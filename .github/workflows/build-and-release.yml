@@ -6,6 +6,7 @@ on:
     branches: [ "main" ]
 
 env:
+  GLOBAL_JSON_PATH: './src/global.json'
   DOTNET_VERSION: '10.0.x'
   PROJECT_PATH: './src/signal.bot.sln'
   PACKAGE_OUTPUT_DIRECTORY: './packages'
@@ -28,7 +29,7 @@ jobs:
       - name: Install .NET Core
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: ${{ env.DOTNET_VERSION }}
+          global-json-file: ${{ env.GLOBAL_JSON_PATH }}
 
       - name: Install GitVersion
         uses: gittools/actions/gitversion/setup@v1.1.1
