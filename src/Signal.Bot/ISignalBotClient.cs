@@ -20,14 +20,14 @@ public interface ISignalBotClient
     IObservable<OnApiResponseArgs> OnApiResponse { get; }
     IObservable<Exception> OnException { get; }
 
+    Task SendRequestAsync(
+        IRequest request,
+        string[]? queryParameters = null,
+        CancellationToken cancellationToken = default);
+
     Task<TResponse> SendRequestAsync<TResponse>(
         IRequest<TResponse> request,
         string[]? queryParameters = null,
         CancellationToken cancellationToken = default
     );
-
-    Task SendRequestAsync(
-        IRequest request,
-        string[]? queryParameters = null,
-        CancellationToken cancellationToken = default);
 }

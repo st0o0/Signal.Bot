@@ -2,7 +2,7 @@ using Signal.Bot;
 using Signal.Bot.Example;
 
 var builder = WebApplication.CreateBuilder(args);
-Console.WriteLine($"Phone {Environment.GetEnvironmentVariable("NUMBER")!}");
+Console.WriteLine($"Phone {Environment.GetEnvironmentVariable("NUMBER")! }");
 builder.Services
     .AddHttpClient("signalbot_client", client => client.BaseAddress = new Uri("http://localhost:1337"))
     .AddTypedClient<ISignalBotClient>((httpClient, sp) =>

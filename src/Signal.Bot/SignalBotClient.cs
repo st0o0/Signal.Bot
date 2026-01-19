@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using System.Net.Http.Json;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Text.Json;
@@ -9,7 +8,6 @@ using System.Threading.Tasks;
 using Signal.Bot.Args;
 using Signal.Bot.Exceptions;
 using Signal.Bot.Requests;
-using Signal.Bot.Serialization;
 
 namespace Signal.Bot;
 
@@ -44,14 +42,12 @@ public class SignalBotClient : ISignalBotClient
     public JsonSerializerOptions JsonSerializerOptions { get; }
 
     public CancellationToken GlobalCancelToken { get; }
-
     public TimeSpan Timeout => _httpClient.Timeout;
     public IObservable<OnApiRequestArgs> OnApiRequest => _onApiRequest.AsObservable();
     public IObservable<OnApiResponseArgs> OnApiResponse => _onApiResponse.AsObservable();
     public IObservable<Exception> OnException => _onException.AsObservable();
 
-    public async Task<TResponse> SendRequestAsync<TResponse>(IRequest<TResponse> request,
-        string[]? queryParameters = null,
+    public async Task<HttpResponseMessage> SendAsync(IRequest request, string[]? queryParameters = null,
         CancellationToken cancellationToken = default)
     {
         try
@@ -95,9 +91,7 @@ public class SignalBotClient : ISignalBotClient
             _onApiResponse.OnNext(new OnApiResponseArgs(request, httpRequest, httpResponse));
             try
             {
-                return (await httpResponse.Content
-                    .ReadFromJsonAsync<TResponse>(JsonBotAPI.Options, cancellationToken)
-                    .ConfigureAwait(false))!;
+                return httpResponse;
             }
             catch (Exception exception)
             {
@@ -114,38 +108,35 @@ public class SignalBotClient : ISignalBotClient
         }
     }
 
-    public async Task SendRequestAsync(IRequest request, string[]? queryParameters = null,
+    public async Task SendRequestAsync(
+        IRequest request,
+        string[]? queryParameters = null,
+        CancellationToken cancellationToken = default)
+    {
+        _ = await SendAsync(request, queryParameters, cancellationToken).ConfigureAwait(false);
+    }
+
+    public async Task<TResponse> SendRequestAsync<TResponse>(IRequest<TResponse> request,
+        string[]? queryParameters = null,
         CancellationToken cancellationToken = default)
     {
         try
         {
-            var methodName = request.MethodName;
-            var query = new List<string>(queryParameters ?? []);
-            if (request is SearchNumbersRequest { Numbers: not null } searchRequest)
-            {
-                query.AddRange(searchRequest.Numbers.Select(num => $"numbers={Uri.EscapeDataString(num)}"));
-            }
-
-            if (query.Count > 0)
-            {
-                methodName += "?" + string.Join("&", query);
-            }
-
-            var httpRequest = new HttpRequestMessage(request.HttpMethod, methodName)
-            {
-                Content = request.ToHttpContent()
-            };
-
-            _onApiRequest.OnNext(new OnApiRequestArgs(request, httpRequest));
-            using var httpResponse = await _httpClient.SendAsync(httpRequest, cancellationToken).ConfigureAwait(false);
-            _onApiResponse.OnNext(new OnApiResponseArgs(request, httpRequest, httpResponse));
-            httpResponse.EnsureSuccessStatusCode();
+            using var cts = CancellationTokenSource.CreateLinkedTokenSource(GlobalCancelToken, cancellationToken);
+            cancellationToken = cts.Token;
+            var httpResponse = await SendAsync(request, queryParameters, cancellationToken);
+            var content = await httpResponse.Content.ReadAsStringAsync(cancellationToken);
+            return JsonSerializer.Deserialize<TResponse>(content, JsonSerializerOptions)!;
+            // return await httpResponse.Content
+            //     .ReadFromJsonAsync<TResponse>(JsonBotAPI.Options, cancellationToken)
+            //     .ConfigureAwait(false)!;
         }
         catch (Exception ex)
         {
             _onException.OnNext(ex);
             _onApiRequest.OnError(ex);
             _onApiResponse.OnError(ex);
+            return default!;
         }
     }
 }

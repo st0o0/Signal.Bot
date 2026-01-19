@@ -1,4 +1,5 @@
 var builder = DistributedApplication.CreateBuilder(args);
+var number = builder.AddParameter("NUMBER", secret: true);
 
 var signalCli = builder
     .AddContainer("signal-cli-rest-api", "bbernhard/signal-cli-rest-api")
@@ -10,6 +11,7 @@ var signalCli = builder
 
 var signalClient = builder
     .AddProject<Projects.Signal_Bot_Example>("signal-bot-example")
+    .WithEnvironment("NUMBER", number)
     .WaitFor(signalCli);
 
 await builder.Build().RunAsync();

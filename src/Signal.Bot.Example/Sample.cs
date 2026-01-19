@@ -23,13 +23,10 @@ public class Sample : BackgroundService
         //var t1 = await client.GetAboutAsync(stoppingToken);
         //var t2 = await client.GetAccountsAsync(stoppingToken);
         //var t4 = await client.GetContactsAsync(stoppingToken);
-        var t3 = await client.GetDevicesAsync(stoppingToken);
-        foreach (var device in t3)
-        {
-            var created = DateTimeOffset.FromUnixTimeMilliseconds(device.Created ?? 0);
-            logger.LogInformation("Created: {DateTimeOffset}", created.UtcDateTime);
-            var lastSeen = DateTimeOffset.FromUnixTimeMilliseconds(device.LastSeen ?? 0);
-            logger.LogInformation("LastSeen: {DateTimeOffset}", lastSeen.UtcDateTime);
-        }
+        //var t3 = await client.GetDevicesAsync(stoppingToken);
+        //var t5 = await client.GetGroupsAsync(stoppingToken);
+        var t6 = await client.GetIdentitiesAsync(stoppingToken);
+        var t7 = (await client.GetAttachmentsAsync(stoppingToken)).ToArray();
+        var t8 = await client.GetAttachmentAsync(t7[0], stoppingToken);
     }
 }
