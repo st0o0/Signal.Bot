@@ -8,6 +8,11 @@ public class SignalBotClientExtensionsTests
 {
     private readonly Mock<ISignalBotClient> _client = new(MockBehavior.Strict);
 
+    public SignalBotClientExtensionsTests()
+    {
+        _client.Setup(x => x.Number).Returns("123");
+    }
+    
     [Fact]
     public async Task SendMessageAsync_SendsCorrectRequest()
     {
@@ -102,7 +107,7 @@ public class SignalBotClientExtensionsTests
     {
         // Arrange
         var members = new List<string> { "a", "b" };
-
+        
         _client
             .Setup(c => c.SendRequestAsync(
                 It.Is<AddGroupMemberRequest>(r =>

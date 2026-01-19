@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <Authors>st0o0</Authors>
+        <Title>Signal Bot API Client</Title>
+        <PackageTags>Signal;Bot;Api;</PackageTags>
+        <PackageIcon>logo.png</PackageIcon>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageLicenseFile>LICENSE</PackageLicenseFile>
+        <PackageProjectUrl>https://github.com/st0o0/signal.bot</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/st0o0/signal.bot.git</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <Copyright>Copyright (c) 2025-$([System.DateTime]::Now.Year) st0o0</Copyright>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <IsPackable>true</IsPackable>
+    </PropertyGroup>
+    <ItemGroup>
+        <None Include="../../README.md" Pack="true" Visible="false" PackagePath="\"/>
+        <None Include="../../LICENSE" Pack="true" Visible="false" PackagePath="\"/>
+        <None Include="../../docs/logo/logo.png" Visible="false" Pack="true" PackagePath="\"/>
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="System.Reactive" Version="6.1.0"/>
+        <PackageReference Include="Websocket.Client" Version="5.3.0"/>
+    </ItemGroup>
+</Project>

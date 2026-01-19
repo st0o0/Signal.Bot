@@ -8,7 +8,7 @@ on:
 env:
   GLOBAL_JSON_PATH: './src/global.json'
   DOTNET_VERSION: '10.0.x'
-  PROJECT_PATH: './src/signal.bot.sln'
+  PROJECT_PATH: './src/signal.sln'
   PACKAGE_OUTPUT_DIRECTORY: './packages'
 
 jobs:
