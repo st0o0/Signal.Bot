@@ -349,13 +349,12 @@ Contributions are welcome! This library grows with the community's needs.
 
 Planned features for upcoming releases:
 
-- [ ] NuGet package publication
+- [X] NuGet package publication
 - [ ] Support for stickers and custom emojis
 - [ ] Typed stories support
 - [ ] Extended profile management
 - [ ] Rate limiting and retry policies
 - [ ] Comprehensive documentation site
-- [ ] More example projects
 
 ## License
 
