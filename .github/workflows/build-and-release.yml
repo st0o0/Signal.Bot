@@ -61,6 +61,7 @@ jobs:
         if: ${{ !cancelled() }}
         with:
           name: Test Results
+          fail-on-error: false
           path: ${{ env.TEST_OUTPUT_DIRECTORY }}/**/*.trx
           reporter: dotnet-trx
 
