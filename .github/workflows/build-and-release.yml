@@ -7,9 +7,9 @@ on:
 
 env:
   GLOBAL_JSON_PATH: './src/global.json'
-  DOTNET_VERSION: '10.0.x'
   PROJECT_PATH: './src/signal.sln'
   PACKAGE_OUTPUT_DIRECTORY: './packages'
+  TEST_OUTPUT_DIRECTORY: './testresults'
 
 jobs:
   build:
@@ -51,10 +51,18 @@ jobs:
         run: dotnet build --configuration Release --no-restore ${{ env.PROJECT_PATH }} /p:Version=${{ steps.gitversion.outputs.semVer }}
 
       - name: Run tests
-        run: dotnet test --configuration Release --no-build --verbosity normal ${{ env.PROJECT_PATH }}
+        run: dotnet test --configuration Release --no-build --collect:"XPlat Code Coverage;Format=opencover" --logger trx --results-directory ${{ env.TEST_OUTPUT_DIRECTORY }} --verbosity normal ${{ env.PROJECT_PATH }}
 
       - name: Create NuGet package
         run: dotnet pack --configuration Release --no-build --output ${{ env.PACKAGE_OUTPUT_DIRECTORY }} ${{ env.PROJECT_PATH }} /p:PackageVersion=${{ steps.gitversion.outputs.semVer }}
+
+      - name: Publish Test Results
+        uses: dorny/test-reporter@v2
+        if: ${{ !cancelled() }}
+        with:
+          name: Test Results
+          path: ${{ env.TEST_OUTPUT_DIRECTORY }}/**/*.trx
+          reporter: dotnet-trx
 
       - name: Upload package artifacts
         uses: actions/upload-artifact@v4
@@ -82,7 +90,7 @@ jobs:
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: ${{ env.DOTNET_VERSION }}
+          global-json-file: ${{ env.GLOBAL_JSON_PATH }}
 
       - name: Publish to NuGet
         run: |
