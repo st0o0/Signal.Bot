@@ -32,7 +32,7 @@ public class SignalBotClientTests
             .Received(1)
             .SendAsync(
                 Arg.Is<HttpRequestMessage>(req =>
-                    req.Method == HttpMethod.Post && req.RequestUri!.AbsolutePath.Contains("v2/send")),
+                    req.Method == HttpMethod.Post && req.RequestUri!.ToString().Contains("v2/send")),
                 Arg.Any<CancellationToken>());
     }
 
