@@ -14,7 +14,7 @@ updates:
     time: "11:00"
 
 - package-ecosystem: dotnet-sdk
-  directory: "/"
+  directory: "/src"
   schedule:
     interval: daily
     time: "11:00"
