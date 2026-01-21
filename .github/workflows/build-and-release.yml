@@ -37,6 +37,12 @@ jobs:
         with:
           global-json-file: ${{ env.GLOBAL_JSON_PATH }}
 
+      - name: Restore tools
+        run: dotnet tool restore
+        
+      - name: Run Slopwatch
+        run: dotnet tool run slopwatch analyze --fail-on error
+
       - name: Install GitVersion
         uses: gittools/actions/gitversion/setup@v4.2.0
         with:
