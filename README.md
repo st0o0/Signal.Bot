@@ -3,8 +3,8 @@
 > A .NET Signal Messenger Bot Client - because sometimes Telegram isn't enough
 
 [![NuGet](https://img.shields.io/nuget/v/Signal.Bot.svg)](https://www.nuget.org/packages/Signal.Bot/)
-[![Build Status](https://img.shields.io/github/actions/workflow/status/st0o0/signal.bot/dotnet.yml?branch=main)](https://github.com/st0o0/signal.bot/actions)
-[![License](https://img.shields.io/github/license/st0o0/signal.bot)](LICENSE)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/st0o0/signal.bot/build-and-release.yml?branch=main)](https://github.com/st0o0/Signal.Bot/actions)
+[![License](https://img.shields.io/github/license/st0o0/Signal.Bot)](LICENSE)
 [![Downloads](https://img.shields.io/nuget/dt/Signal.Bot.svg)](https://www.nuget.org/packages/Signal.Bot/)
 
 
