@@ -33,7 +33,7 @@ jobs:
       
       # Install the .NET Core workload
       - name: Install .NET Core
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           global-json-file: ${{ env.GLOBAL_JSON_PATH }}
 
@@ -111,7 +111,7 @@ jobs:
           path: ${{ env.PACKAGE_OUTPUT_DIRECTORY }}
 
       - name: Setup .NET Core
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           global-json-file: ${{ env.GLOBAL_JSON_PATH }}
 
