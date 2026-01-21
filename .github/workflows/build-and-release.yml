@@ -94,7 +94,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     environment:
-      name: production
+      name: nuget
       url: https://www.nuget.org/packages/Signal.Bot
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     
