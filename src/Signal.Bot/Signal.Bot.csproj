@@ -3,7 +3,7 @@
         <Authors>st0o0</Authors>
         <Title>Signal Bot API Client</Title>
         <PackageTags>Signal;Bot;Api;</PackageTags>
-        <PackageIcon>logo.png</PackageIcon>
+        <PackageIcon>logo_small.png</PackageIcon>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
         <PackageProjectUrl>https://github.com/st0o0/signal.bot</PackageProjectUrl>
@@ -20,7 +20,7 @@
     <ItemGroup>
         <None Include="../../README.md" Pack="true" Visible="false" PackagePath="\"/>
         <None Include="../../LICENSE" Pack="true" Visible="false" PackagePath="\"/>
-        <None Include="../../docs/logo/logo.png" Visible="false" Pack="true" PackagePath="\"/>
+        <None Include="../../docs/logo/logo_small.png" Visible="false" Pack="true" PackagePath="\"/>
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="System.Reactive" Version="6.1.0"/>

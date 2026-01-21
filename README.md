@@ -7,10 +7,7 @@
 [![License](https://img.shields.io/github/license/st0o0/Signal.Bot)](LICENSE)
 [![Downloads](https://img.shields.io/nuget/dt/Signal.Bot.svg)](https://www.nuget.org/packages/Signal.Bot/)
 
-
-<p align="center">
-     <img width="128" height="128" src="docs/logo/logo.png" alt="signal bot logo">
-</p>
+<img alt="Signal.Bot logo" height="128" src="https://raw.githubusercontent.com/st0o0/Signal.Bot/eb7e4e5c69480e29a635b5f93b764aff899b3eba/docs/logo/logo.png" width="128"/>
 
 ## Overview
 
