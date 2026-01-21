@@ -38,14 +38,34 @@ jobs:
           global-json-file: ${{ env.GLOBAL_JSON_PATH }}
 
       - name: Install GitVersion
-        uses: gittools/actions/gitversion/setup@v1.1.1
+        uses: gittools/actions/gitversion/setup@v4.2.0
         with:
-          versionSpec: '5.x'
+          versionSpec: '6.x'
 
       - name: Determine Version
-        uses: gittools/actions/gitversion/execute@v1.1.1
+        uses: gittools/actions/gitversion/execute@v4.2.0
         id: gitversion
-
+      
+      - name: Generate Release Notes for nuget
+        id: plain-notes
+        env:
+          VERSION: ${{ steps.gitversion.outputs.semVer }}
+        run: |
+          cat > notes.md << EOF
+          # 🎯 Signal.Bot v$VERSION
+          
+          📦 NuGet: https://nuget.org/packages/Signal.Bot
+          🔗 Release: https://github.com/st0o0/Signal.Bot/releases/v$VERSION
+          
+          See release page for full changelog and details!
+          
+          Built with ❤️
+          EOF
+          sed -i "s|v\$VERSION|v$VERSION|g" notes.md
+          echo "release-notes<<EOF" >> $GITHUB_OUTPUT
+          cat notes.md >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+      
       - name: Display GitVersion outputs
         run: |
           echo "Version: ${{ steps.gitversion.outputs.semVer }}"
@@ -80,6 +100,7 @@ jobs:
           --output ${{ env.PACKAGE_OUTPUT_DIRECTORY }}
           ${{ env.PROJECT_PATH }} 
           /p:PackageVersion=${{ steps.gitversion.outputs.semVer }}
+          /p:PackageReleaseNotes="${{ steps.plain-notes.outputs.release-notes }}"
 
       - name: Upload package artifacts
         uses: actions/upload-artifact@v6
@@ -119,9 +140,40 @@ jobs:
         run: |
           dotnet nuget push --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate ${{ env.PACKAGE_OUTPUT_DIRECTORY }}/*.nupkg
 
-      - name: Create and push Git tag
+      - name: Generate Release Notes
+        id: notes
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ needs.build.outputs.semVer }}
         run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git tag -a "v${{ needs.build.outputs.semVer }}" -m "Release v${{ needs.build.outputs.semVer }}"
-          git push origin "v${{ needs.build.outputs.semVer }}"
+          cat > notes.md << EOF
+          # 🎯 Signal.Bot v$VERSION
+          
+          [![NuGet](https://img.shields.io/nuget/v/Signal.Bot?logo=nuget)](https://nuget.org/packages/Signal.Bot)
+          [![GitHub](https://img.shields.io/github/last-commit/st0o0/Signal.Bot/main?logo=github)](https://github.com/st0o0/Signal.Bot)
+          
+          🚀 Auto-generated from ${{ github.ref_name }}
+          ---
+          EOF
+          
+          gh api repos/${{ github.repository }}/releases/generate-notes \
+          -f tag_name="v\$VERSION" \
+          --jq .body >> notes.md || echo "## 📋 Changes\nNo changelog available" >> notes.md
+
+          sed -i "s|v\$VERSION|v$VERSION|g" notes.md
+          echo "Built with ❤️" >> notes.md
+          echo "release-notes<<EOF" >> $GITHUB_OUTPUT
+          cat notes.md >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Create & Publish Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: "v${{ needs.build.outputs.semVer }}"
+          target_commitish: ${{ github.sha }}
+          name: "Signal.Bot v${{ needs.build.outputs.semVer }}"
+          body: ${{ steps.notes.outputs.release-notes }}
+          draft: false
+          prerelease: false
+          make_latest: true
+          files: ${{ env.PACKAGE_OUTPUT_DIRECTORY }}/*.nupkg

@@ -10,11 +10,11 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B5DF032D-4C5E-4E6B-B6B1-F83A599FE329}"
 	ProjectSection(SolutionItems) = preProject
 		..\swagger.json = ..\swagger.json
-		..\docs\logo\logo.png = ..\docs\logo\logo.png
 		..\README.md = ..\README.md
 		..\LICENSE = ..\LICENSE
 		..\.github\workflows\build-and-release.yml = ..\.github\workflows\build-and-release.yml
 		global.json = global.json
+		..\.gitversion.yml = ..\.gitversion.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{16183054-D79A-4DE4-9C2F-D43D09B591C7}"
