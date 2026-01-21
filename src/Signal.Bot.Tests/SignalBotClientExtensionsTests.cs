@@ -1,4 +1,4 @@
-using Moq;
+using NSubstitute;
 using Signal.Bot.Requests;
 using Signal.Bot.Types;
 
@@ -6,11 +6,12 @@ namespace Signal.Bot.Tests;
 
 public class SignalBotClientExtensionsTests
 {
-    private readonly Mock<ISignalBotClient> _client = new(MockBehavior.Strict);
+    private readonly ISignalBotClient _client;
 
     public SignalBotClientExtensionsTests()
     {
-        _client.Setup(x => x.Number).Returns("123");
+        _client = Substitute.For<ISignalBotClient>();
+        _client.Number.Returns("123");
     }
 
     [Fact]
@@ -19,24 +20,24 @@ public class SignalBotClientExtensionsTests
         // Arrange
         var expectedResponse = new SendMessage();
         _client
-            .Setup(c => c.SendRequestAsync(
-                It.Is<SendMessageRequest>(r =>
+            .SendRequestAsync(Arg.Is<SendMessageRequest>(r =>
                     r.Message == "hello" &&
                     r.Number == "123" &&
-                    r.Recipients.Count == 1 &&
+                    r.Recipients!.Count == 1 &&
                     r.Recipients.Contains("456")),
-                It.IsAny<string[]>(),
-                It.IsAny<CancellationToken>()))
-            .ReturnsAsync(expectedResponse);
+                Arg.Any<string[]>(),
+                Arg.Any<CancellationToken>())
+            .Returns(expectedResponse);
 
         // Act
-        var result = await _client.Object.SendMessageAsync(
+        var result = await _client.SendMessageAsync(
             recipient: "456",
             message: "hello");
 
         // Assert
         Assert.Same(expectedResponse, result);
-        _client.VerifyAll();
+        await _client.Received(1).SendRequestAsync(Arg.Any<SendMessageRequest>(), Arg.Any<string[]>(),
+            Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -45,18 +46,18 @@ public class SignalBotClientExtensionsTests
         // Arrange
         var about = new About();
         _client
-            .Setup(c => c.SendRequestAsync(It.IsAny<GetAboutRequest>(), It.IsAny<string[]>(),
-                It.IsAny<CancellationToken>()))
-            .ReturnsAsync(about);
+            .SendRequestAsync(Arg.Any<GetAboutRequest>(),
+                Arg.Any<string[]>(),
+                Arg.Any<CancellationToken>())
+            .Returns(about);
 
         // Act
-        var result = await _client.Object.GetAboutAsync();
+        var result = await _client.GetAboutAsync();
 
         // Assert
         Assert.Same(about, result);
-        _client.Verify(c =>
-                c.SendRequestAsync(It.IsAny<GetAboutRequest>(), It.IsAny<string[]>(), It.IsAny<CancellationToken>()),
-            Times.Once);
+        await _client.Received(1)
+            .SendRequestAsync(Arg.Any<GetAboutRequest>(), Arg.Any<string[]>(), Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -64,21 +65,22 @@ public class SignalBotClientExtensionsTests
     {
         // Arrange
         _client
-            .Setup(c => c.SendRequestAsync(
-                It.Is<RegisterNumberRequest>(r =>
+            .SendRequestAsync(Arg.Is<RegisterNumberRequest>(r =>
                     r.Number == "123" &&
                     r.Captcha == "captcha-token" &&
-                    r.UseVoice == true), It.IsAny<string[]>(),
-                It.IsAny<CancellationToken>()))
+                    r.UseVoice == true),
+                Arg.Any<string[]>(),
+                Arg.Any<CancellationToken>())
             .Returns(Task.CompletedTask);
 
         // Act
-        await _client.Object.RegisterNumberAsync(
+        await _client.RegisterNumberAsync(
             captcha: "captcha-token",
             useVoice: true);
 
         // Assert
-        _client.VerifyAll();
+        await _client.Received(1).SendRequestAsync(Arg.Any<RegisterNumberRequest>(), Arg.Any<string[]>(),
+            Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -86,20 +88,21 @@ public class SignalBotClientExtensionsTests
     {
         // Arrange
         _client
-            .Setup(c => c.SendRequestAsync(
-                It.Is<RemoveTypingIndicatorRequest>(r =>
+            .SendRequestAsync(Arg.Is<RemoveTypingIndicatorRequest>(r =>
                     r.Number == "123" &&
-                    r.Recipient == "456"), It.IsAny<string[]>(),
-                It.IsAny<CancellationToken>()))
+                    r.Recipient == "456"),
+                Arg.Any<string[]>(),
+                Arg.Any<CancellationToken>())
             .Returns(Task.CompletedTask);
 
         // Act
-        await _client.Object.SetTypingIndicatorAsync(
+        await _client.SetTypingIndicatorAsync(
             recipient: "456",
             isTyping: false);
 
         // Assert
-        _client.VerifyAll();
+        await _client.Received(1).SendRequestAsync(Arg.Any<RemoveTypingIndicatorRequest>(), Arg.Any<string[]>(),
+            Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -109,20 +112,21 @@ public class SignalBotClientExtensionsTests
         var members = new List<string> { "a", "b" };
 
         _client
-            .Setup(c => c.SendRequestAsync(
-                It.Is<AddGroupMemberRequest>(r =>
+            .SendRequestAsync(Arg.Is<AddGroupMemberRequest>(r =>
                     r.Number == "123" &&
                     r.GroupId == "group1" &&
-                    r.Members == members), It.IsAny<string[]>(),
-                It.IsAny<CancellationToken>()))
+                    r.Members == members),
+                Arg.Any<string[]>(),
+                Arg.Any<CancellationToken>())
             .Returns(Task.CompletedTask);
 
         // Act
-        await _client.Object.AddGroupMemberAsync(
+        await _client.AddGroupMemberAsync(
             groupId: "group1",
             members: members);
 
         // Assert
-        _client.VerifyAll();
+        await _client.Received(1).SendRequestAsync(Arg.Any<AddGroupMemberRequest>(), Arg.Any<string[]>(),
+            Arg.Any<CancellationToken>());
     }
 }
