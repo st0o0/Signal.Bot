@@ -1,12 +1,27 @@
-using System;
-using System.Text.Json;
-using Signal.Bot.Serialization;
-
 namespace Signal.Bot;
 
-public class SignalBotClientOptions(string number, string baseUrl)
+public record SignalBotClientOptions(string Number, string BaseUrl)
 {
-    public JsonSerializerOptions JsonSerializerOptions { get; } = JsonBotAPI.Options;
-    public string BaseUrl { get; } = baseUrl ?? throw new ArgumentNullException(nameof(baseUrl));
-    public string Number { get; } = number ?? throw new ArgumentNullException(nameof(number));
+    public HttpClient? HttpClient { get; set; }
+};
+
+public class SignalBotClientOptionsBuilder
+{
+    private readonly SignalBotClientOptions _options;
+
+    private SignalBotClientOptionsBuilder(string number, string baseUrl)
+    {
+        _options = new SignalBotClientOptions(number, baseUrl);
+    }
+
+    public static SignalBotClientOptionsBuilder Create(string number, string baseUrl)
+    {
+        return new SignalBotClientOptionsBuilder(number, baseUrl);
+    }
+
+    public SignalBotClientOptionsBuilder WithHttpClient(HttpClient httpClient)
+    {
+        _options.HttpClient = httpClient;
+        return this;
+    }
 }

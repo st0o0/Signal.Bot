@@ -7,7 +7,7 @@ namespace Signal.Bot.Polling;
 
 public class DefaultReceivedMessageHandler(
     Func<ISignalBotClient, ReceivedMessage, CancellationToken, Task> updateHandler,
-    Func<ISignalBotClient, IError, CancellationToken, Task> errorHandler)
+    Func<ISignalBotClient, Error, CancellationToken, Task> errorHandler)
     : IReceivedMessageHandler
 {
     public async Task HandleAsync(ISignalBotClient client, ReceivedMessage message,
@@ -16,7 +16,7 @@ public class DefaultReceivedMessageHandler(
 
     public Task HandleErrorAsync(
         ISignalBotClient client,
-        IError error,
+        Error error,
         CancellationToken cancellationToken)
         => errorHandler(client, error, cancellationToken);
 }

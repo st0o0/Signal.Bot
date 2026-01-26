@@ -1,8 +1,8 @@
-namespace Signal.Bot.Requests;
+namespace Signal.Bot.Types;
 
 public class SetUsername
 {
-    [JsonPropertyName("username")] public string? Username { get; set; } = null;
+    [JsonPropertyName("username")] public string? Username { get; set; }
 
-    [JsonPropertyName("username_link")] public string? UsernameLink { get; set; } = null;
+    [JsonPropertyName("username_link")] public string? UsernameLink { get; set; }
 }

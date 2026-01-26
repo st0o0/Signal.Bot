@@ -8,5 +8,5 @@ public class GetReceivedMessagesRequest(string number) : RequestBase<ReceivedMes
 
     public override HttpMethod HttpMethod => HttpMethod.Get;
 
-    public override HttpContent? ToHttpContent() => null; // GET requests don't have content
+    public override HttpContent ToHttpContent() => null; // GET requests don't have content
 }

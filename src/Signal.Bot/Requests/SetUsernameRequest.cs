@@ -1,3 +1,5 @@
+using Signal.Bot.Types;
+
 namespace Signal.Bot.Requests;
 
 public class SetUsernameRequest(string number) : RequestBase<SetUsername>($"v1/accounts/{number}/username")

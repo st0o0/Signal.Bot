@@ -4,7 +4,7 @@ public interface IRequest
 {
     HttpMethod HttpMethod { get; }
     string MethodName { get; }
-    HttpContent? ToHttpContent();
+    HttpContent ToHttpContent();
 }
 
 public interface IRequest<TResponse> : IRequest;
