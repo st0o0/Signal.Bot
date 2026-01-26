@@ -28,9 +28,13 @@ public class QueryParameterRegistry : IQueryParameterRegistry
         ArgumentNullException.ThrowIfNull(value);
         var valueAsString = value as string ?? valueFactory?.Invoke(value) ?? value.ToString();
         var queryParameter = $"{valueName}={valueAsString}";
-        if (_builder.Length > 0)
+        if (_builder.Length == 0)
         {
             queryParameter = "?" + queryParameter;
+        }
+        else
+        {
+            queryParameter = "&" + queryParameter;
         }
 
         _builder.Append(queryParameter);
