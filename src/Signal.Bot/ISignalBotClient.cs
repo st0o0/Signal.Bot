@@ -3,18 +3,19 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Signal.Bot.Args;
+using Signal.Bot.Internal;
 using Signal.Bot.Requests;
-using Signal.Bot.Types;
 
 namespace Signal.Bot;
 
-public interface ISignalBotClient
+public interface ISignalBotClient : IDisposable
 {
+    HttpClient HttpClient { get; }
+
     string BaseUrl { get; }
     string Number { get; }
     JsonSerializerOptions JsonSerializerOptions { get; }
     CancellationToken GlobalCancelToken { get; }
-    TimeSpan Timeout { get; }
 
     IObservable<OnApiRequestArgs> OnApiRequest { get; }
     IObservable<OnApiResponseArgs> OnApiResponse { get; }
@@ -22,12 +23,12 @@ public interface ISignalBotClient
 
     Task SendRequestAsync(
         IRequest request,
-        string[]? queryParameters = null,
+        IQueryParameterRegistry? queryParameters = null,
         CancellationToken cancellationToken = default);
 
     Task<TResponse> SendRequestAsync<TResponse>(
         IRequest<TResponse> request,
-        string[]? queryParameters = null,
+        IQueryParameterRegistry? queryParameters = null,
         CancellationToken cancellationToken = default
     );
 }

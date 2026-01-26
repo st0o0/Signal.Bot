@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Text.Json;
@@ -7,47 +6,41 @@ using System.Threading;
 using System.Threading.Tasks;
 using Signal.Bot.Args;
 using Signal.Bot.Exceptions;
+using Signal.Bot.Internal;
 using Signal.Bot.Requests;
+using Signal.Bot.Serialization;
 
 namespace Signal.Bot;
 
 public class SignalBotClient : ISignalBotClient
 {
     private readonly SignalBotClientOptions _options;
-    private readonly HttpClient _httpClient;
     private readonly Subject<OnApiRequestArgs> _onApiRequest = new();
     private readonly Subject<OnApiResponseArgs> _onApiResponse = new();
     private readonly Subject<Exception> _onException = new();
-
-    public SignalBotClient(string number, HttpClient httpClient, CancellationToken cancellationToken = default) : this(
-        new SignalBotClientOptions(number,
-            httpClient.BaseAddress!.GetComponents(UriComponents.HostAndPort, UriFormat.UriEscaped)), httpClient,
-        cancellationToken)
-    {
-    }
 
     public SignalBotClient(SignalBotClientOptions options, HttpClient httpClient,
         CancellationToken cancellationToken = default)
     {
         _options = options ?? throw new ArgumentNullException(nameof(options));
-        _httpClient = httpClient;
-        JsonSerializerOptions = options.JsonSerializerOptions;
+        HttpClient = httpClient;
         GlobalCancelToken = cancellationToken;
+        JsonSerializerOptions = JsonBotAPI.Options;
     }
 
-    public string BaseUrl => _options.BaseUrl;
+    public HttpClient HttpClient { get; }
 
+    public string BaseUrl => _options.BaseUrl;
     public string Number => _options.Number;
 
     public JsonSerializerOptions JsonSerializerOptions { get; }
 
     public CancellationToken GlobalCancelToken { get; }
-    public TimeSpan Timeout => _httpClient.Timeout;
     public IObservable<OnApiRequestArgs> OnApiRequest => _onApiRequest.AsObservable();
     public IObservable<OnApiResponseArgs> OnApiResponse => _onApiResponse.AsObservable();
     public IObservable<Exception> OnException => _onException.AsObservable();
 
-    public async Task<HttpResponseMessage> SendAsync(IRequest request, string[]? queryParameters = null,
+    public async Task<HttpResponseMessage> SendAsync(IRequest request, IQueryParameterRegistry? queryParameters = null,
         CancellationToken cancellationToken = default)
     {
         try
@@ -55,15 +48,10 @@ public class SignalBotClient : ISignalBotClient
             using var cts = CancellationTokenSource.CreateLinkedTokenSource(GlobalCancelToken, cancellationToken);
             cancellationToken = cts.Token;
             var methodName = request.MethodName;
-            var query = new List<string>(queryParameters ?? []);
+            queryParameters ??= new QueryParameterRegistry();
             if (request is SearchNumbersRequest { Numbers: not null } searchRequest)
             {
-                query.AddRange(searchRequest.Numbers.Select(num => $"numbers={Uri.EscapeDataString(num)}"));
-            }
-
-            if (query.Count > 0)
-            {
-                methodName += "?" + string.Join("&", query);
+                queryParameters.AddRange("numbers", searchRequest.Numbers);
             }
 
             var httpRequest = new HttpRequestMessage(request.HttpMethod, methodName)
@@ -74,7 +62,7 @@ public class SignalBotClient : ISignalBotClient
             HttpResponseMessage? httpResponse;
             try
             {
-                httpResponse = await _httpClient.SendAsync(httpRequest, cancellationToken).ConfigureAwait(false);
+                httpResponse = await HttpClient.SendAsync(httpRequest, cancellationToken).ConfigureAwait(false);
                 httpResponse.EnsureSuccessStatusCode();
             }
             catch (TaskCanceledException exception)
@@ -82,22 +70,9 @@ public class SignalBotClient : ISignalBotClient
                 if (cancellationToken.IsCancellationRequested) throw;
                 throw new RequestException("Bot API Request timed out", exception);
             }
-            catch (Exception exception)
-            {
-                throw new RequestException($"Bot API Service Failure: {exception.GetType().Name}: {exception.Message}",
-                    exception);
-            }
 
             _onApiResponse.OnNext(new OnApiResponseArgs(request, httpRequest, httpResponse));
-            try
-            {
-                return httpResponse;
-            }
-            catch (Exception exception)
-            {
-                throw new RequestException("There was an exception during deserialization of the response",
-                    httpResponse.StatusCode, exception);
-            }
+            return httpResponse;
         }
         catch (Exception ex)
         {
@@ -110,14 +85,14 @@ public class SignalBotClient : ISignalBotClient
 
     public async Task SendRequestAsync(
         IRequest request,
-        string[]? queryParameters = null,
+        IQueryParameterRegistry? queryParameters = null,
         CancellationToken cancellationToken = default)
     {
         _ = await SendAsync(request, queryParameters, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<TResponse> SendRequestAsync<TResponse>(IRequest<TResponse> request,
-        string[]? queryParameters = null,
+        IQueryParameterRegistry? queryParameters = null,
         CancellationToken cancellationToken = default)
     {
         try
@@ -138,5 +113,21 @@ public class SignalBotClient : ISignalBotClient
             _onApiResponse.OnError(ex);
             return default!;
         }
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!disposing) return;
+
+        HttpClient.Dispose();
+        _onApiRequest.OnCompleted();
+        _onApiResponse.OnCompleted();
+        _onException.OnCompleted();
+    }
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
     }
 }

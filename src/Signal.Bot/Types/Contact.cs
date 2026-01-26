@@ -16,8 +16,7 @@ public class Contact
 
     [JsonPropertyName("blocked")] public bool Blocked { get; set; }
 
-    [JsonPropertyName("message_expiration")]
-    public string? MessageExpiration { get; set; }
+    [JsonPropertyName("message_expiration")] public string? MessageExpiration { get; set; }
 
     [JsonPropertyName("note")] public string? Note { get; set; }
 

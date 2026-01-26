@@ -201,18 +201,18 @@ public class TypeSerializationTests
     public void TestRemoteDeleteMessageSerializationAndDeserialization()
     {
         // Arrange
-        var remoteDeleteMessage = new RemoteDeleteMessage
+        var remoteDeleteMessage = new RemoteDelete
         {
-            TargetSentTimestamp = 12314
+            Timestamp = 12314
         };
 
         // Act
         var json = JsonSerializer.Serialize(remoteDeleteMessage);
-        var deserializedRemoteDeleteMessage = JsonSerializer.Deserialize<RemoteDeleteMessage>(json);
+        var deserializedRemoteDeleteMessage = JsonSerializer.Deserialize<RemoteDelete>(json);
 
         // Assert
         Assert.NotNull(deserializedRemoteDeleteMessage);
-        Assert.Equal(remoteDeleteMessage.TargetSentTimestamp, deserializedRemoteDeleteMessage.TargetSentTimestamp);
+        Assert.Equal(remoteDeleteMessage.Timestamp, deserializedRemoteDeleteMessage.Timestamp);
     }
 
     [Fact]

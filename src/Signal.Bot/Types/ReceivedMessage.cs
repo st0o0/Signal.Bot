@@ -13,9 +13,9 @@ public class Envelope
 {
     [JsonPropertyName("source")] public string? Source { get; set; }
 
-    [JsonPropertyName("sourceNumber")] public required string SourceNumber { get; set; }
+    [JsonPropertyName("sourceNumber")] public string? SourceNumber { get; set; }
 
-    [JsonPropertyName("sourceUuid")] public required string SourceUuid { get; set; }
+    [JsonPropertyName("sourceUuid")] public string? SourceUuid { get; set; }
 
     [JsonPropertyName("timestamp")] public long Timestamp { get; set; }
 
@@ -98,8 +98,7 @@ public class ReactionData
 
     [JsonPropertyName("targetAuthor")] public string? TargetAuthor { get; set; }
 
-    [JsonPropertyName("targetSentTimestamp")]
-    public long? TargetSentTimestamp { get; set; }
+    [JsonPropertyName("targetSentTimestamp")] public long? TargetSentTimestamp { get; set; }
 }
 
 public class Mention

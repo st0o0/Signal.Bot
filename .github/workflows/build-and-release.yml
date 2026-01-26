@@ -41,7 +41,7 @@ jobs:
         run: dotnet tool restore
 
       - name: Run Slopwatch
-        run: dotnet tool run slopwatch analyze --fail-on error
+        run: dotnet tool run slopwatch analyze --fail-on warning
 
       - name: Install GitVersion
         uses: gittools/actions/gitversion/setup@v4.2.0

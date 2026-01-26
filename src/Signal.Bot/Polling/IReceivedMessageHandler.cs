@@ -13,6 +13,6 @@ public interface IReceivedMessageHandler
 
     Task HandleErrorAsync(
         ISignalBotClient client,
-        IError error,
+        Error error,
         CancellationToken cancellationToken);
 }
