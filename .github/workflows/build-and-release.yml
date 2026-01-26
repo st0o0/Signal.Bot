@@ -39,7 +39,7 @@ jobs:
 
       - name: Restore tools
         run: dotnet tool restore
-        
+
       - name: Run Slopwatch
         run: dotnet tool run slopwatch analyze --fail-on error
 
@@ -51,7 +51,7 @@ jobs:
       - name: Determine Version
         uses: gittools/actions/gitversion/execute@v4.2.0
         id: gitversion
-      
+
       - name: Generate Release Notes for nuget
         id: plain-notes
         env:
@@ -71,7 +71,7 @@ jobs:
           echo "release-notes<<EOF" >> $GITHUB_OUTPUT
           cat notes.md >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
-      
+
       - name: Display GitVersion outputs
         run: |
           echo "Version: ${{ steps.gitversion.outputs.semVer }}"
@@ -86,6 +86,7 @@ jobs:
           --no-restore
           ${{ env.PROJECT_PATH }} 
           /p:Version=${{ steps.gitversion.outputs.semVer }}
+          /p:ContinuousIntegrationBuild=true
 
       - name: Run tests
         run: >
@@ -112,7 +113,9 @@ jobs:
         uses: actions/upload-artifact@v6
         with:
           name: nuget-packages
-          path: ${{ env.PACKAGE_OUTPUT_DIRECTORY }}/*.nupkg
+          path: |
+            ${{ env.PACKAGE_OUTPUT_DIRECTORY }}/*.nupkg
+            ${{ env.PACKAGE_OUTPUT_DIRECTORY }}/*.snupkg
 
   publish:
     permissions:
