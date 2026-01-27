@@ -113,9 +113,7 @@ jobs:
         uses: actions/upload-artifact@v6
         with:
           name: nuget-packages
-          path: |
-            ${{ env.PACKAGE_OUTPUT_DIRECTORY }}/*.nupkg
-            ${{ env.PACKAGE_OUTPUT_DIRECTORY }}/*.snupkg
+          path: ${{ env.PACKAGE_OUTPUT_DIRECTORY }}/*.nupkg
 
   publish:
     permissions:
