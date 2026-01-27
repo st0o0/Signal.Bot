@@ -85,7 +85,7 @@ jobs:
           --configuration Release
           --no-restore
           ${{ env.PROJECT_PATH }} 
-          /p:Version=${{ steps.gitversion.outputs.semVer }}
+          /p:Version=${{ steps.gitversion.outputs.fullSemVer }}
           /p:ContinuousIntegrationBuild=true
 
       - name: Run tests
@@ -106,7 +106,7 @@ jobs:
           --no-build 
           --output ${{ env.PACKAGE_OUTPUT_DIRECTORY }}
           ${{ env.PROJECT_PATH }} 
-          /p:PackageVersion=${{ steps.gitversion.outputs.semVer }}
+          /p:PackageVersion=${{ steps.gitversion.outputs.fullSemVer }}
           /p:PackageReleaseNotes="${{ steps.plain-notes.outputs.release-notes }}"
 
       - name: Upload package artifacts
