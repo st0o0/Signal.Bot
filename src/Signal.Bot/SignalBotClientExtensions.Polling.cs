@@ -6,6 +6,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
+using Signal.Bot.Internal;
 using Signal.Bot.Polling;
 using Signal.Bot.Types;
 using Websocket.Client;
@@ -56,7 +57,8 @@ public static partial class SignalBotClientExtensions
             try
             {
                 await client
-                    .ReceiveAsync(handler, receiverOptions, cancellationToken)
+                    .ReceiveAsync(handler, (receiverOptions ?? new ReceiverOptions()).AsQueryParameter(),
+                        receiverOptions?.QueueCapacity, cancellationToken)
                     .ConfigureAwait(false);
             }
             catch (OperationCanceledException)
@@ -77,14 +79,20 @@ public static partial class SignalBotClientExtensions
     public static async Task ReceiveAsync<TUpdateHandler>(this ISignalBotClient client,
         ReceiverOptions? receiverOptions = null,
         CancellationToken cancellationToken = default) where TUpdateHandler : IReceivedMessageHandler, new()
-        => await client.ReceiveAsync(new TUpdateHandler(), receiverOptions, cancellationToken)
-            .ConfigureAwait(false);
+        => await client.ReceiveAsync(
+            new TUpdateHandler(),
+            (receiverOptions ?? new ReceiverOptions()).AsQueryParameter(),
+            receiverOptions?.QueueCapacity,
+            cancellationToken).ConfigureAwait(false);
 
     public static async Task ReceiveAsync(this ISignalBotClient client,
         Func<ISignalBotClient, ReceivedMessage, CancellationToken, Task> updateHandler,
         Func<ISignalBotClient, IError, CancellationToken, Task> errorHandler,
         ReceiverOptions? receiverOptions = null, CancellationToken cancellationToken = default)
-        => await client.ReceiveAsync(new DefaultReceivedMessageHandler(updateHandler, errorHandler), receiverOptions,
+        => await client.ReceiveAsync(
+            new DefaultReceivedMessageHandler(updateHandler, errorHandler),
+            (receiverOptions ?? new ReceiverOptions()).AsQueryParameter(),
+            receiverOptions?.QueueCapacity,
             cancellationToken).ConfigureAwait(false);
 
     public static async Task ReceiveAsync(this ISignalBotClient botClient,
@@ -92,32 +100,44 @@ public static partial class SignalBotClientExtensions
         Action<ISignalBotClient, IError, CancellationToken> errorHandler,
         ReceiverOptions? receiverOptions = null, CancellationToken cancellationToken = default)
         => await botClient.ReceiveAsync(new DefaultReceivedMessageHandler(
-            (bot, update, token) =>
-            {
-                updateHandler(bot, update, token);
-                return Task.CompletedTask;
-            },
-            (bot, err, token) =>
-            {
-                errorHandler(bot, err, token);
-                return Task.CompletedTask;
-            }
-        ), receiverOptions, cancellationToken).ConfigureAwait(false);
+                (bot, update, token) =>
+                {
+                    updateHandler(bot, update, token);
+                    return Task.CompletedTask;
+                },
+                (bot, err, token) =>
+                {
+                    errorHandler(bot, err, token);
+                    return Task.CompletedTask;
+                }
+            ), (receiverOptions ?? new ReceiverOptions()).AsQueryParameter(), receiverOptions?.QueueCapacity,
+            cancellationToken).ConfigureAwait(false);
 
     public static async Task<IDisposable> ReceiveAsync(this ISignalBotClient client,
         IReceivedMessageHandler handler,
-        ReceiverOptions? receiverOptions = null,
+        IQueryParameterRegistry queryParameter,
+        int? queueCapacity = null,
         CancellationToken cancellationToken = default)
+    {
+        queueCapacity ??= 100;
+        return await client.InternalReceiveAsync(handler, queryParameter, queueCapacity.Value, cancellationToken)
+            .ConfigureAwait(false);
+    }
+
+    private static async Task<IDisposable> InternalReceiveAsync(this ISignalBotClient client,
+        IReceivedMessageHandler handler,
+        IQueryParameterRegistry queryParameter,
+        int queueCapacity,
+        CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(client);
         ArgumentNullException.ThrowIfNull(handler);
-
         using var cts =
             CancellationTokenSource.CreateLinkedTokenSource(client.GlobalCancelToken, cancellationToken);
         cancellationToken = cts.Token;
 
         var messageChannel = Channel
-            .CreateBounded<ReceivedMessage>(new BoundedChannelOptions(receiverOptions?.QueueCapacity ?? 100)
+            .CreateBounded<ReceivedMessage>(new BoundedChannelOptions(queueCapacity)
             {
                 SingleReader = true,
                 SingleWriter = true,
@@ -125,7 +145,7 @@ public static partial class SignalBotClientExtensions
             });
 
         var errorChannel = Channel
-            .CreateBounded<Error>(new BoundedChannelOptions(receiverOptions?.QueueCapacity ?? 100)
+            .CreateBounded<Error>(new BoundedChannelOptions(queueCapacity)
             {
                 SingleReader = true,
                 SingleWriter = true,
@@ -136,7 +156,7 @@ public static partial class SignalBotClientExtensions
         var messageWriter = messageChannel.Writer;
         var messageReader = messageChannel.Reader;
 
-        var uri = new Uri($"ws://{client.BaseUrl}/v1/receive/{client.Number}");
+        var uri = new Uri($"ws://{client.BaseUrl}/v1/receive/{client.Number}" + queryParameter.Build());
 
         var wsClient = new WebsocketClient(uri);
         wsClient.ConnectTimeout = TimeSpan.FromSeconds(30);
@@ -166,7 +186,6 @@ public static partial class SignalBotClientExtensions
             .Subscribe(
                 info => errorWriter.TryWrite(new ReconnectionInfoError(info)),
                 ex => errorWriter.TryWrite(new Error(ex, ErrorSource.ReconnectionHappenedTermination)));
-
 
         await wsClient.Start();
         var messageHandlerTask = Parallel
@@ -218,5 +237,17 @@ public static partial class SignalBotClientExtensions
 
         await Task.WhenAll(messageHandlerTask, errorHandlerTask).ConfigureAwait(false);
         return wsClient;
+    }
+
+    public static IQueryParameterRegistry AsQueryParameter(this ReceiverOptions options)
+    {
+        var result = new QueryParameterRegistry();
+        result.Add("timeout", options.Timeout, x => x.Seconds.ToString());
+        result.Add("ignore_attachments", options.IgnoreAttachments);
+        result.Add("ignore_stories", options.IgnoreStories);
+        result.Add("max_messages", options.MaxMessage);
+        result.Add("send_read_receipts", options.SendReadReceipts);
+
+        return result;
     }
 }

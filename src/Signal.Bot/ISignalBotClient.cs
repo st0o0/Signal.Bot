@@ -4,7 +4,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Signal.Bot.Args;
 using Signal.Bot.Requests;
-using Signal.Bot.Types;
 
 namespace Signal.Bot;
 

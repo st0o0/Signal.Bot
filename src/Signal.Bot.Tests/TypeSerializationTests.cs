@@ -178,7 +178,7 @@ public class TypeSerializationTests
                 SourceUuid = "msg123",
                 SourceNumber = "msg123",
                 Source = "msg123",
-                DataMessage = new Types.DataMessage
+                DataMessage = new DataMessage
                 {
                     Body = "Hello, World!"
                 }
