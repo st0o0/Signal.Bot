@@ -2,7 +2,6 @@ using System.Net;
 using System.Text.Json;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
-using Signal.Bot.Exceptions;
 using Signal.Bot.Requests;
 using Signal.Bot.Types;
 
@@ -412,7 +411,6 @@ public class SignalBotClientExtendedTests
         Assert.NotNull(client.JsonSerializerOptions);
     }
 
-
     #endregion
 
     #region Observable Properties Tests
@@ -530,10 +528,10 @@ public class SignalBotClientExtendedTests
             .SendAsync(Arg.Any<HttpRequestMessage>(), Arg.Any<CancellationToken>())
             .ThrowsAsync<HttpRequestException>();
 
-        // Act - The client catches exceptions and returns default value
-        var result = await _client.SendMessageAsync(["+1234567890"], "Test message");
+        // Act
+        _ = await _client.SendMessageAsync(["+1234567890"], "Test message");
 
-        // Assert - No exception thrown, gracefully handled
+        // Assert
         await _httpClientMock
             .Received(1)
             .SendAsync(Arg.Any<HttpRequestMessage>(), Arg.Any<CancellationToken>());
@@ -547,10 +545,10 @@ public class SignalBotClientExtendedTests
             .SendAsync(Arg.Any<HttpRequestMessage>(), Arg.Any<CancellationToken>())
             .ThrowsAsync<TaskCanceledException>();
 
-        // Act - The client catches exceptions and returns default value
-        var result = await _client.GetAccountsAsync();
+        // Act
+        _ = await _client.GetAccountsAsync();
 
-        // Assert - No exception thrown, gracefully handled
+        // Assert
         await _httpClientMock
             .Received(1)
             .SendAsync(Arg.Any<HttpRequestMessage>(), Arg.Any<CancellationToken>());

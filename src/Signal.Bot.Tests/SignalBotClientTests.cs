@@ -2,7 +2,6 @@ using System.Net;
 using System.Text.Json;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
-using Signal.Bot.Exceptions;
 using Signal.Bot.Types;
 
 namespace Signal.Bot.Tests;
@@ -26,7 +25,7 @@ public class SignalBotClientTests
         // Arrange
         _httpClientMock
             .SendAsync(Arg.Any<HttpRequestMessage>(), Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult(new HttpResponseMessage(System.Net.HttpStatusCode.OK)));
+            .Returns(Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)));
 
         // Act
         await _client.SendMessageAsync(
@@ -419,12 +418,12 @@ public class SignalBotClientTests
     public async Task GetAttachmentAsync_ValidAttachmentId_CallsHttpClient()
     {
         // Arrange
-        var attachmentId = "test-attachment-id";
+        const string attachmentId = "test-attachment-id";
         _httpClientMock
             .SendAsync(Arg.Any<HttpRequestMessage>(), Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK) 
-            { 
-                Content = new StringContent("attachment-data") 
+            .Returns(Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new StringContent("attachment-data")
             }));
 
         // Act
@@ -503,7 +502,7 @@ public class SignalBotClientTests
             .ThrowsAsync<HttpRequestException>();
 
         // Act - The client catches exceptions and returns default value
-        var result = await _client.SendMessageAsync(["+0987654321"], "Test message");
+        _ = await _client.SendMessageAsync(["+0987654321"], "Test message");
 
         // Assert - No exception thrown, gracefully handled
         await _httpClientMock
@@ -521,7 +520,7 @@ public class SignalBotClientTests
             .ThrowsAsync<TaskCanceledException>();
 
         // Act - The client catches exceptions and returns default value
-        var result = await _client.SendMessageAsync(["+0987654321"], "Test message", cts.Token);
+        _ = await _client.SendMessageAsync(["+0987654321"], "Test message", cts.Token);
 
         // Assert - No exception thrown, gracefully handled
         await _httpClientMock

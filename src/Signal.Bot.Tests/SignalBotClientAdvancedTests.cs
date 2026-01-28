@@ -1,7 +1,6 @@
 using System.Net;
 using System.Text.Json;
 using NSubstitute;
-using Signal.Bot.Exceptions;
 using Signal.Bot.Types;
 
 namespace Signal.Bot.Tests;
