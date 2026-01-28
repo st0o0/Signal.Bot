@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-01-21T20:57:38.2305177+00:00",
-  "updatedAt": "2026-01-21T20:57:38.2323572+00:00",
+  "updatedAt": "2026-01-28T06:12:40.3968748+00:00",
   "description": "Initial baseline created by 'slopwatch init' on 2026-01-21 20:57:38 UTC",
   "entries": [
     {
@@ -12,6 +12,15 @@
       "codeSnippet": "catch (OperationCanceledException)\r\n            {\r\n                // normal shutdown\r\n            }",
       "message": "Empty catch block swallows exceptions without handling",
       "baselinedAt": "2026-01-21T20:57:38.2323333+00:00"
+    },
+    {
+      "hash": "78a0b7c74a2ac431",
+      "ruleId": "SW004",
+      "filePath": "src/Signal.Bot.Tests/SignalBotClientAdvancedTests.cs",
+      "lineNumber": 313,
+      "codeSnippet": "Task.Delay(100)",
+      "message": "Test uses Task.Delay(100) which may indicate a timing-dependent test",
+      "baselinedAt": "2026-01-28T06:12:40.3968521+00:00"
     }
   ]
 }
