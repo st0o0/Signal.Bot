@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Signal.Bot.Requests;
@@ -184,12 +185,25 @@ public static partial class SignalBotClientExtensions
         return await client.SendRequestAsync(new GetAttachmentsRequest(), cancellationToken: cancellationToken);
     }
 
-    public static async Task<string> GetAttachmentAsync(this ISignalBotClient client,
+    public static async Task<byte[]> GetAttachmentAsync(this ISignalBotClient client,
         string attachmentId,
         CancellationToken cancellationToken = default)
     {
-        return await client.SendRequestAsync(new GetAttachmentRequest(attachmentId),
-            cancellationToken: cancellationToken);
+        ArgumentException.ThrowIfNullOrWhiteSpace(attachmentId);
+        var request = new GetAttachmentRequest(attachmentId);
+        var result = await client.SendAsync(request, cancellationToken: cancellationToken);
+        if (!result.IsSuccessStatusCode) return [];
+        return await result.Content.ReadAsByteArrayAsync(cancellationToken);
+    }
+
+    public static async Task<Stream> GetAttachmentStreamAsync(this ISignalBotClient client,
+        string attachmentId,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(attachmentId);
+        var request = new GetAttachmentRequest(attachmentId);
+        var result = await client.SendAsync(request, cancellationToken: cancellationToken);
+        return await result.Content.ReadAsStreamAsync(cancellationToken);
     }
 
     public static async Task RemoveAttachmentAsync(this ISignalBotClient client,

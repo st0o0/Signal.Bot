@@ -14,7 +14,8 @@ public class SignalBotClientTests
     public SignalBotClientTests()
     {
         _httpClientMock = Substitute.For<HttpClient>();
-        _client = new SignalBotClient(new SignalBotClientOptions("123", "http://localhost:8080"), _httpClientMock);
+        _client = new SignalBotClient(builder =>
+            builder.WithNumber("123").WithBaseUrl("http://localhost:8080").WithHttpClient(_httpClientMock));
     }
 
     #region SendMessageAsync Tests
@@ -505,7 +506,8 @@ public class SignalBotClientTests
             .ThrowsAsync<HttpRequestException>();
 
         // Act
-        _ = await _client.SendMessageAsync(["+0987654321"], "Test message", cancellationToken: TestContext.Current.CancellationToken);
+        _ = await _client.SendMessageAsync(["+0987654321"], "Test message",
+            cancellationToken: TestContext.Current.CancellationToken);
 
         // Assert
         await _httpClientMock

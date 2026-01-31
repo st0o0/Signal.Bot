@@ -1,4 +1,5 @@
 using System.Net;
+using System.Net.Http.Headers;
 using System.Text.Json;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
@@ -19,25 +20,11 @@ public class SignalBotClientCompleteTests
         _httpClientMock = Substitute.For<HttpClient>();
         _clientInterfaceMock = Substitute.For<ISignalBotClient>();
         _clientInterfaceMock.Number.Returns("123");
-        _client = new SignalBotClient(new SignalBotClientOptions("123", "http://localhost:8080"), _httpClientMock);
+        _client = new SignalBotClient(builder =>
+            builder.WithNumber("123").WithBaseUrl("http://localhost:8080").WithHttpClient(_httpClientMock));
     }
 
     #region Response Content Handling Tests
-
-    //[Fact]
-    public async Task GetAttachmentAsync_ReturnsStringContent()
-    {
-        const string attachmentId = "test-id";
-        const string attachmentData = "base64encodeddata";
-        var content = new StringContent(attachmentData);
-
-        _httpClientMock.SendAsync(Arg.Any<HttpRequestMessage>(), Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK) { Content = content }));
-
-        var result = await _client.GetAttachmentAsync(attachmentId);
-
-        Assert.Equal(attachmentData, result);
-    }
 
     [Fact]
     public async Task GetDevicesAsync_WithMultipleDevices_ReturnsCollection()
@@ -365,9 +352,11 @@ public class SignalBotClientCompleteTests
     [Fact]
     public void Client_WithDifferentBaseUrl_StoresCorrectly()
     {
-        var options = new SignalBotClientOptions("555", "https://api.secure.com:443");
         var httpClient = Substitute.For<HttpClient>();
-        var client = new SignalBotClient(options, httpClient);
+
+        var client = new SignalBotClient(builder =>
+            builder.WithNumber("555").WithBaseUrl("https://api.secure.com:443").WithHttpClient(httpClient));
+
 
         Assert.Equal("https://api.secure.com:443", client.BaseUrl);
         Assert.Equal("555", client.Number);
@@ -376,9 +365,9 @@ public class SignalBotClientCompleteTests
     [Fact]
     public void Client_WithAlternativeNumber_StoresCorrectly()
     {
-        var options = new SignalBotClientOptions("+33123456789", "http://localhost:8080");
         var httpClient = Substitute.For<HttpClient>();
-        var client = new SignalBotClient(options, httpClient);
+        var client = new SignalBotClient(builder =>
+            builder.WithNumber("+33123456789").WithBaseUrl("http://localhost:8080").WithHttpClient(httpClient));
 
         Assert.Equal("+33123456789", client.Number);
     }
