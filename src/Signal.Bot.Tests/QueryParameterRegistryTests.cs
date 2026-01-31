@@ -1,9 +1,7 @@
-using JetBrains.Annotations;
 using Signal.Bot.Internal;
 
 namespace Signal.Bot.Tests;
 
-[TestSubject(typeof(QueryParameterRegistry))]
 public class QueryParameterRegistryTests
 {
     private readonly QueryParameterRegistry _registry = new();

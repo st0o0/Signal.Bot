@@ -1,6 +1,5 @@
 using System.Net;
 using System.Text.Json;
-using JetBrains.Annotations;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using Signal.Bot.Internal;
@@ -9,7 +8,6 @@ using Signal.Bot.Types;
 
 namespace Signal.Bot.Tests;
 
-[TestSubject(typeof(SignalBotClient))]
 public class SignalBotClientCompleteTests
 {
     private readonly HttpClient _httpClientMock;
@@ -56,7 +54,7 @@ public class SignalBotClientCompleteTests
         _httpClientMock.SendAsync(Arg.Any<HttpRequestMessage>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK) { Content = content }));
 
-        var result = await _client.GetDevicesAsync();
+        var result = await _client.GetDevicesAsync(cancellationToken: TestContext.Current.CancellationToken);
 
         Assert.NotNull(result);
         Assert.Equal(3, result.Count);
@@ -72,7 +70,7 @@ public class SignalBotClientCompleteTests
         _httpClientMock.SendAsync(Arg.Any<HttpRequestMessage>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK) { Content = content }));
 
-        var result = await _client.GetAboutAsync();
+        var result = await _client.GetAboutAsync(cancellationToken: TestContext.Current.CancellationToken);
 
         Assert.NotNull(result);
         Assert.Equal("1.15.0", result.Version);
@@ -88,7 +86,7 @@ public class SignalBotClientCompleteTests
         _httpClientMock.SendAsync(Arg.Any<HttpRequestMessage>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK) { Content = content }));
 
-        var result = await _client.GetAccountsAsync();
+        var result = await _client.GetAccountsAsync(cancellationToken: TestContext.Current.CancellationToken);
 
         Assert.NotNull(result);
         Assert.Equal(2, result.Count);
@@ -104,7 +102,7 @@ public class SignalBotClientCompleteTests
         _httpClientMock.SendAsync(Arg.Any<HttpRequestMessage>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK) { Content = content }));
 
-        var result = await _client.GetGroupsAsync();
+        var result = await _client.GetGroupsAsync(cancellationToken: TestContext.Current.CancellationToken);
 
         Assert.NotNull(result);
     }
@@ -118,7 +116,7 @@ public class SignalBotClientCompleteTests
         _httpClientMock.SendAsync(Arg.Any<HttpRequestMessage>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK) { Content = content }));
 
-        var result = await _client.GetAttachmentsAsync();
+        var result = await _client.GetAttachmentsAsync(cancellationToken: TestContext.Current.CancellationToken);
 
         Assert.NotNull(result);
         Assert.Empty(result);
@@ -134,7 +132,7 @@ public class SignalBotClientCompleteTests
         _httpClientMock.SendAsync(Arg.Any<HttpRequestMessage>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK) { Content = content }));
 
-        var result = await _client.GetDevicesAsync();
+        var result = await _client.GetDevicesAsync(cancellationToken: TestContext.Current.CancellationToken);
 
         Assert.NotNull(result);
         Assert.Empty(result);
@@ -150,7 +148,8 @@ public class SignalBotClientCompleteTests
         _httpClientMock.SendAsync(Arg.Any<HttpRequestMessage>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)));
 
-        await _client.SendMessageAsync(["+1234567890"], "Message");
+        await _client.SendMessageAsync(["+1234567890"], "Message",
+            cancellationToken: TestContext.Current.CancellationToken);
 
         await _httpClientMock.Received(1).SendAsync(
             Arg.Is<HttpRequestMessage>(req => req.Method == HttpMethod.Post),
@@ -163,7 +162,7 @@ public class SignalBotClientCompleteTests
         _httpClientMock.SendAsync(Arg.Any<HttpRequestMessage>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)));
 
-        await _client.GetDevicesAsync();
+        await _client.GetDevicesAsync(cancellationToken: TestContext.Current.CancellationToken);
 
         await _httpClientMock.Received(1).SendAsync(
             Arg.Is<HttpRequestMessage>(req => req.Method == HttpMethod.Get),
@@ -176,7 +175,7 @@ public class SignalBotClientCompleteTests
         _httpClientMock.SendAsync(Arg.Any<HttpRequestMessage>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)));
 
-        await _client.AddDeviceAsync("device://uri");
+        await _client.AddDeviceAsync("device://uri", cancellationToken: TestContext.Current.CancellationToken);
 
         await _httpClientMock.Received(1).SendAsync(
             Arg.Is<HttpRequestMessage>(req => req.Method == HttpMethod.Post),
@@ -189,7 +188,7 @@ public class SignalBotClientCompleteTests
         _httpClientMock.SendAsync(Arg.Any<HttpRequestMessage>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)));
 
-        await _client.RemoveAttachmentAsync("attachment-id");
+        await _client.RemoveAttachmentAsync("attachment-id", cancellationToken: TestContext.Current.CancellationToken);
 
         await _httpClientMock.Received(1).SendAsync(
             Arg.Is<HttpRequestMessage>(req => req.Method == HttpMethod.Delete),
@@ -203,11 +202,12 @@ public class SignalBotClientCompleteTests
     [Fact]
     public async Task SendMessageAsync_WithSpecialCharactersInMessage_CallsHttpClient()
     {
-        var message = "Hello! 你好 🎉 @#$%^&*()";
+        const string message = "Hello! 你好 🎉 @#$%^&*()";
         _httpClientMock.SendAsync(Arg.Any<HttpRequestMessage>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)));
 
-        await _client.SendMessageAsync(["+1234567890"], message);
+        await _client.SendMessageAsync(["+1234567890"], message,
+            cancellationToken: TestContext.Current.CancellationToken);
 
         await _httpClientMock.Received(1).SendAsync(Arg.Any<HttpRequestMessage>(), Arg.Any<CancellationToken>());
     }
@@ -219,7 +219,8 @@ public class SignalBotClientCompleteTests
         _httpClientMock.SendAsync(Arg.Any<HttpRequestMessage>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)));
 
-        await _client.SendMessageAsync(["+1234567890"], message);
+        await _client.SendMessageAsync(["+1234567890"], message,
+            cancellationToken: TestContext.Current.CancellationToken);
 
         await _httpClientMock.Received(1).SendAsync(Arg.Any<HttpRequestMessage>(), Arg.Any<CancellationToken>());
     }
@@ -230,7 +231,8 @@ public class SignalBotClientCompleteTests
         _httpClientMock.SendAsync(Arg.Any<HttpRequestMessage>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)));
 
-        await _client.SendMessageAsync(["+1-234-567-8900"], "Message");
+        await _client.SendMessageAsync(["+1-234-567-8900"], "Message",
+            cancellationToken: TestContext.Current.CancellationToken);
 
         await _httpClientMock.Received(1).SendAsync(Arg.Any<HttpRequestMessage>(), Arg.Any<CancellationToken>());
     }
@@ -261,7 +263,7 @@ public class SignalBotClientCompleteTests
         _httpClientMock.SendAsync(Arg.Any<HttpRequestMessage>(), Arg.Any<CancellationToken>())
             .Returns(async _ =>
             {
-                await Task.Delay(100);
+                await Task.Delay(10);
                 return new HttpResponseMessage(HttpStatusCode.OK);
             });
 
@@ -280,7 +282,7 @@ public class SignalBotClientCompleteTests
         _httpClientMock.SendAsync(Arg.Any<HttpRequestMessage>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)));
 
-        await _client.SendMessageAsync([], "Message");
+        await _client.SendMessageAsync([], "Message", cancellationToken: TestContext.Current.CancellationToken);
 
         await _httpClientMock.Received(1).SendAsync(Arg.Any<HttpRequestMessage>(), Arg.Any<CancellationToken>());
     }
@@ -291,7 +293,8 @@ public class SignalBotClientCompleteTests
         _httpClientMock.SendAsync(Arg.Any<HttpRequestMessage>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)));
 
-        await _client.SendMessageAsync(["+1234567890"], "Message");
+        await _client.SendMessageAsync(["+1234567890"], "Message",
+            cancellationToken: TestContext.Current.CancellationToken);
 
         await _httpClientMock.Received(1).SendAsync(Arg.Any<HttpRequestMessage>(), Arg.Any<CancellationToken>());
     }
@@ -306,7 +309,8 @@ public class SignalBotClientCompleteTests
         _httpClientMock.SendAsync(Arg.Any<HttpRequestMessage>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(new HttpResponseMessage(HttpStatusCode.Created)));
 
-        await _client.SendMessageAsync(["+1234567890"], "Message");
+        await _client.SendMessageAsync(["+1234567890"], "Message",
+            cancellationToken: TestContext.Current.CancellationToken);
 
         await _httpClientMock.Received(1).SendAsync(Arg.Any<HttpRequestMessage>(), Arg.Any<CancellationToken>());
     }
@@ -317,7 +321,8 @@ public class SignalBotClientCompleteTests
         _httpClientMock.SendAsync(Arg.Any<HttpRequestMessage>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(new HttpResponseMessage(HttpStatusCode.Accepted)));
 
-        await _client.SendMessageAsync(["+1234567890"], "Message");
+        await _client.SendMessageAsync(["+1234567890"], "Message",
+            cancellationToken: TestContext.Current.CancellationToken);
 
         await _httpClientMock.Received(1).SendAsync(Arg.Any<HttpRequestMessage>(), Arg.Any<CancellationToken>());
     }
@@ -328,7 +333,8 @@ public class SignalBotClientCompleteTests
         _httpClientMock.SendAsync(Arg.Any<HttpRequestMessage>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(new HttpResponseMessage(HttpStatusCode.NoContent)));
 
-        await _client.SendMessageAsync(["+1234567890"], "Message");
+        await _client.SendMessageAsync(["+1234567890"], "Message",
+            cancellationToken: TestContext.Current.CancellationToken);
 
         await _httpClientMock.Received(1).SendAsync(Arg.Any<HttpRequestMessage>(), Arg.Any<CancellationToken>());
     }
@@ -384,14 +390,14 @@ public class SignalBotClientCompleteTests
     [Fact]
     public async Task GetAttachmentAsync_WithUuidAttachmentId_CallsHttpClient()
     {
-        var attachmentId = "550e8400-e29b-41d4-a716-446655440000";
+        const string attachmentId = "550e8400-e29b-41d4-a716-446655440000";
         _httpClientMock.SendAsync(Arg.Any<HttpRequestMessage>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)
             {
                 Content = new StringContent("data")
             }));
 
-        await _client.GetAttachmentAsync(attachmentId);
+        await _client.GetAttachmentAsync(attachmentId, cancellationToken: TestContext.Current.CancellationToken);
 
         await _httpClientMock.Received(1).SendAsync(
             Arg.Is<HttpRequestMessage>(req => req.RequestUri!.ToString().Contains(attachmentId)),
@@ -401,11 +407,11 @@ public class SignalBotClientCompleteTests
     [Fact]
     public async Task RemoveAttachmentAsync_WithComplexAttachmentId_CallsHttpClient()
     {
-        var attachmentId = "attachment_id_with_special-chars_123";
+        const string attachmentId = "attachment_id_with_special-chars_123";
         _httpClientMock.SendAsync(Arg.Any<HttpRequestMessage>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)));
 
-        await _client.RemoveAttachmentAsync(attachmentId);
+        await _client.RemoveAttachmentAsync(attachmentId, cancellationToken: TestContext.Current.CancellationToken);
 
         await _httpClientMock.Received(1).SendAsync(Arg.Any<HttpRequestMessage>(), Arg.Any<CancellationToken>());
     }
@@ -420,7 +426,7 @@ public class SignalBotClientCompleteTests
         _httpClientMock.SendAsync(Arg.Any<HttpRequestMessage>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)));
 
-        await _client.RegisterNumberAsync();
+        await _client.RegisterNumberAsync(cancellationToken: TestContext.Current.CancellationToken);
 
         await _httpClientMock.Received(1).SendAsync(Arg.Any<HttpRequestMessage>(), Arg.Any<CancellationToken>());
     }
@@ -431,7 +437,8 @@ public class SignalBotClientCompleteTests
         _httpClientMock.SendAsync(Arg.Any<HttpRequestMessage>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)));
 
-        await _client.RegisterNumberAsync(captcha: "captcha-token");
+        await _client.RegisterNumberAsync(captcha: "captcha-token",
+            cancellationToken: TestContext.Current.CancellationToken);
 
         await _httpClientMock.Received(1).SendAsync(Arg.Any<HttpRequestMessage>(), Arg.Any<CancellationToken>());
     }
@@ -442,7 +449,7 @@ public class SignalBotClientCompleteTests
         _httpClientMock.SendAsync(Arg.Any<HttpRequestMessage>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)));
 
-        await _client.RegisterNumberAsync(useVoice: true);
+        await _client.RegisterNumberAsync(useVoice: true, cancellationToken: TestContext.Current.CancellationToken);
 
         await _httpClientMock.Received(1).SendAsync(Arg.Any<HttpRequestMessage>(), Arg.Any<CancellationToken>());
     }
@@ -454,15 +461,15 @@ public class SignalBotClientCompleteTests
     [Fact]
     public async Task VerifyNumberAsync_ValidToken_ReturnsVerificationResult()
     {
-        var token = "verification-token";
-        var expectedResult = "verified-token";
+        const string token = "verification-token";
+        const string expectedResult = "verified-token";
         var json = JsonSerializer.Serialize(expectedResult);
         var content = new StringContent(json);
 
         _httpClientMock.SendAsync(Arg.Any<HttpRequestMessage>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK) { Content = content }));
 
-        var result = await _client.VerifyNumberAsync(token);
+        var result = await _client.VerifyNumberAsync(token, cancellationToken: TestContext.Current.CancellationToken);
 
         Assert.Equal("verified-token", result);
     }
@@ -470,12 +477,12 @@ public class SignalBotClientCompleteTests
     [Fact]
     public async Task VerifyNumberAsync_WithPin_CallsHttpClient()
     {
-        var token = "verification-token";
-        var pin = "123456";
+        const string token = "verification-token";
+        const string pin = "123456";
         _httpClientMock.SendAsync(Arg.Any<HttpRequestMessage>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)));
 
-        await _client.VerifyNumberAsync(token, pin);
+        await _client.VerifyNumberAsync(token, pin, cancellationToken: TestContext.Current.CancellationToken);
 
         await _httpClientMock.Received(1).SendAsync(Arg.Any<HttpRequestMessage>(), Arg.Any<CancellationToken>());
     }
@@ -490,7 +497,8 @@ public class SignalBotClientCompleteTests
         _httpClientMock.SendAsync(Arg.Any<HttpRequestMessage>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)));
 
-        await _client.SetTypingIndicatorAsync(recipient: "+1234567890");
+        await _client.SetTypingIndicatorAsync(recipient: "+1234567890",
+            cancellationToken: TestContext.Current.CancellationToken);
 
         await _httpClientMock.Received(1).SendAsync(Arg.Any<HttpRequestMessage>(), Arg.Any<CancellationToken>());
     }
@@ -501,7 +509,8 @@ public class SignalBotClientCompleteTests
         _httpClientMock.SendAsync(Arg.Any<HttpRequestMessage>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)));
 
-        await _client.SetTypingIndicatorAsync(groupId: "group-id");
+        await _client.SetTypingIndicatorAsync(groupId: "group-id",
+            cancellationToken: TestContext.Current.CancellationToken);
 
         await _httpClientMock.Received(1).SendAsync(Arg.Any<HttpRequestMessage>(), Arg.Any<CancellationToken>());
     }
@@ -512,7 +521,8 @@ public class SignalBotClientCompleteTests
         _httpClientMock.SendAsync(Arg.Any<HttpRequestMessage>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)));
 
-        await _client.SetTypingIndicatorAsync(recipient: "+1234567890", isTyping: false);
+        await _client.SetTypingIndicatorAsync(recipient: "+1234567890", isTyping: false,
+            cancellationToken: TestContext.Current.CancellationToken);
 
         await _httpClientMock.Received(1).SendAsync(Arg.Any<HttpRequestMessage>(), Arg.Any<CancellationToken>());
     }
@@ -527,7 +537,7 @@ public class SignalBotClientCompleteTests
         _httpClientMock.SendAsync(Arg.Any<HttpRequestMessage>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)));
 
-        await _client.UpdateAccountSettingsAsync();
+        await _client.UpdateAccountSettingsAsync(cancellationToken: TestContext.Current.CancellationToken);
 
         await _httpClientMock.Received(1).SendAsync(Arg.Any<HttpRequestMessage>(), Arg.Any<CancellationToken>());
     }
@@ -538,7 +548,8 @@ public class SignalBotClientCompleteTests
         _httpClientMock.SendAsync(Arg.Any<HttpRequestMessage>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)));
 
-        await _client.UpdateAccountSettingsAsync(discoverableByNumber: false);
+        await _client.UpdateAccountSettingsAsync(discoverableByNumber: false,
+            cancellationToken: TestContext.Current.CancellationToken);
 
         await _httpClientMock.Received(1).SendAsync(Arg.Any<HttpRequestMessage>(), Arg.Any<CancellationToken>());
     }
@@ -555,7 +566,8 @@ public class SignalBotClientCompleteTests
                 Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(expectedResponse));
 
-        var result = await _clientInterfaceMock.SendMessageAsync("456", "hello");
+        var result = await _clientInterfaceMock.SendMessageAsync("456", "hello",
+            cancellationToken: TestContext.Current.CancellationToken);
 
         Assert.Same(expectedResponse, result);
         await _clientInterfaceMock.Received(1).SendRequestAsync(
@@ -572,7 +584,7 @@ public class SignalBotClientCompleteTests
                 Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(about));
 
-        var result = await _clientInterfaceMock.GetAboutAsync();
+        var result = await _clientInterfaceMock.GetAboutAsync(cancellationToken: TestContext.Current.CancellationToken);
 
         Assert.Same(about, result);
     }
@@ -587,18 +599,19 @@ public class SignalBotClientCompleteTests
         _httpClientMock.SendAsync(Arg.Any<HttpRequestMessage>(), Arg.Any<CancellationToken>())
             .ThrowsAsync(new HttpRequestException());
 
-        var expections = 0;
+        var exceptions = 0;
         using var t = _client.OnException.Subscribe(x =>
         {
             if (x is HttpRequestException)
             {
-                expections++;
+                exceptions++;
             }
         });
-        await _client.SendMessageAsync(["+1234567890"], "Test message");
+        await _client.SendMessageAsync(["+1234567890"], "Test message",
+            cancellationToken: TestContext.Current.CancellationToken);
 
         await _httpClientMock.Received(1).SendAsync(Arg.Any<HttpRequestMessage>(), Arg.Any<CancellationToken>());
-        Assert.Equal(1, expections);
+        Assert.Equal(1, exceptions);
     }
 
     #endregion

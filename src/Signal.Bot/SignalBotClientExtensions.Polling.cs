@@ -45,14 +45,12 @@ public static partial class SignalBotClientExtensions
     {
         ArgumentNullException.ThrowIfNull(client);
         ArgumentNullException.ThrowIfNull(handler);
-
-
-        // ReSharper disable once MethodSupportsCancellation
+        
         _ = Task.Run(async () =>
         {
             try
             {
-                using var disposable = await client
+                await using var disposable = await client
                     .ReceiveAsync(handler, receiverOptionsConfigure, cancellationToken)
                     .ConfigureAwait(false);
             }
@@ -68,10 +66,10 @@ public static partial class SignalBotClientExtensions
                         cancellationToken)
                     .ConfigureAwait(false);
             }
-        });
+        }, CancellationToken.None);
     }
 
-    public static async Task<IDisposable> ReceiveAsync<TUpdateHandler>(this ISignalBotClient client,
+    public static async Task<IAsyncDisposable> ReceiveAsync<TUpdateHandler>(this ISignalBotClient client,
         Action<ReceiverOptionsBuilder>? receiverOptionsConfigure = null,
         CancellationToken cancellationToken = default) where TUpdateHandler : IReceivedMessageHandler, new()
         => await client.ReceiveAsync(
@@ -79,7 +77,7 @@ public static partial class SignalBotClientExtensions
             receiverOptionsConfigure,
             cancellationToken).ConfigureAwait(false);
 
-    public static async Task<IDisposable> ReceiveAsync(this ISignalBotClient client,
+    public static async Task<IAsyncDisposable> ReceiveAsync(this ISignalBotClient client,
         Func<ISignalBotClient, ReceivedMessage, CancellationToken, Task> updateHandler,
         Func<ISignalBotClient, Error, CancellationToken, Task> errorHandler,
         Action<ReceiverOptionsBuilder>? receiverOptionsConfigure = null,
@@ -89,7 +87,7 @@ public static partial class SignalBotClientExtensions
             receiverOptionsConfigure,
             cancellationToken).ConfigureAwait(false);
 
-    public static async Task<IDisposable> ReceiveAsync(this ISignalBotClient botClient,
+    public static async Task<IAsyncDisposable> ReceiveAsync(this ISignalBotClient botClient,
         Action<ISignalBotClient, ReceivedMessage, CancellationToken> updateHandler,
         Action<ISignalBotClient, Error, CancellationToken> errorHandler,
         Action<ReceiverOptionsBuilder>? receiverOptionsConfigure = null,
@@ -108,14 +106,14 @@ public static partial class SignalBotClientExtensions
             ), receiverOptionsConfigure,
             cancellationToken).ConfigureAwait(false);
 
-    public static async Task<IDisposable> ReceiveAsync(this ISignalBotClient client,
+    public static async Task<IAsyncDisposable> ReceiveAsync(this ISignalBotClient client,
         IReceivedMessageHandler handler,
         Action<ReceiverOptionsBuilder>? receiverOptionsConfigure = null,
         CancellationToken cancellationToken = default)
         => await client.InternalReceiveAsync(handler, receiverOptionsConfigure, cancellationToken)
             .ConfigureAwait(false);
 
-    private static async Task<IDisposable> InternalReceiveAsync(
+    private static async Task<IAsyncDisposable> InternalReceiveAsync(
         this ISignalBotClient client,
         IReceivedMessageHandler handler,
         Action<ReceiverOptionsBuilder>? receiverOptionsConfigure = null,
