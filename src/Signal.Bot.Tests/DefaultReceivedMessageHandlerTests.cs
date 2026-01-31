@@ -1,4 +1,3 @@
-using JetBrains.Annotations;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using Signal.Bot.Polling;
@@ -6,7 +5,6 @@ using Signal.Bot.Types;
 
 namespace Signal.Bot.Tests;
 
-[TestSubject(typeof(DefaultReceivedMessageHandler))]
 public class DefaultReceivedMessageHandlerTests
 {
     private readonly Func<ISignalBotClient, ReceivedMessage, CancellationToken, Task> _updateHandlerMock;
@@ -89,7 +87,7 @@ public class DefaultReceivedMessageHandlerTests
     {
         // Arrange
         using var cts = new CancellationTokenSource();
-        cts.Cancel();
+        await cts.CancelAsync();
 
         // Act
         await _handler.HandleErrorAsync(_clientMock, _error, cts.Token);

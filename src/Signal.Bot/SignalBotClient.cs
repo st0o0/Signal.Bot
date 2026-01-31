@@ -14,28 +14,24 @@ namespace Signal.Bot;
 
 public class SignalBotClient : ISignalBotClient
 {
+    private readonly HttpClient _httpClient;
     private readonly SignalBotClientOptions _options;
     private readonly Subject<OnApiRequestArgs> _onApiRequest = new();
     private readonly Subject<OnApiResponseArgs> _onApiResponse = new();
     private readonly Subject<Exception> _onException = new();
 
-    public SignalBotClient(SignalBotClientOptions options, HttpClient httpClient,
-        CancellationToken cancellationToken = default)
+    public SignalBotClient(SignalBotClientOptions options, HttpClient httpClient)
     {
         _options = options ?? throw new ArgumentNullException(nameof(options));
-        HttpClient = httpClient;
-        GlobalCancelToken = cancellationToken;
+        _httpClient = httpClient;
         JsonSerializerOptions = JsonBotAPI.Options;
     }
-
-    public HttpClient HttpClient { get; }
 
     public string BaseUrl => _options.BaseUrl;
     public string Number => _options.Number;
 
     public JsonSerializerOptions JsonSerializerOptions { get; }
 
-    public CancellationToken GlobalCancelToken { get; }
     public IObservable<OnApiRequestArgs> OnApiRequest => _onApiRequest.AsObservable();
     public IObservable<OnApiResponseArgs> OnApiResponse => _onApiResponse.AsObservable();
     public IObservable<Exception> OnException => _onException.AsObservable();
@@ -45,8 +41,6 @@ public class SignalBotClient : ISignalBotClient
     {
         try
         {
-            using var cts = CancellationTokenSource.CreateLinkedTokenSource(GlobalCancelToken, cancellationToken);
-            cancellationToken = cts.Token;
             var methodName = request.MethodName;
             queryParameters ??= new QueryParameterRegistry();
             if (request is SearchNumbersRequest { Numbers: not null } searchRequest)
@@ -62,7 +56,7 @@ public class SignalBotClient : ISignalBotClient
             HttpResponseMessage? httpResponse;
             try
             {
-                httpResponse = await HttpClient.SendAsync(httpRequest, cancellationToken).ConfigureAwait(false);
+                httpResponse = await _httpClient.SendAsync(httpRequest, cancellationToken).ConfigureAwait(false);
                 httpResponse.EnsureSuccessStatusCode();
             }
             catch (TaskCanceledException exception)
@@ -97,8 +91,6 @@ public class SignalBotClient : ISignalBotClient
     {
         try
         {
-            using var cts = CancellationTokenSource.CreateLinkedTokenSource(GlobalCancelToken, cancellationToken);
-            cancellationToken = cts.Token;
             var httpResponse = await SendAsync(request, queryParameters, cancellationToken);
             var content = await httpResponse.Content.ReadAsStringAsync(cancellationToken);
             return JsonSerializer.Deserialize<TResponse>(content, JsonSerializerOptions)!;
@@ -119,7 +111,7 @@ public class SignalBotClient : ISignalBotClient
     {
         if (!disposing) return;
 
-        HttpClient.Dispose();
+        _httpClient.Dispose();
         _onApiRequest.OnCompleted();
         _onApiResponse.OnCompleted();
         _onException.OnCompleted();

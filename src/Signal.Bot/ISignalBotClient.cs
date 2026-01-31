@@ -10,12 +10,9 @@ namespace Signal.Bot;
 
 public interface ISignalBotClient : IDisposable
 {
-    HttpClient HttpClient { get; }
-
     string BaseUrl { get; }
     string Number { get; }
     JsonSerializerOptions JsonSerializerOptions { get; }
-    CancellationToken GlobalCancelToken { get; }
 
     IObservable<OnApiRequestArgs> OnApiRequest { get; }
     IObservable<OnApiResponseArgs> OnApiResponse { get; }

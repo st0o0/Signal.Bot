@@ -1,10 +1,8 @@
-using JetBrains.Annotations;
 using NSubstitute;
 using Signal.Bot.Polling;
 
 namespace Signal.Bot.Tests;
 
-[TestSubject(typeof(SignalBotReceiver))]
 public class SignalBotReceiverTests
 {
     private readonly ISignalBotClient _mockClient;
@@ -18,7 +16,6 @@ public class SignalBotReceiverTests
         // Setup default returns
         _mockClient.BaseUrl.Returns("localhost:8080");
         _mockClient.Number.Returns("+1234567890");
-        _mockClient.GlobalCancelToken.Returns(CancellationToken.None);
         _mockClient.JsonSerializerOptions.Returns(new System.Text.Json.JsonSerializerOptions());
     }
 
@@ -50,7 +47,7 @@ public class SignalBotReceiverTests
 
         // Act & Assert
         await Assert.ThrowsAsync<ArgumentNullException>(async () =>
-            await receiver.StartReceivingAsync(null!));
+            await receiver.StartReceivingAsync(null!, cancellationToken: TestContext.Current.CancellationToken));
     }
 
     [Fact]
@@ -60,23 +57,15 @@ public class SignalBotReceiverTests
         var receiver = new SignalBotReceiver(_mockClient);
 
         // Act
-        IDisposable? disposable = null;
-        try
-        {
-            disposable = await receiver.StartReceivingAsync(
-                _mockHandler,
-                cancellationToken: new CancellationTokenSource(100).Token);
-        }
-        catch
-        {
-            // Expected - WebSocket connection will fail
-        }
+        var disposable = await receiver.StartReceivingAsync(
+            _mockHandler,
+            cancellationToken: new CancellationTokenSource(10).Token);
 
         // Assert
         Assert.NotNull(disposable);
 
         // Cleanup
-        disposable.Dispose();
+        await disposable.DisposeAsync();
     }
 
     [Fact]
@@ -89,17 +78,10 @@ public class SignalBotReceiverTests
         var receiver = new SignalBotReceiver(_mockClient);
 
         // Act
-        try
-        {
-            await receiver.StartReceivingAsync(
-                _mockHandler,
-                options => options.WithTimeout(TimeSpan.FromMilliseconds(5000)),
-                new CancellationTokenSource(100).Token);
-        }
-        catch
-        {
-            // Expected - WebSocket connection will fail
-        }
+        await receiver.StartReceivingAsync(
+            _mockHandler,
+            options => options.WithTimeout(TimeSpan.FromMilliseconds(100)),
+            new CancellationTokenSource(10).Token);
 
         // Assert
         _ = _mockClient.Received(1).BaseUrl;
@@ -135,45 +117,21 @@ public class SignalBotReceiverTests
         var configuredCapacity = 0;
 
         // Act
-        try
-        {
-            await receiver.StartReceivingAsync(
-                _mockHandler,
-                options =>
-                {
-                    options
-                        .WithTimeout(TimeSpan.FromMilliseconds(5000))
-                        .WithQueueCapacity(200);
-                    configuredTimeout = 5000;
-                    configuredCapacity = 200;
-                },
-                new CancellationTokenSource(100).Token);
-        }
-        catch
-        {
-            // Expected
-        }
+        await receiver.StartReceivingAsync(
+            _mockHandler,
+            options =>
+            {
+                options
+                    .WithTimeout(TimeSpan.FromMilliseconds(100))
+                    .WithQueueCapacity(10);
+                configuredTimeout = 100;
+                configuredCapacity = 10;
+            },
+            new CancellationTokenSource(50).Token);
 
         // Assert
-        Assert.Equal(5000, configuredTimeout);
-        Assert.Equal(200, configuredCapacity);
-    }
-
-    [Fact]
-    public void Dispose_CanBeCalledMultipleTimes_WithoutException()
-    {
-        // Arrange
-        var receiver = new SignalBotReceiver(_mockClient);
-
-        // Act & Assert
-        var act = () =>
-        {
-            receiver.Dispose();
-            receiver.Dispose();
-            receiver.Dispose();
-        };
-        act.Invoke();
-        Assert.True(true);
+        Assert.Equal(100, configuredTimeout);
+        Assert.Equal(10, configuredCapacity);
     }
 
     [Fact]
@@ -182,58 +140,25 @@ public class SignalBotReceiverTests
         // Arrange
         var receiver = new SignalBotReceiver(_mockClient);
 
-        try
-        {
-            await receiver.StartReceivingAsync(
-                _mockHandler,
-                cancellationToken: new CancellationTokenSource(100).Token);
-        }
-        catch
-        {
-            // Expected
-        }
+        await receiver.StartReceivingAsync(
+            _mockHandler,
+            cancellationToken: new CancellationTokenSource(10).Token);
 
         // Act
-        receiver.Dispose();
-
-        await Task.Delay(200);
+        await receiver.DisposeAsync();
 
         // Assert
-        receiver.Dispose();
+        await receiver.DisposeAsync();
         Assert.True(true);
     }
 
     [Fact]
-    public async Task StartReceivingAsync_UsesGlobalCancellationToken()
-    {
-        // Arrange
-        using var globalCts = new CancellationTokenSource();
-        _mockClient.GlobalCancelToken.Returns(globalCts.Token);
-
-        var receiver = new SignalBotReceiver(_mockClient);
-
-        // Act
-        await globalCts.CancelAsync();
-
-        _mockHandler
-            .HandleErrorAsync(Arg.Any<ISignalBotClient>(), Arg.Any<Error>(), Arg.Any<CancellationToken>())
-            .Returns(Task.CompletedTask);
-
-        // Assert
-        await receiver.StartReceivingAsync(_mockHandler);
-
-        await _mockHandler
-            .Received(1)
-            .HandleErrorAsync(Arg.Any<ISignalBotClient>(), Arg.Any<Error>(), Arg.Any<CancellationToken>());
-    }
-
-    [Fact]
-    public void Receiver_ImplementsIDisposable()
+    public void Receiver_ImplementsIAsyncDisposable()
     {
         // Arrange
         var receiver = new SignalBotReceiver(_mockClient);
 
         // Assert
-        Assert.IsType<IDisposable>(receiver, exactMatch: false);
+        Assert.IsType<IAsyncDisposable>(receiver, exactMatch: false);
     }
 }

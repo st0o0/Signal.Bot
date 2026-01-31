@@ -6,14 +6,28 @@ using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.IO;
 using Signal.Bot.Polling;
 using Signal.Bot.Types;
 using Websocket.Client;
 
 namespace Signal.Bot;
 
-internal sealed class SignalBotReceiver : IDisposable
+internal sealed class SignalBotReceiver : IAsyncDisposable
 {
+    private static readonly Lazy<RecyclableMemoryStreamManager> StreamManager = new(() =>
+        new RecyclableMemoryStreamManager(new RecyclableMemoryStreamManager.Options
+        {
+            BlockSize = 1024, // 1KB blocks
+            LargeBufferMultiple = 1024 * 1024, // 1MB for large buffers
+            MaximumBufferSize = 16 * 1024 * 1024, // 16MB max
+            GenerateCallStacks = false, // Disable in production
+            AggressiveBufferReturn = true, // Return buffers quickly
+            MaximumLargePoolFreeBytes = 16 * 1024 * 1024 * 4, // 64MB pool max
+            MaximumSmallPoolFreeBytes = 100 * 1024 * 1024 // 100MB small pool
+        }));
+
+    private int _disposed;
     private readonly ISignalBotClient _client;
     private IWebsocketClient? _websocketClient;
     private IDisposable? _messageSubscription;
@@ -21,18 +35,13 @@ internal sealed class SignalBotReceiver : IDisposable
     private CancellationTokenSource? _disposeCts;
     private CancellationTokenSource? _linkedCts;
 
+
     public SignalBotReceiver(ISignalBotClient client)
     {
         _client = client ?? throw new ArgumentNullException(nameof(client));
     }
 
-    internal SignalBotReceiver(ISignalBotClient client, IWebsocketClient websocketClient)
-    {
-        _client = client ?? throw new ArgumentNullException(nameof(client));
-        _websocketClient = websocketClient ?? throw new ArgumentNullException(nameof(websocketClient));
-    }
-
-    public async Task<IDisposable> StartReceivingAsync(
+    public async Task<IAsyncDisposable> StartReceivingAsync(
         IReceivedMessageHandler handler,
         Action<ReceiverOptionsBuilder>? receiverOptionsConfigure = null,
         CancellationToken cancellationToken = default)
@@ -41,7 +50,6 @@ internal sealed class SignalBotReceiver : IDisposable
 
         _disposeCts = new CancellationTokenSource();
         _linkedCts = CancellationTokenSource.CreateLinkedTokenSource(
-            _client.GlobalCancelToken,
             cancellationToken,
             _disposeCts.Token);
 
@@ -49,15 +57,16 @@ internal sealed class SignalBotReceiver : IDisposable
         receiverOptionsConfigure?.Invoke(builder);
         var options = builder.Build();
 
-        var uri = new Uri($"ws://{_client.BaseUrl}/v1/receive/{_client.Number}" +
+        var uri = new Uri($"{ConvertToWebSocketUrl(_client.BaseUrl)}/v1/receive/{_client.Number}" +
                           options.AsQueryParameter().Build());
 
-        _websocketClient ??= new WebsocketClient(uri)
+        _websocketClient ??= new WebsocketClient(uri, memoryStreamManager: StreamManager.Value)
         {
             Name = "Signal.Bot",
             ConnectTimeout = TimeSpan.FromSeconds(30),
             ReconnectTimeout = TimeSpan.FromSeconds(10),
             ErrorReconnectTimeout = TimeSpan.FromSeconds(30),
+            LostReconnectTimeout = TimeSpan.FromSeconds(30),
             MessageEncoding = Encoding.UTF8
         };
 
@@ -68,7 +77,7 @@ internal sealed class SignalBotReceiver : IDisposable
                 WebSocketMessageType.Text when msg.Text is not null => msg.Text,
                 _ => null
             })
-            .Select(content => JsonSerializer.Deserialize<ReceivedMessage>(content, _client.JsonSerializerOptions))
+            .Select(content => JsonSerializer.Deserialize<ReceivedMessage>(content!, _client.JsonSerializerOptions))
             .Select(parsed => parsed!);
 
         var errors = Observable.Merge(
@@ -88,8 +97,6 @@ internal sealed class SignalBotReceiver : IDisposable
 
         _messageSubscription = messages
             .ObserveOn(TaskPoolScheduler.Default)
-            .Buffer(TimeSpan.FromMilliseconds(100), options.QueueCapacity)
-            .SelectMany(x => x.ToObservable())
             .Select(message => Observable.FromAsync(async () =>
             {
                 try
@@ -145,46 +152,47 @@ internal sealed class SignalBotReceiver : IDisposable
         return this;
     }
 
-    private void Dispose(bool disposing)
+    private static string ConvertToWebSocketUrl(string baseUrl)
     {
-        if (!disposing) return;
-        _ = Task
-            .Run(async () =>
-            {
-                try
-                {
-                    if (_websocketClient != null)
-                    {
-                        await _websocketClient
-                            .Stop(WebSocketCloseStatus.NormalClosure, "Disposed")
-                            .WaitAsync(TimeSpan.FromSeconds(3), CancellationToken.None);
-                    }
-                }
-                catch
-                {
-                    /* Swallow on cleanup */
-                }
-            }, CancellationToken.None)
-            .ContinueWith(_ =>
-            {
-                _disposeCts?.Cancel();
-                _websocketClient?.Dispose();
-                _linkedCts?.Dispose();
-                _disposeCts?.Dispose();
-                _messageSubscription?.Dispose();
-                _errorSubscription?.Dispose();
-            }, CancellationToken.None);
+        var cleanUrl = baseUrl
+            .Replace("http://", "", StringComparison.OrdinalIgnoreCase)
+            .Replace("https://", "", StringComparison.OrdinalIgnoreCase);
+
+        var scheme = baseUrl.StartsWith("https://", StringComparison.OrdinalIgnoreCase)
+            ? "wss"
+            : "ws";
+
+        return $"{scheme}://{cleanUrl}";
     }
 
-
-    public void Dispose()
+    private async ValueTask DisposeAsyncCore()
     {
-        Dispose(true);
-        GC.SuppressFinalize(this);
+        if (Interlocked.Exchange(ref _disposed, 1) != 0)
+        {
+            return;
+        }
+
+        try
+        {
+            await (_websocketClient?
+                .Stop(WebSocketCloseStatus.NormalClosure, "Disposed")
+                .WaitAsync(TimeSpan.FromSeconds(1), CancellationToken.None) ?? Task.CompletedTask);
+        }
+        catch
+        {
+            /* Swallow on cleanup */
+        }
+
+        await (_disposeCts?.CancelAsync() ?? Task.CompletedTask);
+        _linkedCts?.Dispose();
+        _disposeCts?.Dispose();
+        _websocketClient?.Dispose();
+        _messageSubscription?.Dispose();
+        _errorSubscription?.Dispose();
     }
 
-    ~SignalBotReceiver()
+    public async ValueTask DisposeAsync()
     {
-        Dispose(false);
+        await DisposeAsyncCore();
     }
 }
