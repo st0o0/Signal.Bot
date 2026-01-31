@@ -20,10 +20,12 @@ public class SignalBotClient : ISignalBotClient
     private readonly Subject<OnApiResponseArgs> _onApiResponse = new();
     private readonly Subject<Exception> _onException = new();
 
-    public SignalBotClient(SignalBotClientOptions options, HttpClient httpClient)
+    public SignalBotClient(Action<SignalBotClientOptionsBuilder>? configure = null)
     {
-        _options = options ?? throw new ArgumentNullException(nameof(options));
-        _httpClient = httpClient;
+        var builder = SignalBotClientOptionsBuilder.Create();
+        configure?.Invoke(builder);
+        _options = builder.Build();
+        _httpClient = _options.HttpClient!;
         JsonSerializerOptions = JsonBotAPI.Options;
     }
 
@@ -36,7 +38,8 @@ public class SignalBotClient : ISignalBotClient
     public IObservable<OnApiResponseArgs> OnApiResponse => _onApiResponse.AsObservable();
     public IObservable<Exception> OnException => _onException.AsObservable();
 
-    public async Task<HttpResponseMessage> SendAsync(IRequest request, IQueryParameterRegistry? queryParameters = null,
+    public async Task<HttpResponseMessage> SendAsync(IRequest request,
+        IQueryParameterRegistry? queryParameters = null,
         CancellationToken cancellationToken = default)
     {
         try
@@ -56,7 +59,9 @@ public class SignalBotClient : ISignalBotClient
             HttpResponseMessage? httpResponse;
             try
             {
-                httpResponse = await _httpClient.SendAsync(httpRequest, cancellationToken).ConfigureAwait(false);
+                httpResponse = await _httpClient
+                    .SendAsync(httpRequest, cancellationToken)
+                    .ConfigureAwait(false);
                 httpResponse.EnsureSuccessStatusCode();
             }
             catch (TaskCanceledException exception)
@@ -82,7 +87,7 @@ public class SignalBotClient : ISignalBotClient
         IQueryParameterRegistry? queryParameters = null,
         CancellationToken cancellationToken = default)
     {
-        _ = await SendAsync(request, queryParameters, cancellationToken).ConfigureAwait(false);
+        _ = await SendAsync(request, queryParameters, cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<TResponse> SendRequestAsync<TResponse>(IRequest<TResponse> request,
@@ -91,7 +96,7 @@ public class SignalBotClient : ISignalBotClient
     {
         try
         {
-            var httpResponse = await SendAsync(request, queryParameters, cancellationToken);
+            var httpResponse = await SendAsync(request, queryParameters, cancellationToken: cancellationToken);
             var content = await httpResponse.Content.ReadAsStringAsync(cancellationToken);
             return JsonSerializer.Deserialize<TResponse>(content, JsonSerializerOptions)!;
             // return await httpResponse.Content

@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,6 +18,11 @@ public interface ISignalBotClient : IDisposable
     IObservable<OnApiRequestArgs> OnApiRequest { get; }
     IObservable<OnApiResponseArgs> OnApiResponse { get; }
     IObservable<Exception> OnException { get; }
+
+    Task<HttpResponseMessage> SendAsync(
+        IRequest request,
+        IQueryParameterRegistry? queryParameters = null,
+        CancellationToken cancellationToken = default);
 
     Task SendRequestAsync(
         IRequest request,
