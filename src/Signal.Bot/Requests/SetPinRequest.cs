@@ -1,7 +1,6 @@
 namespace Signal.Bot.Requests;
 
-public class SetPinRequest(string number) : RequestBase($"v1/accounts/{number}/pin")
+public record SetPinRequest(string Number) : RequestBase($"v1/accounts/{Number}/pin")
 {
-    [JsonIgnore] public string Number => number;
     public string? Pin { get; set; }
 }

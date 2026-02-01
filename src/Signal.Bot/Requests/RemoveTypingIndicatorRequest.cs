@@ -1,17 +1,16 @@
 namespace Signal.Bot.Requests;
 
-public class SetTypingIndicatorRequest(string number) : RequestBase($"v1/typing-indicator/{number}")
+public record SetTypingIndicatorRequest(string Number) : RequestBase($"v1/typing-indicator/{Number}", HttpMethod.Put)
 {
-    [JsonIgnore] public string Number => number;
     public string? Recipient { get; set; }
+
     public string? GroupId { get; set; }
-    public override HttpMethod HttpMethod => HttpMethod.Put;
 }
 
-public class RemoveTypingIndicatorRequest(string number) : RequestBase($"v1/typing-indicator/{number}")
+public record RemoveTypingIndicatorRequest(string Number)
+    : RequestBase($"v1/typing-indicator/{Number}", HttpMethod.Delete)
 {
-    [JsonIgnore] public string Number => number;
     public string? Recipient { get; set; }
+
     public string? GroupId { get; set; }
-    public override HttpMethod HttpMethod => HttpMethod.Delete;
 }

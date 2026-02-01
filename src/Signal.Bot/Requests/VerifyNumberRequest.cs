@@ -1,9 +1,7 @@
 namespace Signal.Bot.Requests;
 
-public class VerifyNumberRequest(string number, string token)
-    : RequestBase<string>($"v1/register/{number}/verify/{token}")
+public record VerifyNumberRequest(string Number, string Token)
+    : RequestBase<string>($"v1/register/{Number}/verify/{Token}")
 {
-    [JsonIgnore] public string Number => number;
-    [JsonIgnore] public string Token => token;
     public string? Pin { get; set; }
 }

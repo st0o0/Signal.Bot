@@ -30,7 +30,7 @@ public class SignalBotClientTests
 
         // Act
         await _client.SendMessageAsync(
-            ["+0987654321"],
+            "+0987654321",
             "Hello World",
             CancellationToken.None);
 
@@ -65,7 +65,7 @@ public class SignalBotClientTests
     public async Task SendMessageAsync_NullMessage_ThrowsArgumentNullException()
     {
         await Assert.ThrowsAsync<ArgumentNullException>(() =>
-            _client.SendMessageAsync(["+0987654321"], null!,
+            _client.SendMessageAsync("+0987654321", null!,
                 cancellationToken: TestContext.Current.CancellationToken));
     }
 
@@ -75,7 +75,7 @@ public class SignalBotClientTests
     public async Task SendMessageAsync_EmptyMessage_ThrowsArgumentException(string message)
     {
         await Assert.ThrowsAsync<ArgumentException>(() =>
-            _client.SendMessageAsync(["+0987654321"], message,
+            _client.SendMessageAsync("+0987654321", message,
                 cancellationToken: TestContext.Current.CancellationToken));
     }
 
@@ -88,7 +88,9 @@ public class SignalBotClientTests
             .Returns(Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)));
 
         // Act
-        await _client.SendMessageAsync(["+1111111111", "+2222222222", "+3333333333"], "Broadcast message",
+        await _client.SendMessageAsync(builder => builder
+                .WithRecipients(["+1111111111", "+2222222222", "+3333333333"])
+                .WithMessage("Broadcast message"),
             cancellationToken: TestContext.Current.CancellationToken);
 
         // Assert
@@ -107,7 +109,7 @@ public class SignalBotClientTests
             .Returns(Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)));
 
         // Act
-        await _client.SendMessageAsync(["+0987654321"], "Message", cts.Token);
+        await _client.SendMessageAsync("+0987654321", "Message", cts.Token);
 
         // Assert
         await _httpClientMock
@@ -506,7 +508,7 @@ public class SignalBotClientTests
             .ThrowsAsync<HttpRequestException>();
 
         // Act
-        _ = await _client.SendMessageAsync(["+0987654321"], "Test message",
+        _ = await _client.SendMessageAsync("+0987654321", "Test message",
             cancellationToken: TestContext.Current.CancellationToken);
 
         // Assert
@@ -525,7 +527,7 @@ public class SignalBotClientTests
             .ThrowsAsync<TaskCanceledException>();
 
         // Act
-        _ = await _client.SendMessageAsync(["+0987654321"], "Test message", cts.Token);
+        _ = await _client.SendMessageAsync("+0987654321", "Test message", cts.Token);
 
         // Assert
         await _httpClientMock

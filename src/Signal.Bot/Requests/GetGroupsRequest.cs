@@ -2,9 +2,4 @@ using Signal.Bot.Types;
 
 namespace Signal.Bot.Requests;
 
-public class GetGroupsRequest(string number) : RequestBase<ICollection<Group>>($"v1/groups/{number}")
-{
-    [JsonIgnore] public string Number => number;
-
-    public override HttpMethod HttpMethod => HttpMethod.Get;
-}
+public record GetGroupsRequest(string Number) : RequestBase<ICollection<Group>?>($"v1/groups/{Number}",  HttpMethod.Get);
