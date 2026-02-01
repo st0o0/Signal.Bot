@@ -1,11 +1,8 @@
 namespace Signal.Bot.Requests;
 
-public class TrustIdentityRequest(string number, string verifiedNumber)
-    : RequestBase($"v1/identities/{number}/trust/{verifiedNumber}")
+public record TrustIdentityRequest(string Number, string VerifiedNumber)
+    : RequestBase($"v1/identities/{Number}/trust/{VerifiedNumber}", HttpMethod.Put)
 {
-    [JsonIgnore] public string Number => number;
-    [JsonIgnore] public string VerifiedNumber => verifiedNumber;
-    public override HttpMethod HttpMethod => HttpMethod.Put;
     public bool? TrustAllKnownKeys { get; set; }
     public string? VerifiedSafetyNumber { get; set; }
 }

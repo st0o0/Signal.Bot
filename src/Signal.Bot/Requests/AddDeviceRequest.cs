@@ -1,7 +1,6 @@
 namespace Signal.Bot.Requests;
 
-public class AddDeviceRequest(string number) : RequestBase($"v1/devices/{number}")
+public record AddDeviceRequest(string Number) : RequestBase($"v1/devices/{Number}")
 {
-    [JsonIgnore] public string Number => number;
     public string? Uri { get; set; }
 }

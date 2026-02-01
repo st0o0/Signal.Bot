@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Signal.Bot.Requests;
@@ -149,26 +150,6 @@ public class TypeSerializationTests
     }
 
     [Fact]
-    public void TestReactionMessageSerializationAndDeserialization()
-    {
-        // Arrange
-        var reactionMessage = new ReactionMessage
-        {
-            IsRemove = false,
-            Emoji = "👍"
-        };
-
-        // Act
-        var json = JsonSerializer.Serialize(reactionMessage);
-        var deserializedReactionMessage = JsonSerializer.Deserialize<ReactionMessage>(json);
-
-        // Assert
-        Assert.NotNull(deserializedReactionMessage);
-        Assert.Equal(reactionMessage.IsRemove, deserializedReactionMessage.IsRemove);
-        Assert.Equal(reactionMessage.Emoji, deserializedReactionMessage.Emoji);
-    }
-
-    [Fact]
     public void TestReceivedMessageSerializationAndDeserialization()
     {
         // Arrange
@@ -203,14 +184,14 @@ public class TypeSerializationTests
     public void TestRemoteDeleteMessageSerializationAndDeserialization()
     {
         // Arrange
-        var remoteDeleteMessage = new RemoteDelete
+        var remoteDeleteMessage = new Acknowledged
         {
             Timestamp = DateTime.Now
         };
 
         // Act
         var json = JsonSerializer.Serialize(remoteDeleteMessage);
-        var deserializedRemoteDeleteMessage = JsonSerializer.Deserialize<RemoteDelete>(json);
+        var deserializedRemoteDeleteMessage = JsonSerializer.Deserialize<Acknowledged>(json);
 
         // Assert
         Assert.NotNull(deserializedRemoteDeleteMessage);
@@ -508,7 +489,7 @@ public class TypeSerializationTests
         // Arrange
         var identity = new Identity
         {
-            Added = DateTime.Parse("2026-01-31T12:12:42.970Z"),
+            Added = DateTime.Parse("2026-01-31T12:12:42.970Z", CultureInfo.CurrentCulture),
             Fingerprint =
                 "05 b8 fc 5b 4c 3e 67 5d 9d 40 bc 82 bc aa 0a 1b ea ca be 39 dd b6 63 b7 71 96 2f 34 4d 75 3e 18 5c",
             Number = "+1234567890",

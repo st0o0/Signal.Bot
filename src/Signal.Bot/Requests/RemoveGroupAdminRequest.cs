@@ -1,8 +1,7 @@
 namespace Signal.Bot.Requests;
 
-public class RemoveGroupAdminRequest(string number, string groupId)
-    : RequestBase($"v1/groups/{number}/{groupId}/admins")
+public record RemoveGroupAdminRequest(string Number, string GroupId)
+    : RequestBase($"v1/groups/{Number}/{GroupId}/admins", HttpMethod.Delete)
 {
-    public override HttpMethod HttpMethod => HttpMethod.Delete;
     public ICollection<string>? Admins { get; set; }
 }

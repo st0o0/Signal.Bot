@@ -1,10 +1,8 @@
 namespace Signal.Bot.Requests;
 
-public class UpdateAccountSettingsRequest(string number) : RequestBase($"v1/accounts/{number}/settings")
+public record UpdateAccountSettingsRequest(string Number)
+    : RequestBase($"v1/accounts/{Number}/settings", HttpMethod.Put)
 {
-    [JsonIgnore] public string Number => number;
-    public override HttpMethod HttpMethod => HttpMethod.Put;
-
     public bool DiscoverableByNumber { get; set; }
     public bool ShareNumberWithContacts { get; set; }
 }

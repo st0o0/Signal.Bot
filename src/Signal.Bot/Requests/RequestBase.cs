@@ -1,28 +1,16 @@
 using System.Net.Http.Json;
-using System.Text.Json;
 using Signal.Bot.Serialization;
 
 namespace Signal.Bot.Requests;
 
-public abstract class RequestBase(string methodName) : IRequest
+public abstract record RequestBase(string MethodName, HttpMethod? Method = null) : IRequest
 {
-    [JsonIgnore] public virtual HttpMethod HttpMethod { get; } = HttpMethod.Post;
-
-    [JsonIgnore] public string MethodName { get; } = methodName;
-
-    public virtual HttpContent ToHttpContent() => JsonContent.Create(this, GetType(),
-        options: new JsonSerializerOptions
-        {
-            PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower,
-            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault
-        });
+    public HttpMethod HttpMethod => Method ?? HttpMethod.Post;
+    public virtual HttpContent ToHttpContent() => JsonContent.Create(this, GetType(), options: JsonBotAPI.Options);
 }
 
-public abstract class RequestBase<TResponse>(string methodName) : IRequest<TResponse>
+public abstract record RequestBase<TResponse>(string MethodName, HttpMethod? Method = null)
+    : RequestBase(MethodName, Method), IRequest<TResponse>
 {
-    [JsonIgnore] public virtual HttpMethod HttpMethod { get; } = HttpMethod.Post;
-
-    [JsonIgnore] public string MethodName { get; } = methodName;
-
-    public virtual HttpContent ToHttpContent() => JsonContent.Create(this, GetType(), options: JsonBotAPI.Options);
+    
 }

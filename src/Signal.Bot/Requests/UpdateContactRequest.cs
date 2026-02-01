@@ -1,11 +1,8 @@
 namespace Signal.Bot.Requests;
 
-public class UpdateContactRequest(string number) : RequestBase($"v1/contacts/{number}")
+public record UpdateContactRequest(string Number) : RequestBase($"v1/contacts/{Number}", HttpMethod.Put)
 {
-    [JsonIgnore] public string Number => number;
-    public override HttpMethod HttpMethod => HttpMethod.Put;
-
     public string? Name { get; set; }
     public string? Recipient { get; set; }
-    public int? ExpirationTime { get; set; }
+    [JsonPropertyName("expiration_in_seconds")] public int? ExpirationTimeInSeconds { get; set; }
 }

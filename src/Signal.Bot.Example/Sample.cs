@@ -20,15 +20,26 @@ public class Sample : BackgroundService
 
         client.OnApiResponse.Subscribe(response => logger.LogInformation("API Response: {@Response}", response));
 
-        //var t1 = await client.GetAboutAsync(stoppingToken);
-        //var t2 = await client.GetAccountsAsync(stoppingToken);
-        //var t4 = await client.GetContactsAsync(stoppingToken);
-        //var t3 = await client.GetDevicesAsync(stoppingToken);
-        //var t5 = await client.GetGroupsAsync(stoppingToken);
-        //var t6 = await client.GetIdentitiesAsync(stoppingToken);
-        //var t7 = (await client.GetAttachmentsAsync(stoppingToken)).ToArray();
-        //var t8 = await client.GetAttachmentAsync(t7[0], stoppingToken);
-        //var t9 = await client.GetStickerPacksAsync(cancellationToken: stoppingToken);
-        
+        var t1 = await client.GetAboutAsync(stoppingToken);
+        var t2 = await client.GetAccountsAsync(stoppingToken);
+        var t4 = await client.GetContactsAsync(stoppingToken);
+        var t3 = await client.GetDevicesAsync(stoppingToken);
+        var t5 = await client.GetGroupsAsync(stoppingToken);
+        var t6 = await client.GetIdentitiesAsync(stoppingToken);
+        var t7 = (await client.GetAttachmentsAsync(stoppingToken)).ToArray();
+        var t8 = await client.GetAttachmentAsync(t7[0], stoppingToken);
+        var t9 = await client.GetStickerPacksAsync(cancellationToken: stoppingToken);
+
+        // TEST SEND TO ME
+        await client.SendMessageAsync(builder =>
+            {
+                var number = Environment.GetEnvironmentVariable("NUMBER")!;
+                builder
+                    .WithMessage("TEST 12345")
+                    .WithRecipient(number)
+                    .WithNumber(number)
+                    .WithNotifySelf();
+            }
+            , stoppingToken);
     }
 }
