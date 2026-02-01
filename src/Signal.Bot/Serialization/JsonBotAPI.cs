@@ -6,11 +6,31 @@ public static class JsonBotAPI
 {
     public static JsonSerializerOptions Options { get; }
 
-    static JsonBotAPI() => Configure(Options = new JsonSerializerOptions());
+    public static JsonConverter[] Converters { get; }
 
-    public static void Configure(JsonSerializerOptions options)
+    static JsonBotAPI()
+    {
+        Converters = CreateConverters();
+        Options = new JsonSerializerOptions();
+        Configure(Options, Converters);
+    }
+
+    private static void Configure(JsonSerializerOptions options, JsonConverter[] converters)
     {
         options.PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower;
         options.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault;
+        foreach (var jsonConverter in converters)
+        {
+            options.Converters.Add(jsonConverter);
+        }
+    }
+
+    private static JsonConverter[] CreateConverters()
+    {
+        return
+        [
+            new JsonStringEnumMemberConverter(),
+            new TimestampConverter()
+        ];
     }
 }

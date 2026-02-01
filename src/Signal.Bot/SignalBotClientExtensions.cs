@@ -384,7 +384,7 @@ public static partial class SignalBotClientExtensions
         }, cancellationToken: cancellationToken);
     }
 
-    public static async Task<ICollection<SearchResponse>> SearchNumbersAsync(this ISignalBotClient client,
+    public static async Task<ICollection<Search>> SearchNumbersAsync(this ISignalBotClient client,
         IEnumerable<string> numbers,
         CancellationToken cancellationToken = default)
     {

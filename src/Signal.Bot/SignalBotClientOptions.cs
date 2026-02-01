@@ -43,10 +43,11 @@ public class SignalBotClientOptionsBuilder
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(_options.Number);
         ArgumentException.ThrowIfNullOrWhiteSpace(_options.BaseUrl);
-        if(_options.HttpClient is not null)
+        if (_options.HttpClient is not null)
         {
             return _options;
-        } 
-        return _options with { HttpClient = new HttpClient { BaseAddress = new Uri(_options.BaseUrl) }};
+        }
+
+        return _options with { HttpClient = new HttpClient { BaseAddress = new Uri(_options.BaseUrl) } };
     }
 }

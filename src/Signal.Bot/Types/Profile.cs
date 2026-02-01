@@ -1,4 +1,6 @@
-﻿namespace Signal.Bot.Types;
+﻿using System;
+
+namespace Signal.Bot.Types;
 
 public class Profile
 {
@@ -10,5 +12,5 @@ public class Profile
 
     [JsonPropertyName("has_avatar")] public bool? HasAvatar { get; set; }
 
-    [JsonPropertyName("last_updated_timestamp")] public long? LastUpdatedTimestamp { get; set; }
+    [JsonPropertyName("last_updated_timestamp")] public DateTime LastUpdated { get; set; }
 }

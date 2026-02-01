@@ -45,7 +45,7 @@ public static partial class SignalBotClientExtensions
     {
         ArgumentNullException.ThrowIfNull(client);
         ArgumentNullException.ThrowIfNull(handler);
-        
+
         _ = Task.Run(async () =>
         {
             try
@@ -121,6 +121,7 @@ public static partial class SignalBotClientExtensions
     {
         ArgumentNullException.ThrowIfNull(client);
         ArgumentNullException.ThrowIfNull(handler);
+
         var receiver = new SignalBotReceiver(client);
         return await receiver
             .StartReceivingAsync(handler, receiverOptionsConfigure, cancellationToken)

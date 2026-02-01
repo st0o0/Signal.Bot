@@ -5,6 +5,7 @@ using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using Signal.Bot.Internal;
 using Signal.Bot.Requests;
+using Signal.Bot.Serialization;
 using Signal.Bot.Types;
 
 namespace Signal.Bot.Tests;
@@ -31,11 +32,11 @@ public class SignalBotClientCompleteTests
     {
         var devices = new List<Device>
         {
-            new() { Name = "Device 1", Created = 1000 },
-            new() { Name = "Device 2", Created = 2000 },
-            new() { Name = "Device 3", Created = 3000 }
+            new() { Name = "Device 1", Created = DateTime.Now.AddMinutes(1000) },
+            new() { Name = "Device 2", Created = DateTime.Now.AddMinutes(2000) },
+            new() { Name = "Device 3", Created = DateTime.Now.AddMinutes(3000) }
         };
-        var json = JsonSerializer.Serialize(devices);
+        var json = JsonSerializer.Serialize(devices, JsonBotAPI.Options);
         var content = new StringContent(json);
 
         _httpClientMock.SendAsync(Arg.Any<HttpRequestMessage>(), Arg.Any<CancellationToken>())

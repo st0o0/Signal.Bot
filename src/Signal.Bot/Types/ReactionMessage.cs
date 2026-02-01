@@ -1,4 +1,6 @@
-﻿namespace Signal.Bot.Types;
+﻿using System;
+
+namespace Signal.Bot.Types;
 
 public class ReactionMessage
 {
@@ -8,9 +10,9 @@ public class ReactionMessage
 
     [JsonPropertyName("targetAuthorNumber")] public string? TargetAuthorNumber { get; set; }
 
-    [JsonPropertyName("targetAuthorUuid")] public string? TargetAuthorUuid { get; set; }
+    [JsonPropertyName("targetAuthorUuid")] public Guid TargetAuthorId { get; set; }
 
-    [JsonPropertyName("targetSentTimestamp")] public long? TargetSentTimestamp { get; set; }
+    [JsonPropertyName("targetSentTimestamp")] public DateTime TargetSent { get; set; }
 
     [JsonPropertyName("isRemove")] public bool? IsRemove { get; set; }
 }

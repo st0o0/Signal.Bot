@@ -1,4 +1,6 @@
 using System;
+using System.Net;
+using System.Net.Http.Json;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Text.Json;
@@ -62,6 +64,13 @@ public class SignalBotClient : ISignalBotClient
                 httpResponse = await _httpClient
                     .SendAsync(httpRequest, cancellationToken)
                     .ConfigureAwait(false);
+
+                if (httpResponse.StatusCode is HttpStatusCode.BadRequest)
+                {
+                    var error = await httpResponse.Content.ReadFromJsonAsync<Types.Error>(cancellationToken);
+                    throw new HttpRequestException(error!.Message);
+                }
+
                 httpResponse.EnsureSuccessStatusCode();
             }
             catch (TaskCanceledException exception)

@@ -4,4 +4,5 @@ public class RemoveUsernameRequest(string number) : RequestBase<object>($"v1/acc
 {
     [JsonIgnore] public string Number => number;
     public override HttpMethod HttpMethod => HttpMethod.Delete;
+    public override HttpContent ToHttpContent() => new StringContent(string.Empty);
 }

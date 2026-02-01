@@ -142,6 +142,34 @@ public class AttachmentTests
     }
 
     [Fact]
+    public async Task GetAttachmentAsync_WhenServerReturns400_ThrowsException()
+    {
+        // Arrange
+        const string attachmentId = "bad-request-test";
+        const string message = "Invalid attachment request";
+
+        var responseMessage = new HttpResponseMessage(HttpStatusCode.BadRequest)
+        {
+            Content = new StringContent(JsonSerializer.Serialize(new { error = message }))
+        };
+
+        _httpClientMock
+            .SendAsync(Arg.Any<HttpRequestMessage>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(responseMessage));
+
+        Exception catchedException = null!;
+        _client.OnException.Subscribe(ex => catchedException = ex);
+
+        // Act 
+        await Assert.ThrowsAsync<NullReferenceException>(() =>
+            _client.GetAttachmentAsync(attachmentId, cancellationToken: TestContext.Current.CancellationToken));
+
+        // Assert
+        Assert.IsType<HttpRequestException>(catchedException);
+        Assert.Equal(message, catchedException.Message);
+    }
+
+    [Fact]
     public async Task GetAttachmentAsync_LargeFile_HandlesCorrectly()
     {
         // Arrange
@@ -167,7 +195,7 @@ public class AttachmentTests
         Assert.Equal(largeData.Length, result.Length);
         Assert.Equal(largeData, result);
     }
-    
+
     [Theory]
     [InlineData("image/jpeg", new byte[] { 0xFF, 0xD8, 0xFF, 0xE0 })]
     [InlineData("image/png", new byte[] { 0x89, 0x50, 0x4E, 0x47 })]
