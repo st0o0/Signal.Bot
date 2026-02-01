@@ -4,7 +4,16 @@ namespace Signal.Bot.Polling;
 
 public sealed class ReceiverOptionsBuilder
 {
-    private ReceiverOptions _options = new(TimeSpan.FromSeconds(30), false, false, 100, false, 100);
+    private ReceiverOptions _options = new(
+        TimeSpan.FromSeconds(30),
+        false,
+        false,
+        false,
+        false,
+        false,
+        100,
+        false,
+        100);
 
     public ReceiverOptionsBuilder WithTimeout(TimeSpan timeout)
     {
@@ -21,6 +30,24 @@ public sealed class ReceiverOptionsBuilder
     public ReceiverOptionsBuilder WithIgnoreStories(bool ignoreStories)
     {
         _options = _options with { IgnoreStories = ignoreStories };
+        return this;
+    }
+
+    public ReceiverOptionsBuilder WithIgnoreTyping(bool ignoreTyping = true)
+    {
+        _options = _options with { IgnoreTyping = ignoreTyping };
+        return this;
+    }
+
+    public ReceiverOptionsBuilder WithIgnoreReceipt(bool ignoreReceipt = true)
+    {
+        _options = _options with { IgnoreReceipt = ignoreReceipt };
+        return this;
+    }
+
+    public ReceiverOptionsBuilder WithIgnoreSync(bool ignoreSync = true)
+    {
+        _options = _options with { IgnoreSync = ignoreSync };
         return this;
     }
 
@@ -52,6 +79,9 @@ public record ReceiverOptions(
     TimeSpan Timeout,
     bool IgnoreAttachments,
     bool IgnoreStories,
+    bool IgnoreTyping,
+    bool IgnoreReceipt,
+    bool IgnoreSync,
     int MaxMessages,
     bool SendReadReceipts,
     int QueueCapacity);

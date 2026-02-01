@@ -480,12 +480,347 @@ public class SignalBotReceiverIntegrationTests : IAsyncDisposable
         await receiver.DisposeAsync();
     }
 
+    [Fact(Timeout = 10000)]
+    public async Task Should_Filter_Receipt_Messages_When_IgnoreReceipt_Is_True()
+    {
+        // Arrange
+        var receivedMessages = new System.Collections.Concurrent.ConcurrentBag<ReceivedMessage>();
+        var dataMessageTcs = new TaskCompletionSource<bool>();
+
+        _mockHandler.HandleAsync(
+                Arg.Any<ISignalBotClient>(),
+                Arg.Any<ReceivedMessage>(),
+                Arg.Any<CancellationToken>())
+            .Returns(Task.CompletedTask)
+            .AndDoes(callInfo =>
+            {
+                var msg = callInfo.ArgAt<ReceivedMessage>(1);
+                receivedMessages.Add(msg);
+                if (msg.Envelope?.DataMessage != null)
+                {
+                    dataMessageTcs.SetResult(true);
+                }
+            });
+
+        await _testServer.StartAsync();
+
+        var receiver = new SignalBotReceiver(_mockClient);
+        await receiver.StartReceivingAsync(
+            _mockHandler,
+            options => options.WithIgnoreReceipt(),
+            cancellationToken: TestContext.Current.CancellationToken);
+
+        // Act
+        var receiptMessage = CreateTestReceiptMessage();
+        var dataMessage = CreateTestReceivedMessage("Normal message");
+
+        await _testServer.SendMessageAsync(JsonSerializer.Serialize(receiptMessage));
+        await _testServer.SendMessageAsync(JsonSerializer.Serialize(dataMessage));
+
+        // Assert
+        await dataMessageTcs.Task;
+
+        Assert.Single(receivedMessages);
+        Assert.NotNull(receivedMessages.First().Envelope?.DataMessage);
+        Assert.Null(receivedMessages.First().Envelope?.ReceiptMessage);
+
+        await receiver.DisposeAsync();
+    }
+
+    [Fact(Timeout = 10000)]
+    public async Task Should_Not_Filter_Receipt_Messages_When_IgnoreReceipt_Is_False()
+    {
+        // Arrange
+        var messageCount = 0;
+        var allMessagesReceivedTcs = new TaskCompletionSource<bool>();
+
+        _mockHandler.HandleAsync(
+                Arg.Any<ISignalBotClient>(),
+                Arg.Any<ReceivedMessage>(),
+                Arg.Any<CancellationToken>())
+            .Returns(Task.CompletedTask)
+            .AndDoes(_ =>
+            {
+                messageCount++;
+                if (Interlocked.Increment(ref messageCount) == 2)
+                {
+                    allMessagesReceivedTcs.SetResult(true);
+                }
+            });
+
+        await _testServer.StartAsync();
+
+        var receiver = new SignalBotReceiver(_mockClient);
+        await receiver.StartReceivingAsync(
+            _mockHandler,
+            options => options.WithIgnoreReceipt(),
+            cancellationToken: TestContext.Current.CancellationToken);
+
+        // Act
+        var receiptMessage = CreateTestReceiptMessage();
+        var dataMessage = CreateTestReceivedMessage("Normal message");
+
+        await _testServer.SendMessageAsync(JsonSerializer.Serialize(receiptMessage));
+        await _testServer.SendMessageAsync(JsonSerializer.Serialize(dataMessage));
+
+        // Assert
+        await allMessagesReceivedTcs.Task;
+
+        Assert.Equal(2, messageCount);
+
+        await receiver.DisposeAsync();
+    }
+
+    [Fact(Timeout = 10000)]
+    public async Task Should_Filter_Typing_Messages_When_IgnoreTyping_Is_True()
+    {
+        // Arrange
+        var receivedMessages = new System.Collections.Concurrent.ConcurrentBag<ReceivedMessage>();
+        var dataMessageTcs = new TaskCompletionSource<bool>();
+
+        _mockHandler.HandleAsync(
+                Arg.Any<ISignalBotClient>(),
+                Arg.Any<ReceivedMessage>(),
+                Arg.Any<CancellationToken>())
+            .Returns(Task.CompletedTask)
+            .AndDoes(callInfo =>
+            {
+                var msg = callInfo.ArgAt<ReceivedMessage>(1);
+                receivedMessages.Add(msg);
+                if (msg.Envelope?.DataMessage != null)
+                {
+                    dataMessageTcs.SetResult(true);
+                }
+            });
+
+        await _testServer.StartAsync();
+
+        var receiver = new SignalBotReceiver(_mockClient);
+        await receiver.StartReceivingAsync(
+            _mockHandler,
+            options => options.WithIgnoreTyping(),
+            cancellationToken: TestContext.Current.CancellationToken);
+
+        // Act
+        var typingMessage = CreateTestTypingMessage();
+        var dataMessage = CreateTestReceivedMessage("Normal message");
+
+        await _testServer.SendMessageAsync(JsonSerializer.Serialize(typingMessage));
+        await _testServer.SendMessageAsync(JsonSerializer.Serialize(dataMessage));
+
+        // Assert
+        await dataMessageTcs.Task;
+        await Task.Delay(100);
+
+        Assert.Single(receivedMessages);
+        Assert.NotNull(receivedMessages.First().Envelope?.DataMessage);
+        Assert.Null(receivedMessages.First().Envelope?.TypingMessage);
+
+        await receiver.DisposeAsync();
+    }
+
+    [Fact(Timeout = 10000)]
+    public async Task Should_Filter_Sync_Messages_When_IgnoreSync_Is_True()
+    {
+        // Arrange
+        var receivedMessages = new System.Collections.Concurrent.ConcurrentBag<ReceivedMessage>();
+        var dataMessageTcs = new TaskCompletionSource<bool>();
+
+        _mockHandler.HandleAsync(
+                Arg.Any<ISignalBotClient>(),
+                Arg.Any<ReceivedMessage>(),
+                Arg.Any<CancellationToken>())
+            .Returns(Task.CompletedTask)
+            .AndDoes(callInfo =>
+            {
+                var msg = callInfo.ArgAt<ReceivedMessage>(1);
+                receivedMessages.Add(msg);
+                if (msg.Envelope?.DataMessage != null)
+                {
+                    dataMessageTcs.SetResult(true);
+                }
+            });
+
+        await _testServer.StartAsync();
+
+        var receiver = new SignalBotReceiver(_mockClient);
+        await receiver.StartReceivingAsync(
+            _mockHandler,
+            options => options.WithIgnoreSync(),
+            cancellationToken: TestContext.Current.CancellationToken);
+
+        // Act
+        var syncMessage = CreateTestSyncMessage();
+        var dataMessage = CreateTestReceivedMessage("Normal message");
+
+        await _testServer.SendMessageAsync(JsonSerializer.Serialize(syncMessage));
+        await _testServer.SendMessageAsync(JsonSerializer.Serialize(dataMessage));
+
+        // Assert
+        await dataMessageTcs.Task;
+        await Task.Delay(100);
+
+        Assert.Single(receivedMessages);
+        Assert.NotNull(receivedMessages.First().Envelope?.DataMessage);
+        Assert.Null(receivedMessages.First().Envelope?.SyncMessage);
+
+        await receiver.DisposeAsync();
+    }
+
+    [Fact(Timeout = 10000)]
+    public async Task Should_Filter_Multiple_Message_Types_When_Multiple_Options_Are_True()
+    {
+        // Arrange
+        var receivedMessages = new System.Collections.Concurrent.ConcurrentBag<ReceivedMessage>();
+        var dataMessageTcs = new TaskCompletionSource<bool>();
+
+        _mockHandler.HandleAsync(
+                Arg.Any<ISignalBotClient>(),
+                Arg.Any<ReceivedMessage>(),
+                Arg.Any<CancellationToken>())
+            .Returns(Task.CompletedTask)
+            .AndDoes(callInfo =>
+            {
+                var msg = callInfo.ArgAt<ReceivedMessage>(1);
+                receivedMessages.Add(msg);
+                if (msg.Envelope?.DataMessage != null)
+                {
+                    dataMessageTcs.SetResult(true);
+                }
+            });
+
+        await _testServer.StartAsync();
+
+        var receiver = new SignalBotReceiver(_mockClient);
+        await receiver.StartReceivingAsync(
+            _mockHandler,
+            options => options.WithIgnoreTyping().WithIgnoreSync().WithIgnoreReceipt(),
+            cancellationToken: TestContext.Current.CancellationToken);
+
+        // Act
+        await _testServer.SendMessageAsync(JsonSerializer.Serialize(CreateTestReceiptMessage()));
+        await _testServer.SendMessageAsync(JsonSerializer.Serialize(CreateTestTypingMessage()));
+        await _testServer.SendMessageAsync(JsonSerializer.Serialize(CreateTestSyncMessage()));
+        await _testServer.SendMessageAsync(JsonSerializer.Serialize(CreateTestReceivedMessage("Data message")));
+
+        // Assert
+        await dataMessageTcs.Task;
+        await Task.Delay(100);
+
+        Assert.Single(receivedMessages);
+        Assert.NotNull(receivedMessages.First().Envelope?.DataMessage);
+        Assert.Equal("Data message", receivedMessages.First().Envelope?.DataMessage?.Body);
+
+        await receiver.DisposeAsync();
+    }
+
+    [Fact(Timeout = 10000)]
+    public async Task Should_Not_Filter_Any_Messages_When_All_Options_Are_False()
+    {
+        // Arrange
+        var messageCount = 0;
+        var allMessagesReceivedTcs = new TaskCompletionSource<bool>();
+
+        _mockHandler.HandleAsync(
+                Arg.Any<ISignalBotClient>(),
+                Arg.Any<ReceivedMessage>(),
+                Arg.Any<CancellationToken>())
+            .Returns(Task.CompletedTask)
+            .AndDoes(_ =>
+            {
+                if (Interlocked.Increment(ref messageCount) == 4)
+                {
+                    allMessagesReceivedTcs.SetResult(true);
+                }
+            });
+
+        await _testServer.StartAsync();
+
+        var receiver = new SignalBotReceiver(_mockClient);
+        await receiver.StartReceivingAsync(
+            _mockHandler,
+            builder => builder.WithIgnoreReceipt(false).WithIgnoreSync(false).WithIgnoreTyping(false),
+            cancellationToken: TestContext.Current.CancellationToken);
+
+        // Act
+        await _testServer.SendMessageAsync(JsonSerializer.Serialize(CreateTestReceiptMessage()));
+        await _testServer.SendMessageAsync(JsonSerializer.Serialize(CreateTestTypingMessage()));
+        await _testServer.SendMessageAsync(JsonSerializer.Serialize(CreateTestSyncMessage()));
+        await _testServer.SendMessageAsync(JsonSerializer.Serialize(CreateTestReceivedMessage("Data message")));
+
+        // Assert
+        await allMessagesReceivedTcs.Task;
+        await Task.Delay(100);
+
+        Assert.Equal(4, messageCount);
+
+        await receiver.DisposeAsync();
+    }
+
+// Helper methods to create test messages
+    private static ReceivedMessage CreateTestReceiptMessage()
+    {
+        return new ReceivedMessage
+        {
+            Account = "+1234567890",
+            Envelope = new Envelope
+            {
+                Source = "+9876543210",
+                SourceNumber = "+9876543210",
+                SourceId = Guid.NewGuid(),
+                Timestamp = DateTime.UtcNow,
+                ReceiptMessage = new ReceiptMessage
+                {
+                    Timestamps = [DateTime.UtcNow]
+                }
+            }
+        };
+    }
+
+    private static ReceivedMessage CreateTestTypingMessage()
+    {
+        return new ReceivedMessage
+        {
+            Account = "+1234567890",
+            Envelope = new Envelope
+            {
+                Source = "+9876543210",
+                SourceNumber = "+9876543210",
+                SourceId = Guid.NewGuid(),
+                Timestamp = DateTime.UtcNow,
+                TypingMessage = new TypingMessage
+                {
+                    Action = "STARTED",
+                    Timestamp = DateTime.UtcNow
+                }
+            }
+        };
+    }
+
+    private static ReceivedMessage CreateTestSyncMessage()
+    {
+        return new ReceivedMessage
+        {
+            Account = "+1234567890",
+            Envelope = new Envelope
+            {
+                Source = "+9876543210",
+                SourceNumber = "+9876543210",
+                SourceId = Guid.NewGuid(),
+                Timestamp = DateTime.UtcNow,
+                SyncMessage = new SyncMessage
+                {
+                    ReadMessages = [new ReadMessage { Sender = string.Empty, Timestamp = DateTime.UtcNow }]
+                }
+            }
+        };
+    }
+
     private static ReceivedMessage CreateTestReceivedMessage(string body)
     {
         return new ReceivedMessage
         {
             Account = "+1234567890",
-            Subscription = 0,
             Envelope = new Envelope
             {
                 Source = "+9876543210",

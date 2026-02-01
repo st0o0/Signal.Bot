@@ -6,7 +6,7 @@ public class DataMessage
 {
     [JsonPropertyName("timestamp")] public DateTime Timestamp { get; set; }
 
-    [JsonPropertyName("body")] public string? Body { get; set; }
+    [JsonPropertyName("message")] public string? Body { get; set; }
 
     [JsonPropertyName("attachments")] public List<Attachment>? Attachments { get; set; }
 
@@ -21,6 +21,10 @@ public class DataMessage
     [JsonPropertyName("readMessages")] public List<ReadMessage>? ReadMessages { get; set; }
 
     [JsonPropertyName("viewOnce")] public bool? ViewOnce { get; set; }
+
+    [JsonPropertyName("expiresInSeconds")] public int? ExpiresInSeconds { get; set; }
+
+    [JsonPropertyName("isExpirationUpdate")] public bool? IsExpirationUpdate { get; set; }
 
     [JsonPropertyName("previews")] public List<PreviewData>? Previews { get; set; }
 }

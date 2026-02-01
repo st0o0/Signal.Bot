@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.InteropServices.ComTypes;
 using System.Threading;
 using System.Threading.Tasks;
 using Signal.Bot.Internal;
@@ -48,15 +49,16 @@ public static partial class SignalBotClientExtensions
 
         _ = Task.Run(async () =>
         {
+            IAsyncDisposable? disposable = null;
             try
             {
-                await using var disposable = await client
+                disposable = await client
                     .ReceiveAsync(handler, receiverOptionsConfigure, cancellationToken)
                     .ConfigureAwait(false);
-            }
-            catch (OperationCanceledException)
-            {
-                // normal shutdown
+
+                await Task
+                    .Delay(Timeout.Infinite, cancellationToken)
+                    .ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -65,6 +67,13 @@ public static partial class SignalBotClientExtensions
                         new Error(ex, ErrorSource.FatalError),
                         cancellationToken)
                     .ConfigureAwait(false);
+            }
+            finally
+            {
+                if (disposable is not null)
+                {
+                    await disposable.DisposeAsync().ConfigureAwait(false);
+                }
             }
         }, CancellationToken.None);
     }

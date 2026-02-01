@@ -1,8 +1,11 @@
 using Signal.Bot;
 using Signal.Bot.Example;
+using Signal.Bot.Polling;
 
 var builder = WebApplication.CreateBuilder(args);
 Console.WriteLine($"Phone {Environment.GetEnvironmentVariable("NUMBER")!}");
+builder.Services.AddSingleton<IReceivedMessageHandler, TestHandler>();
+
 builder.Services
     .AddHttpClient("signalbot_client", client => client.BaseAddress = new Uri("http://localhost:1337"))
     .AddTypedClient<ISignalBotClient>((httpClient, _) =>
