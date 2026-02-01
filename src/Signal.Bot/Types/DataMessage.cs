@@ -6,7 +6,7 @@ public class DataMessage
 {
     [JsonPropertyName("timestamp")] public DateTime Timestamp { get; set; }
 
-    [JsonPropertyName("message")] public string? Body { get; set; }
+    [JsonPropertyName("message")] public string? Message { get; set; }
 
     [JsonPropertyName("attachments")] public List<Attachment>? Attachments { get; set; }
 

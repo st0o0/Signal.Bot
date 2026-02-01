@@ -163,7 +163,7 @@ public class TypeSerializationTests
                 Source = "msg123",
                 DataMessage = new DataMessage
                 {
-                    Body = "Hello, World!"
+                    Message = "Hello, World!"
                 }
             }
         };
@@ -177,7 +177,7 @@ public class TypeSerializationTests
         Assert.NotNull(deserializedReceivedMessage.Envelope);
         Assert.NotNull(deserializedReceivedMessage.Envelope.DataMessage);
         Assert.Equal(receivedMessage.Account, deserializedReceivedMessage.Account);
-        Assert.Equal(receivedMessage.Envelope.DataMessage.Body, deserializedReceivedMessage.Envelope.DataMessage.Body);
+        Assert.Equal(receivedMessage.Envelope.DataMessage.Message, deserializedReceivedMessage.Envelope.DataMessage.Message);
     }
 
     [Fact]
