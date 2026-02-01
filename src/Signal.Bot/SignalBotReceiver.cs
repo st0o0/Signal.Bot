@@ -78,6 +78,9 @@ internal sealed class SignalBotReceiver : IAsyncDisposable
                 _ => null
             })
             .Select(content => JsonSerializer.Deserialize<ReceivedMessage>(content!, _client.JsonSerializerOptions))
+            .Where(msg => msg?.Envelope?.ReceiptMessage is null || !options.IgnoreReceipt)
+            .Where(msg => msg?.Envelope?.TypingMessage is null || !options.IgnoreTyping)
+            .Where(msg => msg?.Envelope?.SyncMessage is null || !options.IgnoreSync)
             .Select(parsed => parsed!);
 
         var errors = Observable.Merge(
