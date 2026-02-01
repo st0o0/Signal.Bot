@@ -81,7 +81,7 @@ public class SignalBotReceiverIntegrationTests : IAsyncDisposable
         var completed = await messageReceivedTcs.Task;
 
         Assert.NotNull(completed);
-        Assert.Equal("Hello from server!", completed.Envelope?.DataMessage?.Body);
+        Assert.Equal("Hello from server!", completed.Envelope?.DataMessage?.Message);
 
         await receiver.DisposeAsync();
     }
@@ -115,7 +115,7 @@ public class SignalBotReceiverIntegrationTests : IAsyncDisposable
         var completed = await messageReceivedTcs.Task;
 
         Assert.NotNull(completed);
-        Assert.Equal("Binary message!", completed.Envelope?.DataMessage?.Body);
+        Assert.Equal("Binary message!", completed.Envelope?.DataMessage?.Message);
 
         await receiver.DisposeAsync();
     }
@@ -136,7 +136,7 @@ public class SignalBotReceiverIntegrationTests : IAsyncDisposable
             .AndDoes(callInfo =>
             {
                 var msg = callInfo.ArgAt<ReceivedMessage>(1);
-                receivedMessages.Add(msg.Envelope?.DataMessage?.Body ?? "");
+                receivedMessages.Add(msg.Envelope?.DataMessage?.Message ?? "");
 
                 if (Interlocked.Increment(ref messageCount) == 5)
                 {
@@ -437,7 +437,7 @@ public class SignalBotReceiverIntegrationTests : IAsyncDisposable
         var completed = await messageReceivedTcs.Task;
 
         Assert.NotNull(completed);
-        Assert.Equal("Hello group!", completed.Envelope?.DataMessage?.Body);
+        Assert.Equal("Hello group!", completed.Envelope?.DataMessage?.Message);
         Assert.Equal("Test Group", completed.Envelope?.DataMessage?.GroupV2?.Name);
         Assert.Equal("group-123", completed.Envelope?.DataMessage?.GroupV2?.Id);
 
@@ -610,7 +610,6 @@ public class SignalBotReceiverIntegrationTests : IAsyncDisposable
 
         // Assert
         await dataMessageTcs.Task;
-        await Task.Delay(100);
 
         Assert.Single(receivedMessages);
         Assert.NotNull(receivedMessages.First().Envelope?.DataMessage);
@@ -658,7 +657,6 @@ public class SignalBotReceiverIntegrationTests : IAsyncDisposable
 
         // Assert
         await dataMessageTcs.Task;
-        await Task.Delay(100);
 
         Assert.Single(receivedMessages);
         Assert.NotNull(receivedMessages.First().Envelope?.DataMessage);
@@ -705,11 +703,10 @@ public class SignalBotReceiverIntegrationTests : IAsyncDisposable
 
         // Assert
         await dataMessageTcs.Task;
-        await Task.Delay(100);
-
+        
         Assert.Single(receivedMessages);
         Assert.NotNull(receivedMessages.First().Envelope?.DataMessage);
-        Assert.Equal("Data message", receivedMessages.First().Envelope?.DataMessage?.Body);
+        Assert.Equal("Data message", receivedMessages.First().Envelope?.DataMessage?.Message);
 
         await receiver.DisposeAsync();
     }
@@ -750,7 +747,6 @@ public class SignalBotReceiverIntegrationTests : IAsyncDisposable
 
         // Assert
         await allMessagesReceivedTcs.Task;
-        await Task.Delay(100);
 
         Assert.Equal(4, messageCount);
 
@@ -816,7 +812,7 @@ public class SignalBotReceiverIntegrationTests : IAsyncDisposable
         };
     }
 
-    private static ReceivedMessage CreateTestReceivedMessage(string body)
+    private static ReceivedMessage CreateTestReceivedMessage(string message)
     {
         return new ReceivedMessage
         {
@@ -830,7 +826,7 @@ public class SignalBotReceiverIntegrationTests : IAsyncDisposable
                 DataMessage = new DataMessage
                 {
                     Timestamp = DateTime.UtcNow,
-                    Body = body
+                    Message = message
                 }
             }
         };
