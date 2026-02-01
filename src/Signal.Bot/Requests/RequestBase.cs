@@ -1,5 +1,6 @@
 using System.Net.Http.Json;
 using System.Text.Json;
+using Signal.Bot.Serialization;
 
 namespace Signal.Bot.Requests;
 
@@ -23,10 +24,5 @@ public abstract class RequestBase<TResponse>(string methodName) : IRequest<TResp
 
     [JsonIgnore] public string MethodName { get; } = methodName;
 
-    public virtual HttpContent ToHttpContent() => JsonContent.Create(this, GetType(),
-        options: new JsonSerializerOptions
-        {
-            PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower,
-            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault
-        });
+    public virtual HttpContent ToHttpContent() => JsonContent.Create(this, GetType(), options: JsonBotAPI.Options);
 }

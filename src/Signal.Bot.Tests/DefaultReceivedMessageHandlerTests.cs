@@ -23,7 +23,7 @@ public class DefaultReceivedMessageHandlerTests
         _handler = new DefaultReceivedMessageHandler(_updateHandlerMock, _errorHandlerMock);
 
         _clientMock = Substitute.For<ISignalBotClient>();
-        _message = new ReceivedMessage { Envelope = new Envelope { SourceNumber = "test", SourceUuid = "test" } };
+        _message = new ReceivedMessage { Envelope = new Envelope { SourceNumber = "test", SourceId = Guid.NewGuid() } };
         _error = new Error(null, ErrorSource.FatalError);
         _cancellationToken = CancellationToken.None;
     }

@@ -490,11 +490,11 @@ public class SignalBotReceiverIntegrationTests : IAsyncDisposable
             {
                 Source = "+9876543210",
                 SourceNumber = "+9876543210",
-                SourceUuid = Guid.NewGuid().ToString(),
-                Timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
+                SourceId = Guid.NewGuid(),
+                Timestamp = DateTime.UtcNow,
                 DataMessage = new DataMessage
                 {
-                    Timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
+                    Timestamp = DateTime.UtcNow,
                     Body = body
                 }
             }

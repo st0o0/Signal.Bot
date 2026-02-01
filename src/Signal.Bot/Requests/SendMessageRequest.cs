@@ -1,3 +1,6 @@
+using System;
+using System.Runtime.Serialization;
+
 namespace Signal.Bot.Requests;
 
 public class SendMessageRequest : RequestBase<SendMessage>
@@ -6,8 +9,7 @@ public class SendMessageRequest : RequestBase<SendMessage>
     {
     }
 
-    [JsonPropertyName("base64_attachments")]
-    public ICollection<string>? Attachments { get; set; }
+    [JsonPropertyName("base64_attachments")] public ICollection<string>? Attachments { get; set; }
 
     [JsonPropertyName("edit_timestamp")] public int? EditTimestamp { get; set; }
 
@@ -33,24 +35,14 @@ public class SendMessageRequest : RequestBase<SendMessage>
 
     [JsonPropertyName("sticker")] public string? Sticker { get; set; }
 
-    [JsonPropertyName("text_mode")] public SendMessageV2TextMode? TextMode { get; set; }
+    [JsonPropertyName("text_mode")] public TextMode? TextMode { get; set; }
 
     [JsonPropertyName("view_once")] public bool? ViewOnce { get; set; }
 }
 
-
-public class SendMessageError : SendMessage
-{
-    [JsonPropertyName("account")] public string? Account { get; set; } = null;
-
-    [JsonPropertyName("challenge_tokens")] public ICollection<string>? ChallengeTokens { get; set; } = null;
-
-    [JsonPropertyName("error")] public string? Error { get; set; } = null;
-}
-
 public class SendMessage
 {
-    [JsonPropertyName("timestamp")] public string? Timestamp { get; set; } = null;
+    [JsonPropertyName("timestamp")] public DateTime Timestamp { get; set; }
 }
 
 public class MessageMention
@@ -73,11 +65,9 @@ public class LinkPreviewType
     [JsonPropertyName("url")] public string? Url { get; set; } = null;
 }
 
-public enum SendMessageV2TextMode
+public enum TextMode
 {
-    [System.Runtime.Serialization.EnumMember(Value = "normal")]
-    Normal = 0,
+    [EnumMember(Value = "normal")] Normal = 0,
 
-    [System.Runtime.Serialization.EnumMember(Value = "styled")]
-    Styled = 1,
+    [EnumMember(Value = "styled")] Styled = 1,
 }

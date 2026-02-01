@@ -1,4 +1,6 @@
-﻿namespace Signal.Bot.Types;
+﻿using System;
+
+namespace Signal.Bot.Types;
 
 public class ReceivedMessage
 {
@@ -15,9 +17,9 @@ public class Envelope
 
     [JsonPropertyName("sourceNumber")] public string? SourceNumber { get; set; }
 
-    [JsonPropertyName("sourceUuid")] public string? SourceUuid { get; set; }
+    [JsonPropertyName("sourceUuid")] public Guid SourceId { get; set; }
 
-    [JsonPropertyName("timestamp")] public long Timestamp { get; set; }
+    [JsonPropertyName("timestamp")] public DateTime Timestamp { get; set; }
 
     [JsonPropertyName("dataMessage")] public DataMessage? DataMessage { get; set; }
 
@@ -30,7 +32,7 @@ public class Envelope
 
 public class DataMessage
 {
-    [JsonPropertyName("timestamp")] public long? Timestamp { get; set; }
+    [JsonPropertyName("timestamp")] public DateTime Timestamp { get; set; }
 
     [JsonPropertyName("body")] public string? Body { get; set; }
 
@@ -58,14 +60,14 @@ public class SyncMessage
 
 public class TypingMessage
 {
-    [JsonPropertyName("timestamp")] public long? Timestamp { get; set; }
+    [JsonPropertyName("timestamp")] public DateTime Timestamp { get; set; }
 
     [JsonPropertyName("action")] public string? Action { get; set; }
 }
 
 public class ReceiptMessage
 {
-    [JsonPropertyName("timestamps")] public List<long>? Timestamps { get; set; }
+    [JsonPropertyName("timestamps")] public List<DateTime>? Timestamps { get; set; }
 
     [JsonPropertyName("type")] public string? Type { get; set; }
 }
@@ -98,7 +100,7 @@ public class ReactionData
 
     [JsonPropertyName("targetAuthor")] public string? TargetAuthor { get; set; }
 
-    [JsonPropertyName("targetSentTimestamp")] public long? TargetSentTimestamp { get; set; }
+    [JsonPropertyName("targetSentTimestamp")] public DateTime TargetSent { get; set; }
 }
 
 public class Mention
@@ -107,25 +109,25 @@ public class Mention
 
     [JsonPropertyName("length")] public int? Length { get; set; }
 
-    [JsonPropertyName("uuid")] public string? Uuid { get; set; }
+    [JsonPropertyName("uuid")] public Guid Id { get; set; }
 }
 
 public class QuoteData
 {
-    [JsonPropertyName("id")] public long? Id { get; set; }
+    [JsonPropertyName("id")] public Guid Id { get; set; }
 
     [JsonPropertyName("author")] public string? Author { get; set; }
 
     [JsonPropertyName("text")] public string? Text { get; set; }
 
-    [JsonPropertyName("timestamp")] public long? Timestamp { get; set; }
+    [JsonPropertyName("timestamp")] public DateTime Timestamp { get; set; }
 }
 
 public class ReadMessage
 {
     [JsonPropertyName("sender")] public string? Sender { get; set; }
 
-    [JsonPropertyName("timestamp")] public long? Timestamp { get; set; }
+    [JsonPropertyName("timestamp")] public DateTime Timestamp { get; set; }
 }
 
 public class PreviewData

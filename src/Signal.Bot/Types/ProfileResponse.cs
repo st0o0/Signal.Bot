@@ -1,4 +1,6 @@
-﻿namespace Signal.Bot.Types;
+﻿using System;
+
+namespace Signal.Bot.Types;
 
 public class ProfileResponse
 {
@@ -18,5 +20,5 @@ public class ProfileResponse
 
     [JsonPropertyName("capabilities")] public ProfileCapabilities? Capabilities { get; set; }
 
-    [JsonPropertyName("uuid")] public string? Uuid { get; set; }
+    [JsonPropertyName("uuid")] public Guid Id { get; set; }
 }

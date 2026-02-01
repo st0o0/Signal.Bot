@@ -1,10 +1,12 @@
-﻿namespace Signal.Bot.Types;
+﻿using System;
+
+namespace Signal.Bot.Types;
 
 public class Contact
 {
-    [JsonPropertyName("number")] public string? Number { get; set; }
+    [JsonPropertyName("uuid")] public Guid Id { get; set; }
 
-    [JsonPropertyName("uuid")] public string? Uuid { get; set; }
+    [JsonPropertyName("number")] public string? Number { get; set; }
 
     [JsonPropertyName("name")] public string? Name { get; set; }
 
