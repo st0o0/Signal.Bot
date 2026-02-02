@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Signal.Bot.Internal;
@@ -136,7 +136,7 @@ public static partial class SignalBotClientExtensions
             .ConfigureAwait(false);
     }
 
-    public static IQueryParameterRegistry AsQueryParameter(this ReceiverOptions options)
+    internal static IQueryParameterRegistry AsQueryParameter(this ReceiverOptions options)
     {
         var result = new QueryParameterRegistry();
         result.Add("timeout", options.Timeout, x => x.Seconds.ToString());

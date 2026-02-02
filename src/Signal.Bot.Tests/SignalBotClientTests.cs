@@ -303,9 +303,14 @@ public class SignalBotClientTests
             .SendAsync(Arg.Any<HttpRequestMessage>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)));
 
+        var testBytes = new byte[]
+        {
+            0x00, 0x01, 0x02, 0x10, 0x20,
+            0x7F, 0x80, 0xAA, 0xFE, 0xFF
+        };
+
         // Act
-        await _client.UpdateProfileAsync(base64Avatar: "base64data",
-            cancellationToken: TestContext.Current.CancellationToken);
+        await _client.UpdateProfileAsync(avatar: testBytes, cancellationToken: TestContext.Current.CancellationToken);
 
         // Assert
         await _httpClientMock
@@ -420,20 +425,27 @@ public class SignalBotClientTests
 
     #region GetAttachmentAsync Tests
 
-    //[Fact]
+    [Fact]
     public async Task GetAttachmentAsync_ValidAttachmentId_CallsHttpClient()
     {
         // Arrange
         const string attachmentId = "test-attachment-id";
+        var testBytes = new byte[]
+        {
+            0x00, 0x01, 0x02, 0x10, 0x20,
+            0x7F, 0x80, 0xAA, 0xFE, 0xFF
+        };
+
         _httpClientMock
             .SendAsync(Arg.Any<HttpRequestMessage>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)
             {
-                Content = new StringContent("attachment-data")
+                Content = new ByteArrayContent(testBytes)
             }));
 
         // Act
-        var result = await _client.GetAttachmentAsync(attachmentId);
+        var result =
+            await _client.GetAttachmentAsync(attachmentId, cancellationToken: TestContext.Current.CancellationToken);
 
         // Assert
         Assert.NotNull(result);

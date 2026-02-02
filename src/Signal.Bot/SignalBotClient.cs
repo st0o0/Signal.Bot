@@ -1,9 +1,6 @@
-using System;
 using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
-using System.Threading;
-using System.Threading.Tasks;
 using Signal.Bot.Args;
 using Signal.Bot.Exceptions;
 using Signal.Bot.Internal;
@@ -46,11 +43,6 @@ public class SignalBotClient : ISignalBotClient
         try
         {
             var methodName = request.MethodName;
-            queryParameters ??= new QueryParameterRegistry();
-            if (request is SearchNumbersRequest { Numbers: not null } searchRequest)
-            {
-                queryParameters.AddRange("numbers", searchRequest.Numbers);
-            }
 
             var httpRequest = new HttpRequestMessage(request.HttpMethod, methodName)
             {

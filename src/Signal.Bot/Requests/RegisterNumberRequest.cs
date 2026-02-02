@@ -2,6 +2,7 @@ namespace Signal.Bot.Requests;
 
 public record RegisterNumberRequest(string Number) : RequestBase($"v1/register/{Number}")
 {
-    public string? Captcha { get; set; }
-    public bool? UseVoice { get; set; }
+    [JsonPropertyName("captcha")] public string? Captcha { get; set; }
+    
+    [JsonPropertyName("use_voice")] public bool? UseVoice { get; set; }
 }

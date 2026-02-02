@@ -1,6 +1,3 @@
-using System;
-using System.IO;
-
 namespace Signal.Bot;
 
 public class Base64Attachment

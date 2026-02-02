@@ -1,4 +1,3 @@
-using System;
 using System.Net.WebSockets;
 using Signal.Bot.Polling;
 using WebSocket.Rx;

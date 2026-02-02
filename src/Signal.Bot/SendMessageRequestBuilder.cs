@@ -1,5 +1,3 @@
-using System;
-using System.Linq;
 using Signal.Bot.Requests;
 
 namespace Signal.Bot;
@@ -34,7 +32,7 @@ public class SendMessageRequestBuilder
         return this;
     }
 
-    public SendMessageRequestBuilder WithLinkPreview(LinkPreviewType linkPreview)
+    public SendMessageRequestBuilder WithLinkPreview(LinkPreview linkPreview)
     {
         _request = _request with { LinkPreview = linkPreview };
         return this;
@@ -45,7 +43,7 @@ public class SendMessageRequestBuilder
         string? description = null,
         byte[]? thumbnail = null)
     {
-        var linkPreview = new LinkPreviewType
+        var linkPreview = new LinkPreview
         {
             Url = url,
             Title = title,
@@ -174,5 +172,5 @@ public class SendMessageRequestBuilder
         return this;
     }
 
-    public SendMessageRequest Build() => _request;
+    internal SendMessageRequest Build() => _request;
 }

@@ -1,5 +1,3 @@
-using System;
-
 namespace Signal.Bot.Types;
 
 public class QuoteData

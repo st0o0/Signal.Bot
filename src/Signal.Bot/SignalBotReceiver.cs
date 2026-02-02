@@ -1,10 +1,7 @@
-using System;
 using System.Net.WebSockets;
 using R3;
 using System.Text;
 using System.Text.Json;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.IO;
 using Signal.Bot.Polling;
 using WebSocket.Rx;

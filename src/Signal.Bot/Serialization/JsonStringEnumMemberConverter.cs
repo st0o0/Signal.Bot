@@ -1,5 +1,3 @@
-using System;
-using System.Linq;
 using System.Runtime.Serialization;
 using System.Text.Json;
 
@@ -15,7 +13,7 @@ public class JsonStringEnumMemberConverter : JsonConverterFactory
         return (JsonConverter)Activator.CreateInstance(converterType)!;
     }
 
-    private class EnumMemberConverter<T> : JsonConverter<T> where T : struct, Enum
+    private sealed class EnumMemberConverter<T> : JsonConverter<T> where T : struct, Enum
     {
         public override T Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {

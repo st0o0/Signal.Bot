@@ -283,7 +283,7 @@ public class TypeSerializationTests
         // Arrange
         var setConfigurationRequest = new SetConfigurationRequest
         {
-            Logging = "configKey123",
+            Logging = new Logging { Level = "configKey123" }
         };
 
         // Act
@@ -292,26 +292,24 @@ public class TypeSerializationTests
 
         // Assert
         Assert.NotNull(deserializedSetConfigurationRequest);
-        Assert.Equal(setConfigurationRequest.Logging, deserializedSetConfigurationRequest.Logging);
+        Assert.Equal(setConfigurationRequest.Logging.Level, deserializedSetConfigurationRequest.Logging!.Level);
     }
 
     [Fact]
     public void TestSetTypingIndicatorRequestSerializationAndDeserialization()
     {
         // Arrange
-        var setTypingIndicatorRequest = new SetTypingIndicatorRequest("")
+        var setTypingIndicatorRequest = new AddTypingIndicatorRequest("")
         {
-            GroupId = "groupId123",
             Recipient = "recipientUuid456",
         };
 
         // Act
         var json = JsonSerializer.Serialize(setTypingIndicatorRequest);
-        var deserializedSetTypingIndicatorRequest = JsonSerializer.Deserialize<SetTypingIndicatorRequest>(json);
+        var deserializedSetTypingIndicatorRequest = JsonSerializer.Deserialize<AddTypingIndicatorRequest>(json);
 
         // Assert
         Assert.NotNull(deserializedSetTypingIndicatorRequest);
-        Assert.Equal(setTypingIndicatorRequest.GroupId, deserializedSetTypingIndicatorRequest.GroupId);
         Assert.Equal(setTypingIndicatorRequest.Recipient, deserializedSetTypingIndicatorRequest.Recipient);
     }
 
@@ -322,7 +320,7 @@ public class TypeSerializationTests
         var updateAccountSettingsRequest = new UpdateAccountSettingsRequest("")
         {
             DiscoverableByNumber = false,
-            ShareNumberWithContacts = false,
+            ShareNumber = false,
         };
 
         // Act
@@ -333,8 +331,7 @@ public class TypeSerializationTests
         Assert.NotNull(deserializedUpdateAccountSettingsRequest);
         Assert.Equal(updateAccountSettingsRequest.DiscoverableByNumber,
             deserializedUpdateAccountSettingsRequest.DiscoverableByNumber);
-        Assert.Equal(updateAccountSettingsRequest.ShareNumberWithContacts,
-            deserializedUpdateAccountSettingsRequest.ShareNumberWithContacts);
+        Assert.Equal(updateAccountSettingsRequest.ShareNumber, deserializedUpdateAccountSettingsRequest.ShareNumber);
     }
 
     [Fact]
