@@ -1,5 +1,3 @@
-using System;
-
 namespace Signal.Bot;
 
 public record Base64String
@@ -25,5 +23,6 @@ public record Base64String
     public static implicit operator string(Base64String base64) => base64._value;
     public static implicit operator Base64String(string value) => new(value);
 
-    private static bool IsValidBase64(string value) => Convert.TryFromBase64String(value, [], out _);
+    private static bool IsValidBase64(string value)
+        => Convert.TryFromBase64String(value, new byte[value.Length], out _);
 }

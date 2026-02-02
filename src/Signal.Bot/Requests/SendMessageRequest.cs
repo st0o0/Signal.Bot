@@ -1,4 +1,3 @@
-using System;
 using System.Runtime.Serialization;
 using Signal.Bot.Types;
 
@@ -10,7 +9,7 @@ public record SendMessageRequest() : RequestBase<Acknowledged>("v2/send")
 
     [JsonPropertyName("edit_timestamp")] public DateTime EditTimestamp { get; set; }
 
-    [JsonPropertyName("link_preview")] public LinkPreviewType? LinkPreview { get; set; }
+    [JsonPropertyName("link_preview")] public LinkPreview? LinkPreview { get; set; }
 
     [JsonPropertyName("mentions")] public MessageMention[]? Mentions { get; set; }
 
@@ -46,7 +45,7 @@ public record MessageMention
     [JsonPropertyName("start")] public int? Start { get; set; }
 }
 
-public record LinkPreviewType
+public record LinkPreview
 {
     [JsonPropertyName("base64_thumbnail")] public string? Thumbnail { get; set; }
 

@@ -119,9 +119,7 @@ public class SignalBotReceiverTests
             _mockHandler,
             options =>
             {
-                options
-                    .WithTimeout(TimeSpan.FromMilliseconds(100))
-                    .WithQueueCapacity(10);
+                options.WithTimeout(TimeSpan.FromMilliseconds(100));
                 configuredTimeout = 100;
                 configuredCapacity = 10;
             },

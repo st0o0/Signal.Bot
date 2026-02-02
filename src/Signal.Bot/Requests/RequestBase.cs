@@ -10,7 +10,4 @@ public abstract record RequestBase(string MethodName, HttpMethod? Method = null)
 }
 
 public abstract record RequestBase<TResponse>(string MethodName, HttpMethod? Method = null)
-    : RequestBase(MethodName, Method), IRequest<TResponse>
-{
-    
-}
+    : RequestBase(MethodName, Method), IRequest<TResponse>;

@@ -1,5 +1,3 @@
-using System;
-
 namespace Signal.Bot;
 
 public record SignalBotClientOptions(string Number, string BaseUrl)

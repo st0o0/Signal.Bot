@@ -1,19 +1,8 @@
-using System;
-
 namespace Signal.Bot.Polling;
 
 public sealed class ReceiverOptionsBuilder
 {
-    private ReceiverOptions _options = new(
-        TimeSpan.FromSeconds(30),
-        false,
-        false,
-        false,
-        false,
-        false,
-        100,
-        false,
-        100);
+    private ReceiverOptions _options = new(TimeSpan.FromSeconds(30), false, false, 100, false);
 
     public ReceiverOptionsBuilder WithTimeout(TimeSpan timeout)
     {
@@ -63,12 +52,6 @@ public sealed class ReceiverOptionsBuilder
         return this;
     }
 
-    public ReceiverOptionsBuilder WithQueueCapacity(int queueCapacity)
-    {
-        _options = _options with { QueueCapacity = queueCapacity };
-        return this;
-    }
-
     internal ReceiverOptions Build()
     {
         return _options;
@@ -83,5 +66,4 @@ public record ReceiverOptions(
     bool IgnoreReceipt,
     bool IgnoreSync,
     int MaxMessages,
-    bool SendReadReceipts,
-    int QueueCapacity);
+    bool SendReadReceipts);

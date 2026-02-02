@@ -1,11 +1,12 @@
-using System;
-
 namespace Signal.Bot.Requests;
 
 public record AddReactionRequest(string Number) : RequestBase($"v1/reactions/{Number}")
 {
-    public string? Reaction { get; set; }
-    public string? Recipient { get; set; }
-    public string? TargetAuthor { get; set; }
-    public DateTime Timestamp { get; set; } = DateTime.UtcNow;
+    [JsonPropertyName("reaction")] public string? Reaction { get; set; }
+
+    [JsonPropertyName("recipient")] public string? Recipient { get; set; }
+
+    [JsonPropertyName("target_author")] public string? TargetAuthor { get; set; }
+
+    [JsonPropertyName("timestamp")] public DateTime Timestamp { get; set; }
 }

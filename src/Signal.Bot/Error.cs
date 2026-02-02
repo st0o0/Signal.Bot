@@ -1,4 +1,3 @@
-using System;
 using Signal.Bot.Polling;
 
 namespace Signal.Bot;

@@ -3,6 +3,7 @@ namespace Signal.Bot.Requests;
 public record UpdateAccountSettingsRequest(string Number)
     : RequestBase($"v1/accounts/{Number}/settings", HttpMethod.Put)
 {
-    public bool DiscoverableByNumber { get; set; }
-    public bool ShareNumberWithContacts { get; set; }
+    [JsonPropertyName("discoverable_by_number")] public bool DiscoverableByNumber { get; set; }
+
+    [JsonPropertyName("share_number")] public bool ShareNumber { get; set; }
 }

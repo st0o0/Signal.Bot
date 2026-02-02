@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Signal.Bot.Types;
+﻿namespace Signal.Bot.Types;
 
 public class Profile
 {

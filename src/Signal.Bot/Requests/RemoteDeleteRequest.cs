@@ -4,6 +4,7 @@ namespace Signal.Bot.Requests;
 
 public record RemoteDeleteRequest(string Number) : RequestBase<Acknowledged>($"v1/remote-delete/{Number}")
 {
-    public string? Recipient { get; set; }
-    public int? Timestamp { get; set; }
+    [JsonPropertyName("recipient")] public string? Recipient { get; set; }
+    
+    [JsonPropertyName("timestamp")] public DateTime Timestamp { get; set; }
 }
