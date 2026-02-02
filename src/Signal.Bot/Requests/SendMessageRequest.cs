@@ -1,4 +1,3 @@
-using System.Runtime.Serialization;
 using Signal.Bot.Types;
 
 namespace Signal.Bot.Requests;
@@ -58,7 +57,7 @@ public record LinkPreview
 
 public enum TextMode
 {
-    [EnumMember(Value = "normal")] Normal = 0,
+    [JsonStringEnumMemberName("normal")] Normal = 0,
 
-    [EnumMember(Value = "styled")] Styled = 1,
+    [JsonStringEnumMemberName("styled")] Styled = 1,
 }

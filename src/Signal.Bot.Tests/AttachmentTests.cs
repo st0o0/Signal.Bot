@@ -151,7 +151,7 @@ public class AttachmentTests
 
         var responseMessage = new HttpResponseMessage(HttpStatusCode.BadRequest)
         {
-            Content = new StringContent(JsonSerializer.Serialize(new { error = message }))
+            Content = new StringContent(JsonSerializer.Serialize(new Types.Error { Message = message }))
         };
 
         _httpClientMock

@@ -1,5 +1,3 @@
-using System.Runtime.Serialization;
-
 namespace Signal.Bot.Types;
 
 public class Identity
@@ -19,11 +17,11 @@ public class Identity
 
 public enum IdentityStatus
 {
-    [EnumMember(Value = "")] Undefined = 0,
+    [JsonStringEnumMemberName("UNDEFINED")] Undefined = 0,
 
-    [EnumMember(Value = "UNTRUSTED")] Untrusted = 1,
+    [JsonStringEnumMemberName("UNTRUSTED")] Untrusted = 1,
 
-    [EnumMember(Value = "TRUSTED_UNVERIFIED")] TrustedUnverified = 2,
+    [JsonStringEnumMemberName("TRUSTED_UNVERIFIED")] TrustedUnverified = 2,
 
-    [EnumMember(Value = "TRUSTED_VERIFIED")] TrustedVerified = 3
+    [JsonStringEnumMemberName("TRUSTED_VERIFIED")] TrustedVerified = 3
 }

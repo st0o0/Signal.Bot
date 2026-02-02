@@ -58,8 +58,9 @@ public class SignalBotClient : ISignalBotClient
 
                 if (httpResponse.StatusCode is HttpStatusCode.BadRequest)
                 {
-                    var error = await httpResponse.Content.ReadFromJsonAsync<Types.Error>(cancellationToken);
-                    throw new HttpRequestException(error!.Message);
+                    var content = await httpResponse.Content.ReadAsStringAsync(cancellationToken);
+                    var error = JsonSerializer.Deserialize(content, JsonBotAPI.Get<Types.Error>())!;
+                    throw new HttpRequestException(error.Message);
                 }
 
                 httpResponse.EnsureSuccessStatusCode();
@@ -98,7 +99,7 @@ public class SignalBotClient : ISignalBotClient
         {
             var httpResponse = await SendAsync(request, queryParameters, cancellationToken: cancellationToken);
             var content = await httpResponse.Content.ReadAsStringAsync(cancellationToken);
-            return JsonSerializer.Deserialize<TResponse>(content, JsonSerializerOptions)!;
+            return JsonSerializer.Deserialize(content, JsonBotAPI.Get<TResponse>())!;
             // return await httpResponse.Content
             //     .ReadFromJsonAsync<TResponse>(JsonBotAPI.Options, cancellationToken)
             //     .ConfigureAwait(false)!;

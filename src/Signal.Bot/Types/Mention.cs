@@ -1,6 +1,6 @@
 namespace Signal.Bot.Types;
 
-public record Mention
+public class Mention
 {
     [JsonPropertyName("start")] public int? Start { get; set; }
 

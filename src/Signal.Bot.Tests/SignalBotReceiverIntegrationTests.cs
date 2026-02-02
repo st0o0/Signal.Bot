@@ -5,6 +5,7 @@ using System.Text.Json;
 using NSubstitute;
 using Signal.Bot.Polling;
 using Signal.Bot.Tests.Internal;
+using Signal.Bot.Serialization;
 using Signal.Bot.Types;
 
 namespace Signal.Bot.Tests;
@@ -125,9 +126,10 @@ public class SignalBotReceiverIntegrationTests : IAsyncDisposable
         await receiver.StartReceivingAsync(_mockHandler, cancellationToken: TestContext.Current.CancellationToken);
 
         var testMessage = CreateTestReceivedMessage("Hello from server!");
+        var json = JsonSerializer.Serialize(testMessage, JsonBotAPI.Options);
 
         // Act
-        await _testServer.SendMessageAsync(JsonSerializer.Serialize(testMessage));
+        await _testServer.SendMessageAsync(JsonSerializer.Serialize(testMessage, JsonBotAPI.Options));
 
         // Assert
         var completed = await messageReceivedTcs.Task;
@@ -155,7 +157,8 @@ public class SignalBotReceiverIntegrationTests : IAsyncDisposable
         await receiver.StartReceivingAsync(_mockHandler, cancellationToken: TestContext.Current.CancellationToken);
 
         var testMessage = CreateTestReceivedMessage("Binary message!");
-        var bytes = System.Text.Encoding.UTF8.GetBytes(JsonSerializer.Serialize(testMessage));
+        var json = JsonSerializer.Serialize(testMessage, JsonBotAPI.Options);
+        var bytes = System.Text.Encoding.UTF8.GetBytes(json);
 
         // Act
         await _testServer.SendBinaryMessageAsync(bytes);
@@ -201,6 +204,8 @@ public class SignalBotReceiverIntegrationTests : IAsyncDisposable
         {
             var message = CreateTestReceivedMessage($"Message {i}");
             await _testServer.SendMessageAsync(JsonSerializer.Serialize(message));
+            var json = JsonSerializer.Serialize(message, JsonBotAPI.Options);
+            await _testServer.SendMessageAsync(json);
         }
 
         // Assert
@@ -244,7 +249,7 @@ public class SignalBotReceiverIntegrationTests : IAsyncDisposable
         for (var i = 0; i < expectedCount; i++)
         {
             var message = CreateTestReceivedMessage($"Test {i}");
-            await _testServer.SendMessageAsync(JsonSerializer.Serialize(message));
+            await _testServer.SendMessageAsync(JsonSerializer.Serialize(message, JsonBotAPI.Options));
         }
 
         // Assert
@@ -282,7 +287,7 @@ public class SignalBotReceiverIntegrationTests : IAsyncDisposable
         var groupMessage = CreateTestGroupMessage("Hello group!", "group-123", "Test Group");
 
         // Act
-        await _testServer.SendMessageAsync(JsonSerializer.Serialize(groupMessage));
+        await _testServer.SendMessageAsync(JsonSerializer.Serialize(groupMessage, JsonBotAPI.Options));
 
         // Assert
         var completed = await messageReceivedTcs.Task;
@@ -314,7 +319,7 @@ public class SignalBotReceiverIntegrationTests : IAsyncDisposable
         var attachmentMessage = CreateTestMessageWithAttachment("Check this file", "document.pdf", "application/pdf");
 
         // Act
-        await _testServer.SendMessageAsync(JsonSerializer.Serialize(attachmentMessage));
+        await _testServer.SendMessageAsync(JsonSerializer.Serialize(attachmentMessage, JsonBotAPI.Options));
 
         // Assert
         var completed = await messageReceivedTcs.Task;
@@ -347,7 +352,7 @@ public class SignalBotReceiverIntegrationTests : IAsyncDisposable
         var message = CreateTestMessageWithMultipleAttachments("Files attached", 3);
 
         // Act
-        await _testServer.SendMessageAsync(JsonSerializer.Serialize(message));
+        await _testServer.SendMessageAsync(JsonSerializer.Serialize(message, JsonBotAPI.Options));
 
         // Assert
         var completed = await messageReceivedTcs.Task;
@@ -388,9 +393,10 @@ public class SignalBotReceiverIntegrationTests : IAsyncDisposable
         await receiver.StartReceivingAsync(_mockHandler, cancellationToken: TestContext.Current.CancellationToken);
 
         var message = CreateTestReceivedMessage("This will cause error");
+        var json = JsonSerializer.Serialize(message, JsonBotAPI.Options);
 
         // Act
-        await _testServer.SendMessageAsync(JsonSerializer.Serialize(message));
+        await _testServer.SendMessageAsync(json);
 
         // Assert
         var completed = await exceptionHandledTcs.Task;
@@ -442,8 +448,10 @@ public class SignalBotReceiverIntegrationTests : IAsyncDisposable
         await receiver.StartReceivingAsync(_mockHandler, cancellationToken: TestContext.Current.CancellationToken);
 
         // Act
-        await _testServer.SendMessageAsync(JsonSerializer.Serialize(CreateTestReceivedMessage("First")));
-        await _testServer.SendMessageAsync(JsonSerializer.Serialize(CreateTestReceivedMessage("Second")));
+        await _testServer.SendMessageAsync(JsonSerializer.Serialize(CreateTestReceivedMessage("First"),
+            JsonBotAPI.Options));
+        await _testServer.SendMessageAsync(JsonSerializer.Serialize(CreateTestReceivedMessage("Second"),
+            JsonBotAPI.Options));
 
         // Assert
         var completed = await secondMessageTcs.Task;
@@ -488,12 +496,14 @@ public class SignalBotReceiverIntegrationTests : IAsyncDisposable
         await receiver.StartReceivingAsync(_mockHandler, cancellationToken: cts.Token);
 
         // Act
-        await _testServer.SendMessageAsync(JsonSerializer.Serialize(CreateTestReceivedMessage("Before cancel")));
+        await _testServer.SendMessageAsync(JsonSerializer.Serialize(CreateTestReceivedMessage("Before cancel"),
+            JsonBotAPI.Options));
         await firstMessageTcs.Task;
 
         await cts.CancelAsync();
 
-        await _testServer.SendMessageAsync(JsonSerializer.Serialize(CreateTestReceivedMessage("After cancel")));
+        await _testServer.SendMessageAsync(JsonSerializer.Serialize(CreateTestReceivedMessage("After cancel"),
+            JsonBotAPI.Options));
 
         // Assert
         Assert.False(processedAfterCancel, "Should not process messages after cancellation");
@@ -535,8 +545,9 @@ public class SignalBotReceiverIntegrationTests : IAsyncDisposable
             cancellationToken: TestContext.Current.CancellationToken);
 
         // Act
-        await _testServer.SendMessageAsync(JsonSerializer.Serialize(CreateTestReceiptMessage()));
-        await _testServer.SendMessageAsync(JsonSerializer.Serialize(CreateTestReceivedMessage("Normal message")));
+        await _testServer.SendMessageAsync(JsonSerializer.Serialize(CreateTestReceiptMessage(), JsonBotAPI.Options));
+        await _testServer.SendMessageAsync(JsonSerializer.Serialize(CreateTestReceivedMessage("Normal message"),
+            JsonBotAPI.Options));
 
         // Assert
         await dataMessageTcs.Task;
@@ -576,9 +587,13 @@ public class SignalBotReceiverIntegrationTests : IAsyncDisposable
             options => options.WithIgnoreTyping(),
             cancellationToken: TestContext.Current.CancellationToken);
 
+        var groupMessage = CreateTestGroupMessage("Hello group!", "group-123", "Test Group");
+        var json = JsonSerializer.Serialize(groupMessage, JsonBotAPI.Options);
+
         // Act
-        await _testServer.SendMessageAsync(JsonSerializer.Serialize(CreateTestTypingMessage()));
-        await _testServer.SendMessageAsync(JsonSerializer.Serialize(CreateTestReceivedMessage("Normal message")));
+        await _testServer.SendMessageAsync(JsonSerializer.Serialize(CreateTestTypingMessage(), JsonBotAPI.Options));
+        await _testServer.SendMessageAsync(JsonSerializer.Serialize(CreateTestReceivedMessage("Normal message"),
+            JsonBotAPI.Options));
 
         // Assert
         await dataMessageTcs.Task;
@@ -618,9 +633,13 @@ public class SignalBotReceiverIntegrationTests : IAsyncDisposable
             options => options.WithIgnoreSync(),
             cancellationToken: TestContext.Current.CancellationToken);
 
+        var attachmentMessage = CreateTestMessageWithAttachment("Check this file", "document.pdf", "application/pdf");
+        var json = JsonSerializer.Serialize(attachmentMessage, JsonBotAPI.Options);
+
         // Act
-        await _testServer.SendMessageAsync(JsonSerializer.Serialize(CreateTestSyncMessage()));
-        await _testServer.SendMessageAsync(JsonSerializer.Serialize(CreateTestReceivedMessage("Normal message")));
+        await _testServer.SendMessageAsync(JsonSerializer.Serialize(CreateTestSyncMessage(), JsonBotAPI.Options));
+        await _testServer.SendMessageAsync(JsonSerializer.Serialize(CreateTestReceivedMessage("Normal message"),
+            JsonBotAPI.Options));
 
         // Assert
         await dataMessageTcs.Task;
@@ -661,10 +680,12 @@ public class SignalBotReceiverIntegrationTests : IAsyncDisposable
             cancellationToken: TestContext.Current.CancellationToken);
 
         // Act
-        await _testServer.SendMessageAsync(JsonSerializer.Serialize(CreateTestReceiptMessage()));
-        await _testServer.SendMessageAsync(JsonSerializer.Serialize(CreateTestTypingMessage()));
-        await _testServer.SendMessageAsync(JsonSerializer.Serialize(CreateTestSyncMessage()));
-        await _testServer.SendMessageAsync(JsonSerializer.Serialize(CreateTestReceivedMessage("Data message")));
+        await _testServer.SendMessageAsync(JsonSerializer.Serialize(CreateTestReceiptMessage(), JsonBotAPI.Options));
+        await _testServer.SendMessageAsync(JsonSerializer.Serialize(CreateTestTypingMessage(), JsonBotAPI.Options));
+        await _testServer.SendMessageAsync(JsonSerializer.Serialize(CreateTestSyncMessage(), JsonBotAPI.Options));
+        await _testServer.SendMessageAsync(JsonSerializer.Serialize(CreateTestReceivedMessage("Data message"),
+            JsonBotAPI.Options));
+
 
         // Assert
         await dataMessageTcs.Task;
@@ -703,10 +724,11 @@ public class SignalBotReceiverIntegrationTests : IAsyncDisposable
             cancellationToken: TestContext.Current.CancellationToken);
 
         // Act
-        await _testServer.SendMessageAsync(JsonSerializer.Serialize(CreateTestReceiptMessage()));
-        await _testServer.SendMessageAsync(JsonSerializer.Serialize(CreateTestTypingMessage()));
-        await _testServer.SendMessageAsync(JsonSerializer.Serialize(CreateTestSyncMessage()));
-        await _testServer.SendMessageAsync(JsonSerializer.Serialize(CreateTestReceivedMessage("Data message")));
+        await _testServer.SendMessageAsync(JsonSerializer.Serialize(CreateTestReceiptMessage(), JsonBotAPI.Options));
+        await _testServer.SendMessageAsync(JsonSerializer.Serialize(CreateTestTypingMessage(), JsonBotAPI.Options));
+        await _testServer.SendMessageAsync(JsonSerializer.Serialize(CreateTestSyncMessage(), JsonBotAPI.Options));
+        await _testServer.SendMessageAsync(JsonSerializer.Serialize(CreateTestReceivedMessage("Data message"),
+            JsonBotAPI.Options));
 
         // Assert
         await allMessagesReceivedTcs.Task;
@@ -751,7 +773,7 @@ public class SignalBotReceiverIntegrationTests : IAsyncDisposable
         for (var i = 0; i < messageCount; i++)
         {
             var message = CreateTestReceivedMessage($"Message {i}");
-            await _testServer.SendMessageAsync(JsonSerializer.Serialize(message));
+            await _testServer.SendMessageAsync(JsonSerializer.Serialize(message, JsonBotAPI.Options));
         }
 
         // Assert
@@ -800,8 +822,9 @@ public class SignalBotReceiverIntegrationTests : IAsyncDisposable
         {
             var largeText = new string('X', messageSize);
             var message = CreateTestReceivedMessage(largeText);
-            await _testServer.SendMessageAsync(JsonSerializer.Serialize(message));
+            await _testServer.SendMessageAsync(JsonSerializer.Serialize(message, JsonBotAPI.Options));
         }
+
 
         // Assert
         await allReceivedTcs.Task;
@@ -851,7 +874,7 @@ public class SignalBotReceiverIntegrationTests : IAsyncDisposable
         for (var i = 0; i < messageCount; i++)
         {
             var message = CreateTestReceivedMessage($"Message {i}");
-            await _testServer.SendMessageAsync(JsonSerializer.Serialize(message));
+            await _testServer.SendMessageAsync(JsonSerializer.Serialize(message, JsonBotAPI.Options));
         }
 
         // Assert
@@ -887,10 +910,25 @@ public class SignalBotReceiverIntegrationTests : IAsyncDisposable
             .AndDoes(callInfo =>
             {
                 var msg = callInfo.ArgAt<ReceivedMessage>(1);
-                if (msg.Envelope?.DataMessage != null) Interlocked.Increment(ref dataMessageCount);
-                if (msg.Envelope?.ReceiptMessage != null) Interlocked.Increment(ref receiptMessageCount);
-                if (msg.Envelope?.TypingMessage != null) Interlocked.Increment(ref typingMessageCount);
-                if (msg.Envelope?.SyncMessage != null) Interlocked.Increment(ref syncMessageCount);
+                if (msg.Envelope?.DataMessage != null)
+                {
+                    Interlocked.Increment(ref dataMessageCount);
+                }
+
+                if (msg.Envelope?.ReceiptMessage != null)
+                {
+                    Interlocked.Increment(ref receiptMessageCount);
+                }
+
+                if (msg.Envelope?.TypingMessage != null)
+                {
+                    Interlocked.Increment(ref typingMessageCount);
+                }
+
+                if (msg.Envelope?.SyncMessage != null)
+                {
+                    Interlocked.Increment(ref syncMessageCount);
+                }
 
                 var total = dataMessageCount + receiptMessageCount + typingMessageCount + syncMessageCount;
                 if (total == messagesPerType * 4)
@@ -919,7 +957,7 @@ public class SignalBotReceiverIntegrationTests : IAsyncDisposable
 
         foreach (var message in messages)
         {
-            await _testServer.SendMessageAsync(JsonSerializer.Serialize(message));
+            await _testServer.SendMessageAsync(JsonSerializer.Serialize(message, JsonBotAPI.Options));
         }
 
         // Assert

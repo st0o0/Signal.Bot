@@ -22,6 +22,12 @@
         <DebugType>embedded</DebugType>
         <EmbedUntrackedSources>true</EmbedUntrackedSources>
     </PropertyGroup>
+    <PropertyGroup>
+        <PublishAot>true</PublishAot>
+        <IsAotCompatible>true</IsAotCompatible>
+        <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
+        <EnableSingleFileAnalyzer>true</EnableSingleFileAnalyzer>
+    </PropertyGroup>
     <ItemGroup>
         <None Include="../../README.md" Pack="true" Visible="false" PackagePath="\"/>
         <None Include="../../LICENSE" Pack="true" Visible="false" PackagePath="\"/>

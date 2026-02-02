@@ -1,5 +1,3 @@
-using System.Runtime.Serialization;
-
 namespace Signal.Bot.Requests;
 
 public record SendReceiptsRequest(string Number) : RequestBase($"/v1/receipts/{Number}")
@@ -13,9 +11,9 @@ public record SendReceiptsRequest(string Number) : RequestBase($"/v1/receipts/{N
 
 public enum ReceiptType
 {
-    [EnumMember(Value = "")] Undefined = 0,
+    [JsonStringEnumMemberName("UNDEFINED")] Undefined = 0,
 
-    [EnumMember(Value = "read")] Read = 1,
+    [JsonStringEnumMemberName("read")] Read = 1,
 
-    [EnumMember(Value = "viewed")] Viewed = 2,
+    [JsonStringEnumMemberName("viewed")] Viewed = 2,
 }

@@ -4,6 +4,7 @@ using System.Text;
 using System.Text.Json;
 using Microsoft.IO;
 using Signal.Bot.Polling;
+using Signal.Bot.Serialization;
 using WebSocket.Rx;
 using ReceivedMessage = Signal.Bot.Types.ReceivedMessage;
 
@@ -72,10 +73,10 @@ internal sealed class SignalBotReceiver : IAsyncDisposable
                 WebSocketMessageType.Text when msg.Text is not null => msg.Text,
                 _ => null
             })
-            .Select(content => JsonSerializer.Deserialize<ReceivedMessage>(content!, _client.JsonSerializerOptions))
-            .Where(msg => msg?.Envelope?.ReceiptMessage is null || !options.IgnoreReceipt)
-            .Where(msg => msg?.Envelope?.TypingMessage is null || !options.IgnoreTyping)
-            .Where(msg => msg?.Envelope?.SyncMessage is null || !options.IgnoreSync)
+            .Select(content => JsonSerializer.Deserialize(content!, JsonBotAPI.Get<ReceivedMessage>())!)
+            .Where(msg => msg.Envelope?.ReceiptMessage is null || !options.IgnoreReceipt)
+            .Where(msg => msg.Envelope?.TypingMessage is null || !options.IgnoreTyping)
+            .Where(msg => msg.Envelope?.SyncMessage is null || !options.IgnoreSync)
             .Select(parsed => parsed!);
 
         var messageSubscription = messages
@@ -84,15 +85,14 @@ internal sealed class SignalBotReceiver : IAsyncDisposable
                 try
                 {
                     using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(_linkedCts.Token, ct);
-                    await handler.HandleAsync(_client, msg, linkedCts.Token).ConfigureAwait(false);
+                    await handler.HandleAsync(_client, msg, linkedCts.Token);
                 }
                 catch (Exception ex) when (ex is not OperationCanceledException)
                 {
                     try
                     {
                         await handler
-                            .HandleErrorAsync(_client, new Error(ex, ErrorType.MessageReceived), _linkedCts.Token)
-                            .ConfigureAwait(false);
+                            .HandleErrorAsync(_client, new Error(ex, ErrorType.MessageReceived), _linkedCts.Token);
                     }
                     catch
                     {

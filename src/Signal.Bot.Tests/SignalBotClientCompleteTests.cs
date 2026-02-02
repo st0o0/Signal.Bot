@@ -45,7 +45,7 @@ public class SignalBotClientCompleteTests
         var result = await _client.GetDevicesAsync(cancellationToken: TestContext.Current.CancellationToken);
 
         Assert.NotNull(result);
-        Assert.Equal(3, result.Length);
+        Assert.Equal(3, result.Count);
     }
 
     [Fact]
