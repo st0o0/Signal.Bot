@@ -5,7 +5,7 @@ public record UpdateGroupRequest(string Number, string GroupId)
 {
     [JsonPropertyName("base64_avatar")] public string? Avatar { get; set; }
 
-    [JsonPropertyName("name")] public string Name { get; set; }
+    [JsonPropertyName("name")] public string? Name { get; set; }
 
     [JsonPropertyName("description")] public string? Description { get; set; }
 
@@ -13,5 +13,5 @@ public record UpdateGroupRequest(string Number, string GroupId)
 
     [JsonPropertyName("group_link")] public GroupLink GroupLink { get; set; }
 
-    [JsonPropertyName("permissions")] public Permissions Permissions { get; set; }
+    [JsonPropertyName("permissions")] public Permissions? Permissions { get; set; }
 }

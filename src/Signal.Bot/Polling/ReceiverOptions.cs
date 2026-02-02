@@ -2,7 +2,15 @@ namespace Signal.Bot.Polling;
 
 public sealed class ReceiverOptionsBuilder
 {
-    private ReceiverOptions _options = new(TimeSpan.FromSeconds(30), false, false, 100, false);
+    private ReceiverOptions _options = new(
+        TimeSpan.FromSeconds(30),
+        false,
+        false,
+        false,
+        false,
+        false,
+        100,
+        false);
 
     public ReceiverOptionsBuilder WithTimeout(TimeSpan timeout)
     {

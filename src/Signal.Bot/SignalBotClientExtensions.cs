@@ -41,7 +41,7 @@ public static partial class SignalBotClientExtensions
 
     #region Devices
 
-    public static async Task<Device[]> GetDevicesAsync(this ISignalBotClient client,
+    public static async Task<ICollection<Device>> GetDevicesAsync(this ISignalBotClient client,
         CancellationToken cancellationToken = default)
     {
         var request = new GetDevicesRequest(client.Number);
@@ -410,7 +410,7 @@ public static partial class SignalBotClientExtensions
 
     #region Attachments
 
-    public static async Task<string[]> GetAttachmentsAsync(this ISignalBotClient client,
+    public static async Task<ICollection<string>> GetAttachmentsAsync(this ISignalBotClient client,
         CancellationToken cancellationToken = default)
     {
         var request = new GetAttachmentsRequest();
@@ -470,7 +470,7 @@ public static partial class SignalBotClientExtensions
 
     #region Identities
 
-    public static async Task<Identity[]> GetIdentitiesAsync(this ISignalBotClient client,
+    public static async Task<ICollection<Identity>> GetIdentitiesAsync(this ISignalBotClient client,
         CancellationToken cancellationToken = default)
     {
         var request = new GetIdentitiesRequest(client.Number);
@@ -568,7 +568,7 @@ public static partial class SignalBotClientExtensions
 
     #region Sticker Packs
 
-    public static async Task<StickerPack[]> GetStickerPacksAsync(this ISignalBotClient client,
+    public static async Task<ICollection<StickerPack>> GetStickerPacksAsync(this ISignalBotClient client,
         CancellationToken cancellationToken = default)
     {
         var request = new GetStickerPacksRequest(client.Number);
@@ -593,7 +593,7 @@ public static partial class SignalBotClientExtensions
 
     #region Contacts
 
-    public static async Task<Contact[]> GetContactsAsync(this ISignalBotClient client,
+    public static async Task<ICollection<Contact>> GetContactsAsync(this ISignalBotClient client,
         CancellationToken cancellationToken = default)
     {
         var request = new GetContactsRequest(client.Number);

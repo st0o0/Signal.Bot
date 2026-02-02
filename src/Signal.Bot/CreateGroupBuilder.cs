@@ -45,19 +45,19 @@ public class CreateGroupBuilder
 
     public CreateGroupBuilder WithAddMemberPermission(GroupPermission addMember)
     {
-        _request.Permissions.AddMembers = addMember;
+        _request.Permissions!.AddMembers = addMember;
         return this;
     }
 
     public CreateGroupBuilder WithEditGroupPermission(GroupPermission editGroup)
     {
-        _request.Permissions.EditGroup = editGroup;
+        _request.Permissions!.EditGroup = editGroup;
         return this;
     }
 
     public CreateGroupBuilder WithSendMessagesPermission(GroupPermission sendMessages)
     {
-        _request.Permissions.SendMessages = sendMessages;
+        _request.Permissions!.SendMessages = sendMessages;
         return this;
     }
 

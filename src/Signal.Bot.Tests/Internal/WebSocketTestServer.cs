@@ -12,7 +12,9 @@ public class WebSocketTestServer : IAsyncDisposable
     private Task? _listenerTask;
     private System.Net.WebSockets.WebSocket? _serverWebSocket;
 
-    public int Port { get; }
+    private Task? _serverTask;
+
+    public int Port { get; private set; }
     public string Url => $"http://localhost:{Port}/";
     public string WebSocketUrl => $"ws://localhost:{Port}/";
 
@@ -22,7 +24,7 @@ public class WebSocketTestServer : IAsyncDisposable
 
     public WebSocketTestServer(int? port = null)
     {
-        Port = port ?? GetAvailablePort();
+        Port = port ?? 0;
         _httpListener = new HttpListener();
         _httpListener.Prefixes.Add(Url);
         _cts = new CancellationTokenSource();
@@ -30,10 +32,39 @@ public class WebSocketTestServer : IAsyncDisposable
 
     public async Task StartAsync()
     {
-        _httpListener.Start();
-        _listenerTask = Task.Run(async () => await ListenAsync(_cts.Token), _cts.Token);
-        await Task.Delay(100);
+        const int maxRetries = 10;
+        for (var i = 0; i < maxRetries; i++)
+        {
+            try
+            {
+                if (Port == 0 || i > 0)
+                {
+                    Port = GetAvailablePort();
+                }
+
+                _httpListener.Prefixes.Clear();
+                _httpListener.Prefixes.Add(Url);
+                _httpListener.Start();
+                _serverTask = Task.Run(() => ListenAsync(_cts.Token));
+                await Task.Delay(100);
+                return;
+            }
+            catch (HttpListenerException) when (i < maxRetries - 1)
+            {
+                await Task.Delay(100);
+            }
+        }
+
+        if (!_httpListener.IsListening)
+        {
+            _httpListener.Prefixes.Clear();
+            _httpListener.Prefixes.Add(Url);
+            _httpListener.Start();
+            _serverTask = Task.Run(() => ListenAsync(_cts.Token));
+            await Task.Delay(100);
+        }
     }
+
 
     private async Task ListenAsync(CancellationToken cancellationToken)
     {
@@ -74,7 +105,8 @@ public class WebSocketTestServer : IAsyncDisposable
         }
     }
 
-    private async Task HandleWebSocketAsync(System.Net.WebSockets.WebSocket webSocket, CancellationToken cancellationToken)
+    private async Task HandleWebSocketAsync(System.Net.WebSockets.WebSocket webSocket,
+        CancellationToken cancellationToken)
     {
         var buffer = new byte[1024 * 4];
 
