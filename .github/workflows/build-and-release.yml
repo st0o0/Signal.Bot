@@ -25,7 +25,7 @@ jobs:
     # https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idruns-on
     runs-on: ubuntu-latest
     outputs:
-      semVer: ${{ steps.gitversion.outputs.semVer }}
+      releaseVersion: ${{ steps.gitversion.outputs.majorMinorPatch }}
     
     steps:
       - name: Checkout
@@ -46,12 +46,12 @@ jobs:
         run: dotnet tool run slopwatch analyze --fail-on warning
 
       - name: Install GitVersion
-        uses: gittools/actions/gitversion/setup@v4.2.0
+        uses: gittools/actions/gitversion/setup@v1.1.1
         with:
-          versionSpec: '6.x'
+          versionSpec: '5.x'
 
       - name: Determine Version
-        uses: gittools/actions/gitversion/execute@v4.2.0
+        uses: gittools/actions/gitversion/execute@v1.1.1
         id: gitversion
 
       - name: Generate Release Notes for nuget
@@ -60,7 +60,7 @@ jobs:
           VERSION: ${{ steps.gitversion.outputs.semVer }}
         run: |
           cat > notes.md << EOF
-          # 🎯 Signal.Bot v$VERSION
+          🎯 Signal.Bot v$VERSION
           
           📦 NuGet: https://nuget.org/packages/Signal.Bot
           🔗 Release: https://github.com/st0o0/Signal.Bot/releases/v$VERSION
@@ -76,7 +76,8 @@ jobs:
 
       - name: Display GitVersion outputs
         run: |
-          echo "Version: ${{ steps.gitversion.outputs.semVer }}"
+          echo "Release Version: ${{ steps.gitversion.outputs.majorMinorPatch }}"
+          echo "Nuget Version: ${{ steps.gitversion.outputs.fullSemVer }}"
 
       - name: Restore dependencies
         run: dotnet restore ${{ env.PROJECT_PATH }}
@@ -161,10 +162,10 @@ jobs:
         id: notes
         env:
           GH_TOKEN: ${{ github.token }}
-          VERSION: ${{ needs.build.outputs.semVer }}
+          VERSION: ${{ needs.build.outputs.releaseVersion }}
         run: |
           cat > notes.md << EOF
-          # 🎯 Signal.Bot v$VERSION
+          🎯 Signal.Bot v$VERSION
           
           [![NuGet](https://img.shields.io/nuget/v/Signal.Bot?logo=nuget)](https://nuget.org/packages/Signal.Bot)
           [![GitHub](https://img.shields.io/github/last-commit/st0o0/Signal.Bot/main?logo=github)](https://github.com/st0o0/Signal.Bot)
@@ -186,9 +187,9 @@ jobs:
       - name: Create & Publish Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: "v${{ needs.build.outputs.semVer }}"
+          tag_name: "v${{ needs.build.outputs.releaseVersion }}"
           target_commitish: ${{ github.sha }}
-          name: "Signal.Bot v${{ needs.build.outputs.semVer }}"
+          name: "Signal.Bot v${{ needs.build.outputs.releaseVersion }}"
           body: ${{ steps.notes.outputs.release-notes }}
           draft: false
           prerelease: false
