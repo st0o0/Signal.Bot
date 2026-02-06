@@ -63,7 +63,7 @@ public static partial class SignalBotClientExtensions
             {
                 await handler.HandleErrorAsync(
                         client,
-                        new Error(ex, ErrorSource.FatalError),
+                        new Error(ex, ErrorType.FatalError),
                         cancellationToken)
                     .ConfigureAwait(false);
             }

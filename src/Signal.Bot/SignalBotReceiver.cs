@@ -63,6 +63,7 @@ internal sealed class SignalBotReceiver : IAsyncDisposable
             ConnectTimeout = TimeSpan.FromSeconds(30),
             KeepAliveInterval = TimeSpan.FromSeconds(30),
             KeepAliveTimeout = TimeSpan.FromSeconds(10),
+            IsReconnectionEnabled = true,
             IsTextMessageConversionEnabled = true,
             MessageEncoding = Encoding.UTF8
         };
@@ -93,7 +94,7 @@ internal sealed class SignalBotReceiver : IAsyncDisposable
                     try
                     {
                         await handler
-                            .HandleErrorAsync(_client, new Error(ex, ErrorSource.MessageReceived), _linkedCts.Token)
+                            .HandleErrorAsync(_client, new Error(ex, ErrorType.MessageReceived), _linkedCts.Token)
                             .ConfigureAwait(false);
                     }
                     catch
@@ -106,14 +107,14 @@ internal sealed class SignalBotReceiver : IAsyncDisposable
         var errors = Observable.Merge(
             messages
                 .SelectMany(_ => Observable.Empty<Error>())
-                .Catch((Exception ex) => Observable.Return(new Error(ex, ErrorSource.MessageReceivedTermination))),
+                .Catch((Exception ex) => Observable.Return(new Error(ex, ErrorType.MessageReceivedTermination))),
             _websocketClient.DisconnectionHappened
                 .Select(info => info.To())
                 .Catch((Exception ex) =>
-                    Observable.Return(new Error(ex, ErrorSource.DisconnectionHappenedTermination))),
+                    Observable.Return(new Error(ex, ErrorType.DisconnectionHappenedTermination))),
             _websocketClient.ConnectionHappened
                 .Select(info => info.To())
-                .Catch((Exception ex) => Observable.Return(new Error(ex, ErrorSource.ConnectionHappenedTermination)))
+                .Catch((Exception ex) => Observable.Return(new Error(ex, ErrorType.ConnectionHappenedTermination)))
         );
 
         var errorSubscription = errors
@@ -130,7 +131,7 @@ internal sealed class SignalBotReceiver : IAsyncDisposable
                     try
                     {
                         await handler.HandleErrorAsync(_client,
-                                new Error(ex, ErrorSource.FatalError), _linkedCts.Token)
+                                new Error(ex, ErrorType.FatalError), _linkedCts.Token)
                             .ConfigureAwait(false);
                     }
                     catch
@@ -153,15 +154,10 @@ internal sealed class SignalBotReceiver : IAsyncDisposable
 
     private static string ConvertToWebSocketUrl(string baseUrl)
     {
-        var cleanUrl = baseUrl
-            .Replace("http://", "", StringComparison.OrdinalIgnoreCase)
-            .Replace("https://", "", StringComparison.OrdinalIgnoreCase);
-
-        var scheme = baseUrl.StartsWith("https://", StringComparison.OrdinalIgnoreCase)
-            ? "wss"
-            : "ws";
-
-        return $"{scheme}://{cleanUrl}";
+        var tempUrl = baseUrl
+            .Replace("http://", "ws://", StringComparison.OrdinalIgnoreCase)
+            .Replace("https://", "wss://", StringComparison.OrdinalIgnoreCase);
+        return tempUrl.StartsWith("ws") ? tempUrl : $"ws://{tempUrl}";
     }
 
     private async ValueTask DisposeAsyncCore()

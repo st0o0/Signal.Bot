@@ -6,12 +6,12 @@ using WebSocket.Rx;
 namespace Signal.Bot;
 
 public record DisconnectionError(
-    DisconnectionType Type,
+    DisconnectionType DisconnectionType,
     WebSocketCloseStatus? CloseStatus,
     string? CloseStatusDescription = null,
     string? SubProtocol = null,
     Exception? Exception = null)
-    : Error(Exception, ErrorSource.DisconnectionHappened)
+    : Error(Exception, ErrorType.DisconnectionHappened)
 {
     internal Action? CancelReconnectionAction;
     internal Action? CancelClosingAction;
@@ -25,10 +25,9 @@ public enum DisconnectionType
     Undefined = 0,
     ConnectionLost = 1,
     Timeout = 2,
-    Error = 3,
-    ClientInitiated = 4,
-    ServerInitiated = 5,
-    Shutdown = 6
+    ClientInitiated = 3,
+    ServerInitiated = 4,
+    Shutdown = 5
 }
 
 internal static class DisconnectionTypeExtensions
@@ -54,9 +53,9 @@ internal static class DisconnectionTypeExtensions
             DisconnectReason.Undefined => DisconnectionType.Undefined,
             DisconnectReason.ConnectionLost => DisconnectionType.ConnectionLost,
             DisconnectReason.Timeout => DisconnectionType.Timeout,
-            DisconnectReason.Error => DisconnectionType.Error,
             DisconnectReason.ClientInitiated => DisconnectionType.ClientInitiated,
             DisconnectReason.ServerInitiated => DisconnectionType.ServerInitiated,
+            DisconnectReason.Shutdown => DisconnectionType.Shutdown,
             _ => DisconnectionType.Undefined
         };
     }

@@ -17,12 +17,9 @@ public class SendMessageRequestBuilder
 
     public SendMessageRequestBuilder WithAttachmentFromBytes(byte[] bytes, string mimeType, string? filename = null)
     {
-        if (filename != null)
-        {
-            return WithAttachment(Base64Attachment.FromDataUri(bytes, mimeType, filename));
-        }
-
-        return WithAttachment(Base64Attachment.FromDataUri(bytes, mimeType));
+        return WithAttachment(filename != null
+            ? Base64Attachment.FromDataUri(bytes, mimeType, filename)
+            : Base64Attachment.FromDataUri(bytes, mimeType));
     }
 
     public SendMessageRequestBuilder WithAttachment(string attachment)

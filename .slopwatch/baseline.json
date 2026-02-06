@@ -1,53 +1,44 @@
 {
   "version": 1,
   "createdAt": "2026-01-21T20:57:38.2305177+00:00",
-  "updatedAt": "2026-01-31T14:32:47.427262+00:00",
+  "updatedAt": "2026-02-08T07:55:23.5899156+00:00",
   "description": "Initial baseline created by 'slopwatch init' on 2026-01-21 20:57:38 UTC",
   "entries": [
     {
-      "hash": "b85b4a6e7f3a0810",
+      "hash": "9e8c5bb47b8d7353",
       "ruleId": "SW003",
-      "filePath": "src/Signal.Bot/SignalBotClientExtensions.Polling.cs",
-      "lineNumber": 62,
-      "codeSnippet": "catch (OperationCanceledException)\r\n            {\r\n                // normal shutdown\r\n            }",
+      "filePath": "src/Signal.Bot/SignalBotReceiver.cs",
+      "lineNumber": 99,
+      "codeSnippet": "catch\r\n                    {\r\n                        // noop\r\n                    }",
       "message": "Empty catch block swallows exceptions without handling",
-      "baselinedAt": "2026-01-21T20:57:38.2323333+00:00"
+      "baselinedAt": "2026-02-08T07:55:23.4534325+00:00"
     },
     {
-      "hash": "dff0f47b4c1fc0ec",
+      "hash": "0877b9357ae982d2",
       "ruleId": "SW004",
-      "filePath": "src/Signal.Bot.Tests/SignalBotClientCompleteTests.cs",
-      "lineNumber": 262,
-      "codeSnippet": "Task.Delay(100)",
-      "message": "Test uses Task.Delay(100) which may indicate a timing-dependent test",
-      "baselinedAt": "2026-01-29T12:53:25.1235243+00:00"
+      "filePath": "src/Signal.Bot.Tests/SignalBotReceiverPerformanceTests.cs",
+      "lineNumber": 475,
+      "codeSnippet": "Task.Delay(delay)",
+      "message": "Test uses Task.Delay(delay) which may indicate a timing-dependent test",
+      "baselinedAt": "2026-02-08T07:55:23.5469211+00:00"
     },
     {
-      "hash": "02da96374ea9c29c",
-      "ruleId": "SW003",
-      "filePath": "src/Signal.Bot/SignalBotReceiver.cs",
-      "lineNumber": 115,
-      "codeSnippet": "catch\r\n                    {\r\n                        /* Swallow */\r\n                    }",
-      "message": "Empty catch block swallows exceptions without handling",
-      "baselinedAt": "2026-01-31T14:32:47.309413+00:00"
-    },
-    {
-      "hash": "fbe5e6a81236ab85",
-      "ruleId": "SW003",
-      "filePath": "src/Signal.Bot/SignalBotReceiver.cs",
-      "lineNumber": 181,
-      "codeSnippet": "catch\r\n        {\r\n            /* Swallow on cleanup */\r\n        }",
-      "message": "Empty catch block swallows exceptions without handling",
-      "baselinedAt": "2026-01-31T14:32:47.3094821+00:00"
+      "hash": "56f0585d3b15983f",
+      "ruleId": "SW004",
+      "filePath": "src/Signal.Bot.Tests/SignalBotReceiverThroughputTests.cs",
+      "lineNumber": 131,
+      "codeSnippet": "Task.Delay(delay, TestContext.Current.CancellationToken)",
+      "message": "Test uses Task.Delay(delay) which may indicate a timing-dependent test",
+      "baselinedAt": "2026-02-08T07:55:23.5494515+00:00"
     },
     {
       "hash": "9001af43e2e3c093",
       "ruleId": "SW004",
       "filePath": "src/Signal.Bot.Tests/SignalBotClientCompleteTests.cs",
-      "lineNumber": 266,
+      "lineNumber": 254,
       "codeSnippet": "Task.Delay(10)",
       "message": "Test uses Task.Delay(10) which may indicate a timing-dependent test",
-      "baselinedAt": "2026-01-31T14:32:47.4272603+00:00"
+      "baselinedAt": "2026-02-08T07:55:23.5899128+00:00"
     }
   ]
 }
