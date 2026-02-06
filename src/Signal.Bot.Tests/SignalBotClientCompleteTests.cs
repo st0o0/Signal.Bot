@@ -1,5 +1,5 @@
 using System.Net;
-using System.Net.Http.Headers;
+using R3;
 using System.Text.Json;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
@@ -261,7 +261,7 @@ public class SignalBotClientCompleteTests
     }
 
     #endregion
-    
+
     #region HttpStatusCode Variations Tests
 
     [Fact]

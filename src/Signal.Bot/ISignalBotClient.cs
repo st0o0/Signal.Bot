@@ -1,8 +1,8 @@
 using System;
-using System.IO;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using R3;
 using Signal.Bot.Args;
 using Signal.Bot.Internal;
 using Signal.Bot.Requests;
@@ -15,9 +15,9 @@ public interface ISignalBotClient : IDisposable
     string Number { get; }
     JsonSerializerOptions JsonSerializerOptions { get; }
 
-    IObservable<OnApiRequestArgs> OnApiRequest { get; }
-    IObservable<OnApiResponseArgs> OnApiResponse { get; }
-    IObservable<Exception> OnException { get; }
+    Observable<OnApiRequestArgs> OnApiRequest { get; }
+    Observable<OnApiResponseArgs> OnApiResponse { get; }
+    Observable<Exception> OnException { get; }
 
     Task<HttpResponseMessage> SendAsync(
         IRequest request,

@@ -194,7 +194,8 @@ public class SignalBotReceiverIntegrationTests : IAsyncDisposable
         await _testServer.DisconnectAsync();
 
         // Assert
-        var completed = await disconnectTcs.Task;
+        var completed =
+            await disconnectTcs.Task.WaitAsync(TimeSpan.FromSeconds(1), TestContext.Current.CancellationToken);
 
         Assert.True(completed, "Should handle disconnect");
 
@@ -703,7 +704,7 @@ public class SignalBotReceiverIntegrationTests : IAsyncDisposable
 
         // Assert
         await dataMessageTcs.Task;
-        
+
         Assert.Single(receivedMessages);
         Assert.NotNull(receivedMessages.First().Envelope?.DataMessage);
         Assert.Equal("Data message", receivedMessages.First().Envelope?.DataMessage?.Message);
