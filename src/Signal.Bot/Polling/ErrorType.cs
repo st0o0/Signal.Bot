@@ -1,6 +1,6 @@
 namespace Signal.Bot.Polling;
 
-public enum ErrorSource
+public enum ErrorType
 {
     Undefined = 0,
     MessageReceived,

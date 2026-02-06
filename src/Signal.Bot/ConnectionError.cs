@@ -4,7 +4,7 @@ using WebSocket.Rx;
 namespace Signal.Bot;
 
 public record ConnectionError(ConnectionType Type)
-    : Error(null, ErrorSource.ConnectionHappened);
+    : Error(null, ErrorType.ConnectionHappened);
 
 public enum ConnectionType
 {
