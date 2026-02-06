@@ -1,15 +1,14 @@
 using System;
 using System.Net.WebSockets;
-using System.Reactive.Concurrency;
-using System.Reactive.Linq;
+using R3;
 using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.IO;
 using Signal.Bot.Polling;
-using Signal.Bot.Types;
-using Websocket.Client;
+using WebSocket.Rx;
+using ReceivedMessage = Signal.Bot.Types.ReceivedMessage;
 
 namespace Signal.Bot;
 
@@ -29,9 +28,8 @@ internal sealed class SignalBotReceiver : IAsyncDisposable
 
     private int _disposed;
     private readonly ISignalBotClient _client;
-    private IWebsocketClient? _websocketClient;
-    private IDisposable? _messageSubscription;
-    private IDisposable? _errorSubscription;
+    private ReactiveWebSocketClient? _websocketClient;
+    private CompositeDisposable? _disposables;
     private CancellationTokenSource? _disposeCts;
     private CancellationTokenSource? _linkedCts;
 
@@ -60,13 +58,12 @@ internal sealed class SignalBotReceiver : IAsyncDisposable
         var uri = new Uri($"{ConvertToWebSocketUrl(_client.BaseUrl)}/v1/receive/{_client.Number}" +
                           options.AsQueryParameter().Build());
 
-        _websocketClient ??= new WebsocketClient(uri, memoryStreamManager: StreamManager.Value)
+        _websocketClient ??= new ReactiveWebSocketClient(uri, memoryStreamManager: StreamManager.Value)
         {
-            Name = "Signal.Bot",
             ConnectTimeout = TimeSpan.FromSeconds(30),
-            ReconnectTimeout = TimeSpan.FromSeconds(10),
-            ErrorReconnectTimeout = TimeSpan.FromSeconds(30),
-            LostReconnectTimeout = TimeSpan.FromSeconds(30),
+            KeepAliveInterval = TimeSpan.FromSeconds(30),
+            KeepAliveTimeout = TimeSpan.FromSeconds(10),
+            IsTextMessageConversionEnabled = true,
             MessageEncoding = Encoding.UTF8
         };
 
@@ -83,54 +80,49 @@ internal sealed class SignalBotReceiver : IAsyncDisposable
             .Where(msg => msg?.Envelope?.SyncMessage is null || !options.IgnoreSync)
             .Select(parsed => parsed!);
 
-        var errors = Observable.Merge(
-            messages
-                .SelectMany(_ => Observable.Empty<Error>())
-                .Catch((Exception ex) => Observable.Return(
-                    new Error(ex, ErrorSource.MessageReceivedTermination))),
-            _websocketClient.DisconnectionHappened
-                .Select(info => info.To())
-                .Catch((Exception ex) => Observable.Return(
-                    new Error(ex, ErrorSource.DisconnectionHappenedTermination))),
-            _websocketClient.ReconnectionHappened
-                .Select(info => info.To())
-                .Catch((Exception ex) => Observable.Return(
-                    new Error(ex, ErrorSource.ReconnectionHappenedTermination)))
-        );
-
-        _messageSubscription = messages
-            .ObserveOn(TaskPoolScheduler.Default)
-            .Select(message => Observable.FromAsync(async () =>
+        var messageSubscription = messages
+            .SubscribeAwait(async (msg, ct) =>
             {
                 try
                 {
-                    await handler.HandleAsync(_client, message, _linkedCts.Token)
-                        .ConfigureAwait(false);
+                    using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(_linkedCts.Token, ct);
+                    await handler.HandleAsync(_client, msg, linkedCts.Token).ConfigureAwait(false);
                 }
                 catch (Exception ex) when (ex is not OperationCanceledException)
                 {
                     try
                     {
-                        await handler.HandleErrorAsync(_client,
-                                new Error(ex, ErrorSource.MessageReceived), _linkedCts.Token)
+                        await handler
+                            .HandleErrorAsync(_client, new Error(ex, ErrorSource.MessageReceived), _linkedCts.Token)
                             .ConfigureAwait(false);
                     }
                     catch
                     {
-                        /* Swallow */
+                        // noop
                     }
                 }
-            }))
-            .Concat()
-            .Subscribe(_ => { }, _ => { });
+            }, _ => { });
 
-        _errorSubscription = errors
-            .ObserveOn(TaskPoolScheduler.Default)
-            .Select(error => Observable.FromAsync(async () =>
+        var errors = Observable.Merge(
+            messages
+                .SelectMany(_ => Observable.Empty<Error>())
+                .Catch((Exception ex) => Observable.Return(new Error(ex, ErrorSource.MessageReceivedTermination))),
+            _websocketClient.DisconnectionHappened
+                .Select(info => info.To())
+                .Catch((Exception ex) =>
+                    Observable.Return(new Error(ex, ErrorSource.DisconnectionHappenedTermination))),
+            _websocketClient.ConnectionHappened
+                .Select(info => info.To())
+                .Catch((Exception ex) => Observable.Return(new Error(ex, ErrorSource.ConnectionHappenedTermination)))
+        );
+
+        var errorSubscription = errors
+            .SubscribeAwait(async (error, ct) =>
             {
                 try
                 {
-                    await handler.HandleErrorAsync(_client, error, _linkedCts.Token)
+                    using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(_linkedCts.Token, ct);
+                    await handler.HandleErrorAsync(_client, error, linkedCts.Token)
                         .ConfigureAwait(false);
                 }
                 catch (Exception ex) when (ex is not OperationCanceledException)
@@ -143,14 +135,18 @@ internal sealed class SignalBotReceiver : IAsyncDisposable
                     }
                     catch
                     {
-                        /* Swallow */
+                        // noop
                     }
                 }
-            }))
-            .Concat()
-            .Subscribe(_ => { }, _ => { });
+            }, result => result.TryThrow());
 
-        await _websocketClient.Start().ConfigureAwait(false);
+        _disposables = new CompositeDisposable
+        {
+            errorSubscription,
+            messageSubscription
+        };
+
+        await _websocketClient.StartAsync().ConfigureAwait(false);
 
         return this;
     }
@@ -178,20 +174,19 @@ internal sealed class SignalBotReceiver : IAsyncDisposable
         try
         {
             await (_websocketClient?
-                .Stop(WebSocketCloseStatus.NormalClosure, "Disposed")
+                .StopAsync(WebSocketCloseStatus.NormalClosure, "Disposed")
                 .WaitAsync(TimeSpan.FromSeconds(1), CancellationToken.None) ?? Task.CompletedTask);
         }
         catch
         {
-            /* Swallow on cleanup */
+            // noop
         }
 
         await (_disposeCts?.CancelAsync() ?? Task.CompletedTask);
         _linkedCts?.Dispose();
         _disposeCts?.Dispose();
-        _websocketClient?.Dispose();
-        _messageSubscription?.Dispose();
-        _errorSubscription?.Dispose();
+        await (_websocketClient?.DisposeAsync() ?? ValueTask.CompletedTask);
+        _disposables?.Dispose();
     }
 
     public async ValueTask DisposeAsync()

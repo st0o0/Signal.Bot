@@ -1,8 +1,6 @@
 using System;
 using System.Net;
 using System.Net.Http.Json;
-using System.Reactive.Linq;
-using System.Reactive.Subjects;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,6 +9,7 @@ using Signal.Bot.Exceptions;
 using Signal.Bot.Internal;
 using Signal.Bot.Requests;
 using Signal.Bot.Serialization;
+using R3;
 
 namespace Signal.Bot;
 
@@ -36,9 +35,9 @@ public class SignalBotClient : ISignalBotClient
 
     public JsonSerializerOptions JsonSerializerOptions { get; }
 
-    public IObservable<OnApiRequestArgs> OnApiRequest => _onApiRequest.AsObservable();
-    public IObservable<OnApiResponseArgs> OnApiResponse => _onApiResponse.AsObservable();
-    public IObservable<Exception> OnException => _onException.AsObservable();
+    public Observable<OnApiRequestArgs> OnApiRequest => _onApiRequest.AsObservable();
+    public Observable<OnApiResponseArgs> OnApiResponse => _onApiResponse.AsObservable();
+    public Observable<Exception> OnException => _onException.AsObservable();
 
     public async Task<HttpResponseMessage> SendAsync(IRequest request,
         IQueryParameterRegistry? queryParameters = null,
@@ -85,9 +84,9 @@ public class SignalBotClient : ISignalBotClient
         catch (Exception ex)
         {
             _onException.OnNext(ex);
-            _onApiRequest.OnError(ex);
-            _onApiResponse.OnError(ex);
-            return default!;
+            _onApiRequest.OnErrorResume(ex);
+            _onApiResponse.OnErrorResume(ex);
+            return null!;
         }
     }
 
@@ -115,8 +114,8 @@ public class SignalBotClient : ISignalBotClient
         catch (Exception ex)
         {
             _onException.OnNext(ex);
-            _onApiRequest.OnError(ex);
-            _onApiResponse.OnError(ex);
+            _onApiRequest.OnErrorResume(ex);
+            _onApiResponse.OnErrorResume(ex);
             return default!;
         }
     }

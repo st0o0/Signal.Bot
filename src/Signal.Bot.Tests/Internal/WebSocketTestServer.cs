@@ -10,7 +10,7 @@ public class WebSocketTestServer : IAsyncDisposable
     private readonly HttpListener _httpListener;
     private readonly CancellationTokenSource _cts;
     private Task? _listenerTask;
-    private WebSocket? _serverWebSocket;
+    private System.Net.WebSockets.WebSocket? _serverWebSocket;
 
     public int Port { get; }
     public string Url => $"http://localhost:{Port}/";
@@ -74,7 +74,7 @@ public class WebSocketTestServer : IAsyncDisposable
         }
     }
 
-    private async Task HandleWebSocketAsync(WebSocket webSocket, CancellationToken cancellationToken)
+    private async Task HandleWebSocketAsync(System.Net.WebSockets.WebSocket webSocket, CancellationToken cancellationToken)
     {
         var buffer = new byte[1024 * 4];
 

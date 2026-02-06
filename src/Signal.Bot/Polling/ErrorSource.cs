@@ -8,7 +8,7 @@ public enum ErrorSource
     DisconnectionHappened,
     DisconnectionHappenedTermination,
 
-    ReconnectionHappened,
-    ReconnectionHappenedTermination,
+    ConnectionHappened,
+    ConnectionHappenedTermination,
     FatalError
 }
