@@ -3,7 +3,7 @@ using System.Net.Sockets;
 using System.Net.WebSockets;
 using System.Text;
 
-namespace Signal.Bot.IntegrationTests.Internal;
+namespace Signal.Bot.Tests.Internal;
 
 public class WebSocketTestServer : IAsyncDisposable
 {
