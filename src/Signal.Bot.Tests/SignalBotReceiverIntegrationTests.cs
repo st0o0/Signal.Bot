@@ -1,11 +1,11 @@
 using System.Net.Sockets;
 using System.Text.Json;
 using NSubstitute;
-using Signal.Bot.IntegrationTests.Internal;
 using Signal.Bot.Polling;
+using Signal.Bot.Tests.Internal;
 using Signal.Bot.Types;
 
-namespace Signal.Bot.IntegrationTests;
+namespace Signal.Bot.Tests;
 
 public class SignalBotReceiverIntegrationTests : IAsyncDisposable
 {
