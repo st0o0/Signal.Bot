@@ -23,6 +23,18 @@ public class TimestampConverter : JsonConverter<DateTime>
                 var milliseconds = reader.GetInt64();
                 return DateTimeOffset.FromUnixTimeMilliseconds(milliseconds).DateTime;
             }
+            case JsonTokenType.None:
+            case JsonTokenType.StartObject:
+            case JsonTokenType.EndObject:
+            case JsonTokenType.StartArray:
+            case JsonTokenType.EndArray:
+            case JsonTokenType.PropertyName:
+            case JsonTokenType.Comment:
+            case JsonTokenType.True:
+            case JsonTokenType.False:
+            case JsonTokenType.Null:
+            default:
+                break;
         }
 
         throw new JsonException("Invalid timestamp format");
