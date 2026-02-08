@@ -113,10 +113,14 @@ public static class JsonBotAPI
         { typeof(VerifyNumberRequest), JsonBotSerializerContext.Default.VerifyNumberRequest },
         // Arrays
         { typeof(List<Group>), JsonBotSerializerContext.Default.ListGroup },
-        { typeof(List<string>), JsonBotSerializerContext.Default.ListString },
         { typeof(List<Attachment>), JsonBotSerializerContext.Default.ListAttachment },
         { typeof(List<Mention>), JsonBotSerializerContext.Default.ListMention },
         { typeof(List<Device>), JsonBotSerializerContext.Default.ListDevice },
+        { typeof(List<Identity>), JsonBotSerializerContext.Default.ListIdentity },
+        { typeof(List<Contact>), JsonBotSerializerContext.Default.ListContact },
+        { typeof(List<Search>), JsonBotSerializerContext.Default.ListSearch },
+        { typeof(List<StickerPack>), JsonBotSerializerContext.Default.ListStickerPack },
+        { typeof(List<string>), JsonBotSerializerContext.Default.ListString },
         { typeof(string[]), JsonBotSerializerContext.Default.StringArray },
         { typeof(string), JsonBotSerializerContext.Default.String },
     }.ToImmutableDictionary();

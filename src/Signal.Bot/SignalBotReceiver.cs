@@ -26,7 +26,7 @@ internal sealed class SignalBotReceiver : IAsyncDisposable
 
     private int _disposed;
     private readonly ISignalBotClient _client;
-    private ReactiveWebSocketClient? _websocketClient;
+    private IReactiveWebSocketClient? _websocketClient;
     private CompositeDisposable? _disposables;
     private CancellationTokenSource? _disposeCts;
     private CancellationTokenSource? _linkedCts;
@@ -35,6 +35,11 @@ internal sealed class SignalBotReceiver : IAsyncDisposable
     public SignalBotReceiver(ISignalBotClient client)
     {
         _client = client ?? throw new ArgumentNullException(nameof(client));
+    }
+
+    internal SignalBotReceiver(ISignalBotClient client, IReactiveWebSocketClient websocketClient) : this(client)
+    {
+        _websocketClient = websocketClient;
     }
 
     public async Task<IAsyncDisposable> StartReceivingAsync(

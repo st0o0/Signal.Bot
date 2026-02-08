@@ -92,10 +92,14 @@ namespace Signal.Bot.Serialization;
 
 // Arrays/Collections
 [JsonSerializable(typeof(List<Group>))]
-[JsonSerializable(typeof(List<string>))]
 [JsonSerializable(typeof(List<Attachment>))]
 [JsonSerializable(typeof(List<ReadMessage>))]
 [JsonSerializable(typeof(List<PreviewData>))]
 [JsonSerializable(typeof(List<Mention>))]
 [JsonSerializable(typeof(List<Device>))]
+[JsonSerializable(typeof(List<Identity>))]
+[JsonSerializable(typeof(List<Contact>))]
+[JsonSerializable(typeof(List<Search>))]
+[JsonSerializable(typeof(List<StickerPack>))]
+[JsonSerializable(typeof(List<string>))]
 public partial class JsonBotSerializerContext : JsonSerializerContext;

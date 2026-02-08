@@ -10,6 +10,7 @@ env:
   PROJECT_PATH: './src/signal.sln'
   PACKAGE_OUTPUT_DIRECTORY: './packages'
   TEST_OUTPUT_DIRECTORY: './testresults'
+  COVERAGE_REPORT_DIRECTORY: './coveragereport'
 
 permissions:
   contents: write
@@ -104,32 +105,6 @@ jobs:
           --verbosity normal 
           ${{ env.PROJECT_PATH }} 
 
-      - name: Code Coverage Report
-        uses: irongut/CodeCoverageSummary@v1.3.0
-        with:
-          filename: ${{ env.TEST_OUTPUT_DIRECTORY }}/*/coverage.cobertura.xml
-          format: markdown
-          hide_branch_rate: false
-          hide_complexity: false
-          output: both
-          indicators: true
-          thresholds: '50 80'
-
-      - name: Add Coverage PR Comment
-        uses: marocchino/sticky-pull-request-comment@v2
-        if: github.event_name == 'pull_request'
-        with:
-          recreate: true
-          path: code-coverage-results.md
-
-      - name: Publish Test Results
-        uses: dorny/test-reporter@v1
-        if: always()
-        with:
-          name: Tests
-          path: '**/*.trx'
-          reporter: dotnet-trx
-
       - name: Create NuGet package
         run: >
           dotnet pack
@@ -139,6 +114,18 @@ jobs:
           ${{ env.PROJECT_PATH }} 
           /p:PackageVersion=${{ steps.gitversion.outputs.fullSemVer }}
           /p:PackageReleaseNotes="${{ steps.plain-notes.outputs.release-notes }}"
+
+      - name: Report Code Coverage
+        uses: danielpalme/ReportGenerator-GitHub-Action@5
+        with:
+          reports: '${{ env.TEST_OUTPUT_DIRECTORY }}/*/coverage.cobertura.xml'
+          targetdir: '${{ env.COVERAGE_REPORT_DIRECTORY }}'
+          reporttypes: 'MarkdownSummaryGithub'
+          tag: '${{ steps.gitversion.outputs.fullSemVer }}'
+
+      - name: Add Coverage Summary to Job Summary
+        if: always()
+        run: cat ${{ env.COVERAGE_REPORT_DIRECTORY }}/SummaryGithub.md >> $GITHUB_STEP_SUMMARY
 
       - name: Upload package artifacts
         uses: actions/upload-artifact@v6
@@ -190,8 +177,6 @@ jobs:
           [![NuGet](https://img.shields.io/nuget/v/Signal.Bot?logo=nuget)](https://nuget.org/packages/Signal.Bot)
           [![GitHub](https://img.shields.io/github/last-commit/st0o0/Signal.Bot/main?logo=github)](https://github.com/st0o0/Signal.Bot)
           
-          🚀 Auto-generated from ${{ github.ref_name }}
-          ---
           EOF
           
           gh api repos/${{ github.repository }}/releases/generate-notes \
