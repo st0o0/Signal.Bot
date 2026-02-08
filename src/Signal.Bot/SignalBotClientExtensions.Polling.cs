@@ -1,6 +1,3 @@
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 using Signal.Bot.Internal;
 using Signal.Bot.Polling;
 using Signal.Bot.Types;

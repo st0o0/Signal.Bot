@@ -84,7 +84,7 @@ public class AttachmentTests
         };
 
         HttpRequestMessage? capturedRequest = null;
-        CancellationToken capturedToken = default;
+        var capturedToken = CancellationToken.None;
 
         _httpClientMock
             .SendAsync(Arg.Any<HttpRequestMessage>(), Arg.Any<CancellationToken>())
@@ -175,7 +175,7 @@ public class AttachmentTests
     {
         // Arrange
         const string attachmentId = "large-file";
-        var largeData = new byte[10 * 1024 * 1024]; // 10MB
+        var largeData = new byte[100 * 1024 * 1024]; // 100MB
         new Random().NextBytes(largeData);
 
         var responseMessage = new HttpResponseMessage(HttpStatusCode.OK)
