@@ -1,7 +1,4 @@
-using System;
 using System.Text.Json;
-using System.Threading;
-using System.Threading.Tasks;
 using R3;
 using Signal.Bot.Args;
 using Signal.Bot.Internal;

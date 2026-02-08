@@ -82,9 +82,9 @@ internal sealed class SignalBotReceiver : IAsyncDisposable
         var messageSubscription = messages
             .SubscribeAwait(async (msg, ct) =>
             {
+                using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(_linkedCts.Token, ct);
                 try
                 {
-                    using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(_linkedCts.Token, ct);
                     await handler.HandleAsync(_client, msg, linkedCts.Token);
                 }
                 catch (Exception ex) when (ex is not OperationCanceledException)
@@ -92,7 +92,7 @@ internal sealed class SignalBotReceiver : IAsyncDisposable
                     try
                     {
                         await handler
-                            .HandleErrorAsync(_client, new Error(ex, ErrorType.MessageReceived), _linkedCts.Token);
+                            .HandleErrorAsync(_client, new Error(ex, ErrorType.MessageReceived), linkedCts.Token);
                     }
                     catch
                     {
@@ -117,9 +117,9 @@ internal sealed class SignalBotReceiver : IAsyncDisposable
         var errorSubscription = errors
             .SubscribeAwait(async (error, ct) =>
             {
+                using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(_linkedCts.Token, ct);
                 try
                 {
-                    using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(_linkedCts.Token, ct);
                     await handler.HandleErrorAsync(_client, error, linkedCts.Token)
                         .ConfigureAwait(false);
                 }
@@ -128,7 +128,7 @@ internal sealed class SignalBotReceiver : IAsyncDisposable
                     try
                     {
                         await handler.HandleErrorAsync(_client,
-                                new Error(ex, ErrorType.FatalError), _linkedCts.Token)
+                                new Error(ex, ErrorType.FatalError), linkedCts.Token)
                             .ConfigureAwait(false);
                     }
                     catch
