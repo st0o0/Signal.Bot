@@ -1,4 +1,5 @@
 using NSubstitute;
+using Signal.Bot.UnitTests.Utils;
 
 namespace Signal.Bot.UnitTests.Extensions;
 

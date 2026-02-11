@@ -7,9 +7,9 @@ on:
 
 env:
   GLOBAL_JSON_PATH: './src/global.json'
-  PROJECT_PATH: './src/signal.sln'
+  PROJECT_PATH: './src/signal.slnx'
   PACKAGE_OUTPUT_DIRECTORY: './packages'
-  TEST_OUTPUT_DIRECTORY: './testresults'
+  TEST_OUTPUT_DIRECTORY: '${{ github.workspace }}/testresults'
   COVERAGE_REPORT_DIRECTORY: './coveragereport'
 
 permissions:
@@ -95,15 +95,16 @@ jobs:
           /p:ContinuousIntegrationBuild=true
 
       - name: Run tests
+        working-directory: './src'
         run: >
           dotnet test 
-          --configuration Release 
-          --no-build 
-          --collect:"XPlat Code Coverage" 
-          --logger trx 
-          --results-directory ${{ env.TEST_OUTPUT_DIRECTORY }} 
-          --verbosity normal 
-          ${{ env.PROJECT_PATH }} 
+          --configuration Release
+          --no-ansi
+          --no-build
+          --coverage
+          --coverage-output-format cobertura
+          --results-directory ${{ env.TEST_OUTPUT_DIRECTORY }}
+          --solution *.slnx
 
       - name: Create NuGet package
         run: >
@@ -118,7 +119,7 @@ jobs:
       - name: Report Code Coverage
         uses: danielpalme/ReportGenerator-GitHub-Action@5
         with:
-          reports: '${{ env.TEST_OUTPUT_DIRECTORY }}/*/coverage.cobertura.xml'
+          reports: '${{ env.TEST_OUTPUT_DIRECTORY }}/*cobertura.xml'
           targetdir: '${{ env.COVERAGE_REPORT_DIRECTORY }}'
           reporttypes: 'MarkdownSummaryGithub'
           tag: '${{ steps.gitversion.outputs.fullSemVer }}'

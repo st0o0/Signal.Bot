@@ -58,8 +58,8 @@ internal sealed class SignalBotReceiver : IAsyncDisposable
         receiverOptionsConfigure?.Invoke(builder);
         var options = builder.Build();
 
-        var uri = new Uri($"{ConvertToWebSocketUrl(_client.BaseUrl)}/v1/receive/{_client.Number}" +
-                          options.AsQueryParameter().Build());
+        var baseUrl = $"{ConvertToWebSocketUrl(_client.BaseUrl)}/v1/receive/{_client.Number}";
+        var uri = new Uri(baseUrl + options.AsQueryParameter().Build());
 
         _websocketClient ??= new ReactiveWebSocketClient(uri, memoryStreamManager: StreamManager.Value)
         {
@@ -82,7 +82,7 @@ internal sealed class SignalBotReceiver : IAsyncDisposable
             .Where(msg => msg.Envelope?.ReceiptMessage is null || !options.IgnoreReceipt)
             .Where(msg => msg.Envelope?.TypingMessage is null || !options.IgnoreTyping)
             .Where(msg => msg.Envelope?.SyncMessage is null || !options.IgnoreSync)
-            .Select(parsed => parsed!);
+            .Select(parsed => parsed);
 
         var messageSubscription = messages
             .SubscribeAwait(async (msg, ct) =>

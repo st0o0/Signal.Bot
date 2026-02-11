@@ -3,6 +3,7 @@ using System.Net.Http.Headers;
 using System.Text.Json;
 using NSubstitute;
 using R3;
+using Signal.Bot.UnitTests.Utils;
 
 namespace Signal.Bot.UnitTests.Extensions;
 
@@ -141,7 +142,7 @@ public class AttachmentTests : BotTestBase
 
         var responseMessage = new HttpResponseMessage(HttpStatusCode.BadRequest)
         {
-            Content = new StringContent(JsonSerializer.Serialize(new Types.Error { Message = message }))
+            Content = new StringContent(JsonSerializer.Serialize(new Types.ErrorResponse { Message = message }))
         };
 
         HttpClientMock

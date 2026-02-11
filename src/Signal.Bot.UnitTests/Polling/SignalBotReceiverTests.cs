@@ -1,10 +1,8 @@
 using System.Net.WebSockets;
-using System.Text.Json;
 using NSubstitute;
 using R3;
 using Signal.Bot.Polling;
 using Signal.Bot.Serialization;
-using Signal.Bot.Types;
 using WebSocket.Rx;
 
 namespace Signal.Bot.UnitTests.Polling;
@@ -23,9 +21,9 @@ public class SignalBotReceiverTests
 
         _mockClient.BaseUrl.Returns("localhost:8080");
         _mockClient.Number.Returns("+1234567890");
-        _mockClient.JsonSerializerOptions.Returns((JsonSerializerOptions)JsonBotAPI.Options);
+        _mockClient.JsonSerializerOptions.Returns(JsonBotAPI.Options);
 
-        _mockWebSocket.MessageReceived.Returns(Observable.Empty<WebSocket.Rx.ReceivedMessage>());
+        _mockWebSocket.MessageReceived.Returns(Observable.Empty<ReceivedMessage>());
         _mockWebSocket.ConnectionHappened.Returns(Observable.Empty<Connected>());
         _mockWebSocket.DisconnectionHappened.Returns(Observable.Empty<Disconnected>());
         _mockWebSocket.StartAsync().Returns(Task.CompletedTask);

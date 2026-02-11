@@ -7,7 +7,7 @@ using WireMock.ResponseBuilders;
 
 namespace Signal.Bot.IntegrationTests.Extensions;
 
-public class AccountIntegrationTests : IntegrationTestBase
+public class AccountTests : IntegrationTestBase
 {
     [Fact(Timeout = 15000)]
     public async Task GetAccounts_ShouldReturnList()

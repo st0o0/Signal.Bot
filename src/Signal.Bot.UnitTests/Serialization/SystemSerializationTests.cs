@@ -1,5 +1,6 @@
 using System.Text.Json;
 using Signal.Bot.Requests;
+using Signal.Bot.Types;
 
 namespace Signal.Bot.UnitTests.Serialization;
 
@@ -9,14 +10,14 @@ public class SystemSerializationTests
     public void TestErrorSerializationAndDeserialization()
     {
         // Arrange
-        var error = new Types.Error
+        var error = new ErrorResponse
         {
             Message = "Not Found"
         };
 
         // Act
         var json = JsonSerializer.Serialize(error);
-        var deserializedError = JsonSerializer.Deserialize<Types.Error>(json);
+        var deserializedError = JsonSerializer.Deserialize<ErrorResponse>(json);
 
         // Assert
         Assert.NotNull(deserializedError);

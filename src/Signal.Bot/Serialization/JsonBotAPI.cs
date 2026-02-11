@@ -40,7 +40,7 @@ public static class JsonBotAPI
         { typeof(DataMessage), JsonBotSerializerContext.Default.DataMessage },
         { typeof(Device), JsonBotSerializerContext.Default.Device },
         { typeof(Envelope), JsonBotSerializerContext.Default.Envelope },
-        { typeof(Types.Error), JsonBotSerializerContext.Default.Error },
+        { typeof(ErrorResponse), JsonBotSerializerContext.Default.ErrorResponse },
         { typeof(Group), JsonBotSerializerContext.Default.Group },
         { typeof(GroupV2Info), JsonBotSerializerContext.Default.GroupV2Info },
         { typeof(Identity), JsonBotSerializerContext.Default.Identity },

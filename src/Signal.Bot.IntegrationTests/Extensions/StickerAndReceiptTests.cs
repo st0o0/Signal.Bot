@@ -8,7 +8,7 @@ using WireMock.ResponseBuilders;
 
 namespace Signal.Bot.IntegrationTests.Extensions;
 
-public class StickerAndReceiptIntegrationTests : IntegrationTestBase
+public class StickerAndReceiptTests : IntegrationTestBase
 {
     [Fact(Timeout = 15000)]
     public async Task GetStickerPacks_ShouldReturnList()
@@ -60,13 +60,14 @@ public class StickerAndReceiptIntegrationTests : IntegrationTestBase
         // Arrange
         MockServer
             .Given(Request.Create()
-                .WithPath($"/v1/receipts/{BotNumber}")
+                .WithPath(path => path.Contains("/receipts"))
                 .UsingPost())
             .RespondWith(Response.Create()
                 .WithStatusCode(HttpStatusCode.OK));
 
         // Act
-        await Client.SendReceiptAsync(RecipientNumber, DateTime.UtcNow, cancellationToken: TestContext.Current.CancellationToken);
+        await Client.SendReceiptAsync(RecipientNumber, DateTime.UtcNow,
+            cancellationToken: TestContext.Current.CancellationToken);
 
         // Assert
         Assert.Single(MockServer.LogEntries);

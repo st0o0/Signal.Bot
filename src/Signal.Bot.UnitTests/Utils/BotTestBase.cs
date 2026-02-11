@@ -1,8 +1,7 @@
 using System.Net;
 using NSubstitute;
-using Signal.Bot.UnitTests.Utils;
 
-namespace Signal.Bot.UnitTests;
+namespace Signal.Bot.UnitTests.Utils;
 
 public abstract class BotTestBase
 {

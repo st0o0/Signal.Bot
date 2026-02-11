@@ -1,6 +1,6 @@
 ﻿namespace Signal.Bot.Types;
 
-public class Error
+public class ErrorResponse
 {
     [JsonPropertyName("error")] public string? Message { get; set; }
 }

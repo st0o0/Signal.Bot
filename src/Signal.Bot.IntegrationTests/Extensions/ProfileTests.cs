@@ -6,7 +6,7 @@ using WireMock.ResponseBuilders;
 
 namespace Signal.Bot.IntegrationTests.Extensions;
 
-public class ProfileIntegrationTests : IntegrationTestBase
+public class ProfileTests : IntegrationTestBase
 {
     [Fact(Timeout = 15000)]
     public async Task UpdateProfile_ShouldSucceed()

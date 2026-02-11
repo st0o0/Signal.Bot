@@ -1,6 +1,5 @@
 using NSubstitute;
 using Signal.Bot.IntegrationTests.Utils;
-using Signal.Bot.Polling;
 
 namespace Signal.Bot.IntegrationTests.Polling;
 

@@ -8,7 +8,7 @@ using WireMock.ResponseBuilders;
 
 namespace Signal.Bot.IntegrationTests.Extensions;
 
-public class MessageIntegrationTests : IntegrationTestBase
+public class MessageTests : IntegrationTestBase
 {
     [Fact(Timeout = 15000)]
     public async Task SendMessage_SimpleText_ShouldReturnTimestamp()

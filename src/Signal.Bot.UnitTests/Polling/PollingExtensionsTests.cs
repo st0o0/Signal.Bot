@@ -1,5 +1,6 @@
 using Signal.Bot.Polling;
 using Signal.Bot.Types;
+using Signal.Bot.UnitTests.Utils;
 
 namespace Signal.Bot.UnitTests.Polling;
 

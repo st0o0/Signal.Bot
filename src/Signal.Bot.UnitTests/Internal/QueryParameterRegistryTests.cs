@@ -126,9 +126,6 @@ public class QueryParameterRegistryTests
     [Fact(Timeout = 5000)]
     public void Add_WithValueFactory_UsesFactoryOutput()
     {
-        // Arrange
-        static string CustomFormat(DateTime dt) => dt.ToString("yyyyMMdd");
-
         // Act
         _registry.Add("date", DateTime.Now, CustomFormat);
 
@@ -136,6 +133,10 @@ public class QueryParameterRegistryTests
         var result = _registry.Build();
         Assert.StartsWith("?date=", result);
         Assert.Contains("20", result);
+        return;
+
+        // Arrange
+        static string CustomFormat(DateTime dt) => dt.ToString("yyyyMMdd");
     }
 
     [Fact(Timeout = 5000)]
@@ -249,7 +250,7 @@ public class QueryParameterRegistryTests
     public void Add_NullValueFactoryWithStringFallback_Works()
     {
         // Arrange
-        var testValue = "hello";
+        const string testValue = "hello";
 
         // Act
         _registry.Add("test", testValue);
@@ -281,7 +282,7 @@ public class QueryParameterRegistryTests
 
 public class TestClass
 {
-    public string Value { get; set; } = string.Empty;
+    public string Value { get; init; } = string.Empty;
 
     public override string ToString() => Value;
 }

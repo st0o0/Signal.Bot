@@ -1,7 +1,6 @@
 using System.Text.Json;
 using NSubstitute;
 using Signal.Bot.IntegrationTests.Utils;
-using Signal.Bot.Polling;
 using Signal.Bot.Serialization;
 using Signal.Bot.Types;
 

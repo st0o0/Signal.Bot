@@ -1,4 +1,4 @@
-namespace Signal.Bot.Polling;
+namespace Signal.Bot;
 
 public enum ErrorType
 {

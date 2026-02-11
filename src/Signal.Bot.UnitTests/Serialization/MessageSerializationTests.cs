@@ -11,10 +11,10 @@ public class MessageSerializationTests
     public void TestReceivedMessage_OptionalFieldsMissing_DeserializesCorrectly()
     {
         // Arrange
-        var json = "{\"account\": \"msg123\", \"envelope\": {\"source\": \"src123\"}}";
+        const string json = "{\"account\": \"msg123\", \"envelope\": {\"source\": \"src123\"}}";
 
         // Act
-        var result = JsonSerializer.Deserialize<ReceivedMessage>(json, (JsonSerializerOptions)JsonBotAPI.Options);
+        var result = JsonSerializer.Deserialize<ReceivedMessage>(json, JsonBotAPI.Options);
 
         // Assert
         Assert.NotNull(result);

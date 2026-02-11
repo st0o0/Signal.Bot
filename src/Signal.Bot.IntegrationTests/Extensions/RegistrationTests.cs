@@ -6,7 +6,7 @@ using WireMock.ResponseBuilders;
 
 namespace Signal.Bot.IntegrationTests.Extensions;
 
-public class RegistrationIntegrationTests : IntegrationTestBase
+public class RegistrationTests : IntegrationTestBase
 {
     [Fact(Timeout = 15000)]
     public async Task RegisterNumber_WithCaptcha_ShouldSendVerificationCode()

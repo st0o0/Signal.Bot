@@ -18,7 +18,7 @@ namespace Signal.Bot.Serialization;
 [JsonSerializable(typeof(DataMessage))]
 [JsonSerializable(typeof(Device))]
 [JsonSerializable(typeof(Envelope))]
-[JsonSerializable(typeof(Types.Error))]
+[JsonSerializable(typeof(ErrorResponse))]
 [JsonSerializable(typeof(Group))]
 [JsonSerializable(typeof(GroupV2Info))]
 [JsonSerializable(typeof(Identity))]
@@ -39,6 +39,7 @@ namespace Signal.Bot.Serialization;
 [JsonSerializable(typeof(StickerPack))]
 [JsonSerializable(typeof(SyncMessage))]
 [JsonSerializable(typeof(TypingMessage))]
+// Requests
 [JsonSerializable(typeof(AddDeviceRequest))]
 [JsonSerializable(typeof(AddGroupAdminRequest))]
 [JsonSerializable(typeof(AddGroupMemberRequest))]
