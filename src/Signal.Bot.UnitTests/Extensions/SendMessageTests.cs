@@ -2,6 +2,7 @@ using System.Net;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using R3;
+using Signal.Bot.UnitTests.Utils;
 
 namespace Signal.Bot.UnitTests.Extensions;
 

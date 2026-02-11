@@ -1,4 +1,3 @@
-using Signal.Bot.Polling;
 using WebSocket.Rx;
 
 namespace Signal.Bot;

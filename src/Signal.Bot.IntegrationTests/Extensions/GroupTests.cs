@@ -6,7 +6,7 @@ using WireMock.ResponseBuilders;
 
 namespace Signal.Bot.IntegrationTests.Extensions;
 
-public class GroupIntegrationTests : IntegrationTestBase
+public class GroupTests : IntegrationTestBase
 {
     private const string GroupId = "group.ckRzaEd4VmRzNnJaASAEsasa";
 
@@ -15,7 +15,7 @@ public class GroupIntegrationTests : IntegrationTestBase
     {
         // Arrange
         var members = new[] { RecipientNumber };
-        var groupName = "Test Group";
+        const string groupName = "Test Group";
 
         MockServer
             .Given(Request.Create()
@@ -37,7 +37,7 @@ public class GroupIntegrationTests : IntegrationTestBase
     public async Task AddGroupMember_ShouldSucceed()
     {
         // Arrange
-        var newMember = "+491700000000";
+        const string newMember = "+491700000000";
 
         MockServer
             .Given(Request.Create()
@@ -52,7 +52,7 @@ public class GroupIntegrationTests : IntegrationTestBase
                 .WithBody("{}"));
 
         // Act
-        await Client.AddGroupMemberAsync(GroupId, new[] { newMember },
+        await Client.AddGroupMemberAsync(GroupId, [newMember],
             cancellationToken: TestContext.Current.CancellationToken);
 
         // Assert
@@ -63,7 +63,7 @@ public class GroupIntegrationTests : IntegrationTestBase
     public async Task RemoveGroupMember_ShouldSucceed()
     {
         // Arrange
-        var memberToRemove = "+491700000000";
+        const string memberToRemove = "+491700000000";
 
         MockServer
             .Given(Request.Create()
@@ -78,7 +78,7 @@ public class GroupIntegrationTests : IntegrationTestBase
                 .WithBody("{}"));
 
         // Act
-        await Client.RemoveGroupMemberAsync(GroupId, new[] { memberToRemove },
+        await Client.RemoveGroupMemberAsync(GroupId, [memberToRemove],
             cancellationToken: TestContext.Current.CancellationToken);
 
         // Assert

@@ -1,7 +1,6 @@
 using System.Net;
 using System.Net.WebSockets;
 using Signal.Bot.Exceptions;
-using Signal.Bot.Polling;
 using WebSocket.Rx;
 
 namespace Signal.Bot.UnitTests.Exceptions;
@@ -49,7 +48,7 @@ public class ErrorHandlingTests
     public void DisconnectionError_CancelActions_InvokeCorrectly()
     {
         // Arrange
-        var disconnectedInfo = new Disconnected(DisconnectReason.Timeout, null, null, null, null);
+        var disconnectedInfo = new Disconnected(DisconnectReason.Timeout);
         var error = disconnectedInfo.To() as DisconnectionError;
         Assert.NotNull(error);
 

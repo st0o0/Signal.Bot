@@ -8,7 +8,7 @@ using WireMock.ResponseBuilders;
 
 namespace Signal.Bot.IntegrationTests.Extensions;
 
-public class IdentityAndContactIntegrationTests : IntegrationTestBase
+public class IdentityAndContactTests : IntegrationTestBase
 {
     [Fact(Timeout = 15000)]
     public async Task GetIdentities_ShouldReturnList()
@@ -94,7 +94,7 @@ public class IdentityAndContactIntegrationTests : IntegrationTestBase
                 .WithBody(json));
 
         // Act
-        var result = await Client.SearchNumbersAsync(new[] { RecipientNumber }, cancellationToken: TestContext.Current.CancellationToken);
+        var result = await Client.SearchNumbersAsync([RecipientNumber], cancellationToken: TestContext.Current.CancellationToken);
 
         // Assert
         Assert.Single(result);

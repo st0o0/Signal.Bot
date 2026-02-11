@@ -2,6 +2,7 @@ using System.Text.Json;
 using NSubstitute;
 using Signal.Bot.Serialization;
 using Signal.Bot.Types;
+using Signal.Bot.UnitTests.Utils;
 
 namespace Signal.Bot.UnitTests.Extensions;
 

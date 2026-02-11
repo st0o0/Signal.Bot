@@ -15,10 +15,10 @@ public class AboutSerializationTests
             Build = 123,
             Mode = "production",
             Version = "1.2.3",
-            Versions = new List<string> { "v1", "v2" },
+            Versions = ["v1", "v2"],
             Capabilities = new Dictionary<string, List<string>>
             {
-                { "cap1", new List<string> { "a", "b" } }
+                { "cap1", ["a", "b"] }
             }
         };
 

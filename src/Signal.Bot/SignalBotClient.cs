@@ -1,4 +1,5 @@
 using System.Net;
+using System.Net.Http.Json;
 using System.Text.Json;
 using Signal.Bot.Args;
 using Signal.Bot.Exceptions;
@@ -9,7 +10,7 @@ using R3;
 
 namespace Signal.Bot;
 
-public class SignalBotClient : ISignalBotClient
+public sealed class SignalBotClient : ISignalBotClient
 {
     private readonly HttpClient _httpClient;
     private readonly SignalBotClientOptions _options;
@@ -58,7 +59,7 @@ public class SignalBotClient : ISignalBotClient
                 if (httpResponse.StatusCode is HttpStatusCode.BadRequest)
                 {
                     var content = await httpResponse.Content.ReadAsStringAsync(cancellationToken);
-                    var error = JsonSerializer.Deserialize(content, JsonBotAPI.Get<Types.Error>())!;
+                    var error = JsonSerializer.Deserialize(content, JsonBotAPI.Get<Types.ErrorResponse>())!;
                     throw new HttpRequestException(error.Message);
                 }
 
@@ -97,11 +98,8 @@ public class SignalBotClient : ISignalBotClient
         try
         {
             var httpResponse = await SendAsync(request, queryParameters, cancellationToken: cancellationToken);
-            var content = await httpResponse.Content.ReadAsStringAsync(cancellationToken);
-            return JsonSerializer.Deserialize(content, JsonBotAPI.Get<TResponse>())!;
-            // return await httpResponse.Content
-            //     .ReadFromJsonAsync<TResponse>(JsonBotAPI.Options, cancellationToken)
-            //     .ConfigureAwait(false)!;
+            var response = await httpResponse.Content.ReadFromJsonAsync(JsonBotAPI.Get<TResponse>(), cancellationToken);
+            return response!;
         }
         catch (Exception ex)
         {
@@ -112,7 +110,7 @@ public class SignalBotClient : ISignalBotClient
         }
     }
 
-    protected virtual void Dispose(bool disposing)
+    private void Dispose(bool disposing)
     {
         if (!disposing) return;
 

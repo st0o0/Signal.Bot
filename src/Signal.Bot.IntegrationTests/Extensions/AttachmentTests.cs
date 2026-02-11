@@ -5,7 +5,7 @@ using WireMock.ResponseBuilders;
 
 namespace Signal.Bot.IntegrationTests.Extensions;
 
-public class AttachmentIntegrationTests : IntegrationTestBase
+public class AttachmentTests : IntegrationTestBase
 {
     [Fact(Timeout = 15000)]
     public async Task GetAttachments_ShouldReturnList()
@@ -33,7 +33,7 @@ public class AttachmentIntegrationTests : IntegrationTestBase
     public async Task GetAttachment_ShouldReturnBytes()
     {
         // Arrange
-        var attachmentId = "test-id";
+        const string attachmentId = "test-id";
         var content = "test content"u8.ToArray();
         MockServer
             .Given(Request.Create()
@@ -54,7 +54,7 @@ public class AttachmentIntegrationTests : IntegrationTestBase
     public async Task RemoveAttachment_ShouldSucceed()
     {
         // Arrange
-        var attachmentId = "test-id";
+        const string attachmentId = "test-id";
         MockServer
             .Given(Request.Create()
                 .WithPath($"/v1/attachments/{attachmentId}")

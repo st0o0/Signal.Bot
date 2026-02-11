@@ -1,12 +1,11 @@
 using System.Net;
 using Signal.Bot.IntegrationTests.Utils;
-using WireMock.Matchers;
 using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
 
 namespace Signal.Bot.IntegrationTests.Extensions;
 
-public class TypingIndicatorIntegrationTests : IntegrationTestBase
+public class TypingIndicatorTests : IntegrationTestBase
 {
     [Fact(Timeout = 15000)]
     public async Task SetTypingIndicator_StartTyping_ShouldUsePut()

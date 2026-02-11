@@ -6,14 +6,13 @@ using WireMock.ResponseBuilders;
 
 namespace Signal.Bot.IntegrationTests.Extensions;
 
-public class ReactionIntegrationTests : IntegrationTestBase
+public class ReactionTests : IntegrationTestBase
 {
     [Fact(Timeout = 15000)]
     public async Task AddReaction_ShouldSucceed()
     {
         // Arrange
         const string reaction = "👍";
-        var targetAuthor = RecipientNumber;
         var timestamp = DateTime.Now;
 
         MockServer
@@ -24,7 +23,7 @@ public class ReactionIntegrationTests : IntegrationTestBase
                 {
                     reaction,
                     recipient = RecipientNumber,
-                    target_author = targetAuthor,
+                    target_author = RecipientNumber,
                     timestamp = (long)timestamp.Subtract(DateTime.UnixEpoch).TotalMilliseconds
                 })))
             .RespondWith(Response.Create()
@@ -32,7 +31,7 @@ public class ReactionIntegrationTests : IntegrationTestBase
                 .WithBody("{}"));
 
         // Act
-        await Client.AddReactionAsync(reaction, RecipientNumber, targetAuthor, timestamp,
+        await Client.AddReactionAsync(reaction, RecipientNumber, RecipientNumber, timestamp,
             cancellationToken: TestContext.Current.CancellationToken);
 
         // Assert
@@ -44,7 +43,6 @@ public class ReactionIntegrationTests : IntegrationTestBase
     {
         // Arrange
         const string reaction = "👍";
-        var targetAuthor = RecipientNumber;
 
         MockServer
             .Given(Request.Create()
@@ -55,7 +53,7 @@ public class ReactionIntegrationTests : IntegrationTestBase
                 .WithBodyAsJson("ok"));
 
         // Act
-        var result = await Client.RemoveReactionAsync(reaction, RecipientNumber, targetAuthor,
+        var result = await Client.RemoveReactionAsync(reaction, RecipientNumber, RecipientNumber,
             cancellationToken: TestContext.Current.CancellationToken);
 
         // Assert

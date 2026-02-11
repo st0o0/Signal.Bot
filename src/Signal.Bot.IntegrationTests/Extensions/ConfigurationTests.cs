@@ -2,11 +2,10 @@ using System.Net;
 using Signal.Bot.IntegrationTests.Utils;
 using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
-using Signal.Bot.Types;
 
 namespace Signal.Bot.IntegrationTests.Extensions;
 
-public class ConfigurationIntegrationTests : IntegrationTestBase
+public class ConfigurationTests : IntegrationTestBase
 {
     [Fact(Timeout = 15000)]
     public async Task GetConfiguration_ShouldReturnConfiguration()

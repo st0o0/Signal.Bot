@@ -28,8 +28,6 @@ public class DefaultReceivedMessageHandlerTests
         _cancellationToken = CancellationToken.None;
     }
 
-    #region HandleAsync Tests
-
     [Fact(Timeout = 5000)]
     public async Task HandleAsync_CallsUpdateHandlerWithCorrectParameters()
     {
@@ -67,10 +65,6 @@ public class DefaultReceivedMessageHandlerTests
         await _errorHandlerMock.DidNotReceive()(Arg.Any<ISignalBotClient>(), Arg.Any<Error>(),
             Arg.Any<CancellationToken>());
     }
-
-    #endregion
-
-    #region HandleErrorAsync Tests
 
     [Fact(Timeout = 5000)]
     public async Task HandleErrorAsync_CallsErrorHandlerWithCorrectParameters()
@@ -110,10 +104,6 @@ public class DefaultReceivedMessageHandlerTests
         Assert.Equal("Error handler failed", thrownException.Message);
     }
 
-    #endregion
-
-    #region Integration Tests
-
     [Fact(Timeout = 5000)]
     public async Task FullLifecycle_BothHandlersWorkIndependently()
     {
@@ -131,6 +121,4 @@ public class DefaultReceivedMessageHandlerTests
         await _updateHandlerMock.Received(1)(Arg.Is(_clientMock), Arg.Is(_message), Arg.Is(_cancellationToken));
         await _errorHandlerMock.Received(1)(Arg.Is(_clientMock), Arg.Is(_error), Arg.Is(_cancellationToken));
     }
-
-    #endregion
 }

@@ -37,9 +37,9 @@ public class ReceiverOptionsBuilderTests
         var options = new ReceiverOptionsBuilder()
             .WithIgnoreAttachments(true)
             .WithIgnoreStories(true)
-            .WithIgnoreTyping(true)
-            .WithIgnoreReceipt(true)
-            .WithIgnoreSync(true)
+            .WithIgnoreTyping()
+            .WithIgnoreReceipt()
+            .WithIgnoreSync()
             .Build();
 
         Assert.True(options.IgnoreAttachments);

@@ -1,10 +1,11 @@
 using System.Text.Json;
 using NSubstitute;
 using Signal.Bot.Serialization;
+using Signal.Bot.UnitTests.Utils;
 
 namespace Signal.Bot.UnitTests.Extensions;
 
-public class VerfiyNumberTests : BotTestBase
+public class VerifyNumberTests : BotTestBase
 {
     [Fact(Timeout = 5000)]
     public async Task VerifyNumberAsync_ValidToken_ReturnsVerificationResult()
