@@ -2,14 +2,6 @@ using System.Text;
 
 namespace Signal.Bot.Internal;
 
-public interface IQueryParameterRegistry
-{
-    T AddAndGet<T>(string valueName, T value, Func<T, string>? valueFactory = null) where T : notnull;
-    void Add<T>(string valueName, T value, Func<T, string>? valueFactory = null) where T : notnull;
-    void AddRange<T>(string valueName, IEnumerable<T> values, Func<T, string>? valueFactory = null) where T : notnull;
-    string Build();
-}
-
 internal sealed class QueryParameterRegistry : IQueryParameterRegistry
 {
     private readonly StringBuilder _builder = new(string.Empty);
@@ -49,6 +41,5 @@ internal sealed class QueryParameterRegistry : IQueryParameterRegistry
         }
     }
 
-    public string Build()
-        => _builder.ToString();
+    public string Build() => _builder.ToString();
 }

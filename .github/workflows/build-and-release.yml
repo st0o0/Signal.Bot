@@ -85,7 +85,11 @@ jobs:
           echo "Nuget Version: ${{ steps.gitversion.outputs.fullSemVer }}"
 
       - name: Restore dependencies
-        run: dotnet restore ${{ env.PROJECT_PATH }}
+        run: >
+          dotnet
+          restore
+          --locked-mode
+          ${{ env.PROJECT_PATH }}
 
       - name: Build
         run: >

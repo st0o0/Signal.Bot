@@ -51,7 +51,7 @@ function generateIndexPage(parsedDocs, availableTypes) {
     namespaces[ns].push(type)
   })
   
-  let md = `# ${assembly} API Reference
+  let md = `# API Reference
 
 This documentation was automatically generated from XML documentation comments.
 
@@ -240,28 +240,76 @@ function processMixedContent(element, availableTypes) {
   let result = ''
   
   for (const child of element.$$) {
+    if (!child) continue // Safety check
+    
     const tagName = child['#name']
     
     if (tagName === '__text__') {
       // Plain text node
-      result += child._
+      result += child._ || ''
     } else if (tagName === 'see') {
-      // <see cref="..."/>
-      const cref = child.$.cref.replace(/^[TPMF]:/, '')
-      const linkText = cref.split('.').pop()
+      // <see cref="..."/> or <see langword="..."/> or <see href="..."/>
+      if (!child.$) {
+        console.warn('⚠️  <see> tag without attributes found')
+        continue
+      }
       
-      if (availableTypes && availableTypes.has(cref)) {
-        const fileName = sanitizeFileName(cref)
-        result += `[\`${linkText}\`](/api/${fileName})`
-      } else {
-        result += `\`${linkText}\``
+      // Handle <see langword="..."/>
+      if (child.$.langword) {
+        const langword = child.$.langword
+        // Format language keywords like null, true, false, etc.
+        result += `\`${langword}\``
+      }
+      // Handle <see href="..."/>
+      else if (child.$.href) {
+        const href = child.$.href
+        const linkText = child._ || href
+        result += `[${linkText}](${href})`
+      }
+      // Handle <see cref="..."/>
+      else if (child.$.cref) {
+        const cref = child.$.cref.replace(/^[TPMF]:/, '')
+        const linkText = cref.split('.').pop()
+        
+        if (availableTypes && availableTypes.has(cref)) {
+          const fileName = sanitizeFileName(cref)
+          result += `[\`${linkText}\`](/api/${fileName})`
+        } else {
+          result += `\`${linkText}\``
+        }
+      }
+      else {
+        console.warn('⚠️  <see> tag without cref, langword, or href attribute')
+      }
+    } else if (tagName === 'seealso') {
+      // <seealso cref="..."/> or <seealso href="..."/>
+      if (!child.$) continue
+      
+      if (child.$.cref) {
+        const cref = child.$.cref.replace(/^[TPMF]:/, '')
+        const linkText = cref.split('.').pop()
+        
+        if (availableTypes && availableTypes.has(cref)) {
+          const fileName = sanitizeFileName(cref)
+          result += `[\`${linkText}\`](/api/${fileName})`
+        } else {
+          result += `\`${linkText}\``
+        }
+      } else if (child.$.href) {
+        const href = child.$.href
+        const linkText = child._ || href
+        result += `[${linkText}](${href})`
       }
     } else if (tagName === 'paramref') {
       // <paramref name="..."/>
-      result += `\`${child.$.name}\``
+      if (child.$ && child.$.name) {
+        result += `\`${child.$.name}\``
+      }
     } else if (tagName === 'typeparamref') {
       // <typeparamref name="..."/>
-      result += `\`${child.$.name}\``
+      if (child.$ && child.$.name) {
+        result += `\`${child.$.name}\``
+      }
     } else if (tagName === 'c') {
       // <c>code</c>
       if (child.$$) {
@@ -269,12 +317,25 @@ function processMixedContent(element, availableTypes) {
       } else if (child._) {
         result += `\`${child._}\``
       }
+    } else if (tagName === 'code') {
+      // <code>...</code>
+      if (child.$$) {
+        result += '\n```\n' + processMixedContent(child, availableTypes) + '\n```\n'
+      } else if (child._) {
+        result += '\n```\n' + child._ + '\n```\n'
+      }
     } else if (tagName === 'para') {
       // <para>...</para>
       result += '\n\n' + processMixedContent(child, availableTypes) + '\n\n'
     } else if (tagName === 'list') {
       // <list>...</list>
       result += '\n\n' + processListElement(child, availableTypes)
+    } else if (tagName === 'example') {
+      // <example>...</example>
+      result += '\n\n**Example:**\n\n' + processMixedContent(child, availableTypes) + '\n\n'
+    } else if (tagName === 'remarks') {
+      // <remarks>...</remarks>
+      result += '\n\n**Remarks:**\n\n' + processMixedContent(child, availableTypes) + '\n\n'
     }
   }
   

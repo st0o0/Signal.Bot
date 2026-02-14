@@ -15,9 +15,9 @@ The simplest bot - echoes back everything you send it.
 A bot that responds to commands like `/help`, `/time`, `/weather`.
 
 [View Command Bot Example →](/examples/command-bot)
-
-## Intermediate Examples
 <!---
+## Intermediate Examples
+
 ### Group Manager Bot
 
 Manage Signal groups with commands to add/remove members, update settings, and more.
@@ -80,14 +80,8 @@ Create and manage polls in Signal groups.
 
 ### Send a Message
 
-```csharp
-var client = new SignalBotClient("http://localhost:8080");
-await client.SendMessageAsync(
-    number: "+1234567890",
-    message: "Hello!",
-    recipients: new[] { "+0987654321" }
-);
-```
+<!-- snippet: SendAMessage show-source -->
+<!-- endSnippet -->
 
 ### Receive Messages
 

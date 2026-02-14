@@ -1,7 +1,6 @@
 using System.Net.Sockets;
 using System.Text.Json;
 using NSubstitute;
-using Signal.Bot.Polling;
 using Signal.Bot.Types;
 
 namespace Signal.Bot.IntegrationTests.Utils;
@@ -31,9 +30,9 @@ public abstract class ReceiverIntegrationTestBase : IAsyncDisposable
         GC.SuppressFinalize(this);
     }
 
-    protected static ReceivedMessage CreateTestReceivedMessage(string message)
+    protected static ReceivedMessageEnvelope CreateTestReceivedMessage(string message)
     {
-        return new ReceivedMessage
+        return new ReceivedMessageEnvelope
         {
             Account = "+1234567890",
             Envelope = new Envelope
@@ -51,9 +50,9 @@ public abstract class ReceiverIntegrationTestBase : IAsyncDisposable
         };
     }
 
-    protected static ReceivedMessage CreateTestReceiptMessage()
+    protected static ReceivedMessageEnvelope CreateTestReceiptMessage()
     {
-        return new ReceivedMessage
+        return new ReceivedMessageEnvelope
         {
             Account = "+1234567890",
             Envelope = new Envelope
@@ -71,9 +70,9 @@ public abstract class ReceiverIntegrationTestBase : IAsyncDisposable
         };
     }
 
-    protected static ReceivedMessage CreateTestTypingMessage()
+    protected static ReceivedMessageEnvelope CreateTestTypingMessage()
     {
-        return new ReceivedMessage
+        return new ReceivedMessageEnvelope
         {
             Account = "+1234567890",
             Envelope = new Envelope
@@ -91,9 +90,9 @@ public abstract class ReceiverIntegrationTestBase : IAsyncDisposable
         };
     }
 
-    protected static ReceivedMessage CreateTestSyncMessage()
+    protected static ReceivedMessageEnvelope CreateTestSyncMessage()
     {
-        return new ReceivedMessage
+        return new ReceivedMessageEnvelope
         {
             Account = "+1234567890",
             Envelope = new Envelope
@@ -110,7 +109,7 @@ public abstract class ReceiverIntegrationTestBase : IAsyncDisposable
         };
     }
 
-    protected static ReceivedMessage CreateTestGroupMessage(string body, string groupId, string groupName)
+    protected static ReceivedMessageEnvelope CreateTestGroupMessage(string body, string groupId, string groupName)
     {
         var message = CreateTestReceivedMessage(body);
         message.Envelope!.DataMessage!.GroupV2 = new GroupV2Info
@@ -122,7 +121,7 @@ public abstract class ReceiverIntegrationTestBase : IAsyncDisposable
         return message;
     }
 
-    protected static ReceivedMessage CreateTestMessageWithAttachment(string body, string filename, string contentType)
+    protected static ReceivedMessageEnvelope CreateTestMessageWithAttachment(string body, string filename, string contentType)
     {
         var message = CreateTestReceivedMessage(body);
         message.Envelope!.DataMessage!.Attachments =
@@ -138,7 +137,7 @@ public abstract class ReceiverIntegrationTestBase : IAsyncDisposable
         return message;
     }
 
-    protected static ReceivedMessage CreateTestMessageWithMultipleAttachments(string body, int attachmentCount)
+    protected static ReceivedMessageEnvelope CreateTestMessageWithMultipleAttachments(string body, int attachmentCount)
     {
         var message = CreateTestReceivedMessage(body);
         var attachments = new List<Attachment>();

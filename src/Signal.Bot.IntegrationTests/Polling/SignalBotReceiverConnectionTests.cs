@@ -37,7 +37,7 @@ public class SignalBotReceiverConnectionTests : ReceiverIntegrationTestBase
 
         MockHandler.HandleErrorAsync(
                 Arg.Any<ISignalBotClient>(),
-                Arg.Is<Error>(e => e.ErrorType == ErrorType.DisconnectionHappened),
+                Arg.Is<Error>(e => e.Source == FailureSource.DisconnectionHappened),
                 Arg.Any<CancellationToken>())
             .Returns(Task.CompletedTask)
             .AndDoes(_ => disconnectTcs.SetResult(true));

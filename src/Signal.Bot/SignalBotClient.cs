@@ -3,14 +3,15 @@ using System.Net.Http.Json;
 using System.Text.Json;
 using Signal.Bot.Args;
 using Signal.Bot.Exceptions;
-using Signal.Bot.Internal;
 using Signal.Bot.Requests;
 using Signal.Bot.Serialization;
 using R3;
 
 namespace Signal.Bot;
 
-/// <inheritdoc />
+/// <summary>
+/// Defines the core interface for interacting with the Signal Bot API, providing methods for sending requests and observing API interactions.
+/// </summary>
 public sealed class SignalBotClient : ISignalBotClient
 {
     private readonly HttpClient _httpClient;
@@ -32,25 +33,43 @@ public sealed class SignalBotClient : ISignalBotClient
         JsonSerializerOptions = JsonBotAPI.Options;
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Gets the base URL of the Signal Bot API endpoint.
+    /// </summary>
     public string BaseUrl => _options.BaseUrl;
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Gets the Signal phone number associated with this bot client.
+    /// </summary>
     public string Number => _options.Number;
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Gets the JSON serialization options used for request and response serialization.
+    /// </summary>
     public JsonSerializerOptions JsonSerializerOptions { get; }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Observable stream of outgoing API request events for monitoring and logging purposes.
+    /// </summary>
     public Observable<OnApiRequestArgs> OnApiRequest => _onApiRequest.AsObservable();
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Observable stream of incoming API response events for monitoring and logging purposes.
+    /// </summary>
     public Observable<OnApiResponseArgs> OnApiResponse => _onApiResponse.AsObservable();
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Observable stream of exceptions that occur during API interactions.
+    /// </summary>
     public Observable<Exception> OnException => _onException.AsObservable();
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Sends an HTTP request to the Signal Bot API and returns the raw HTTP response.
+    /// </summary>
+    /// <param name="request">The request to send.</param>
+    /// <param name="queryParameters">Optional query parameters to append to the request URL.</param>
+    /// <param name="cancellationToken">Cancellation token to cancel the operation.</param>
+    /// <returns>The HTTP response message.</returns>
     public async Task<HttpResponseMessage> SendAsync(IRequest request,
         IQueryParameterRegistry? queryParameters = null,
         CancellationToken cancellationToken = default)
@@ -98,7 +117,13 @@ public sealed class SignalBotClient : ISignalBotClient
         }
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Sends a request to the Signal Bot API without expecting a response body.
+    /// </summary>
+    /// <param name="request">The request to send.</param>
+    /// <param name="queryParameters">Optional query parameters to append to the request URL.</param>
+    /// <param name="cancellationToken">Cancellation token to cancel the operation.</param>
+    /// <returns>A task that completes when the request is sent successfully.</returns>
     public async Task SendRequestAsync(
         IRequest request,
         IQueryParameterRegistry? queryParameters = null,
@@ -107,7 +132,14 @@ public sealed class SignalBotClient : ISignalBotClient
         _ = await SendAsync(request, queryParameters, cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Sends a request to the Signal Bot API and deserializes the response to the specified type.
+    /// </summary>
+    /// <typeparam name="TResponse">The type to deserialize the response into.</typeparam>
+    /// <param name="request">The request to send.</param>
+    /// <param name="queryParameters">Optional query parameters to append to the request URL.</param>
+    /// <param name="cancellationToken">Cancellation token to cancel the operation.</param>
+    /// <returns>The deserialized response of type TResponse.</returns>
     public async Task<TResponse> SendRequestAsync<TResponse>(IRequest<TResponse> request,
         IQueryParameterRegistry? queryParameters = null,
         CancellationToken cancellationToken = default)

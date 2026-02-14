@@ -4,11 +4,9 @@ using System.Text;
 using System.Text.Json;
 using Microsoft.IO;
 using Signal.Bot.Internal;
-using Signal.Bot.Polling;
 using Signal.Bot.Serialization;
+using Signal.Bot.Types;
 using WebSocket.Rx;
-using ErrorSource = Signal.Bot.Polling.ErrorSource;
-using ReceivedMessage = Signal.Bot.Types.ReceivedMessage;
 
 namespace Signal.Bot;
 
@@ -80,7 +78,7 @@ internal sealed class SignalBotReceiver : IAsyncDisposable
                 WebSocketMessageType.Text when msg.Text is not null => msg.Text,
                 _ => null
             })
-            .Select(content => JsonSerializer.Deserialize(content!, JsonBotAPI.Get<ReceivedMessage>())!)
+            .Select(content => JsonSerializer.Deserialize(content!, JsonBotAPI.Get<ReceivedMessageEnvelope>())!)
             .Where(msg => msg.Envelope?.ReceiptMessage is null || !options.IgnoreReceipt)
             .Where(msg => msg.Envelope?.TypingMessage is null || !options.IgnoreTyping)
             .Where(msg => msg.Envelope?.SyncMessage is null || !options.IgnoreSync)
@@ -99,7 +97,7 @@ internal sealed class SignalBotReceiver : IAsyncDisposable
                     try
                     {
                         await handler
-                            .HandleErrorAsync(_client, new Error(ex, ErrorSource.MessageReceived), _linkedCts.Token)
+                            .HandleErrorAsync(_client, new Error(ex, FailureSource.MessageReceived), _linkedCts.Token)
                             .ConfigureAwait(false);
                     }
                     catch
@@ -112,14 +110,14 @@ internal sealed class SignalBotReceiver : IAsyncDisposable
         var errors = Observable.Merge(
             messages
                 .SelectMany(_ => Observable.Empty<Error>())
-                .Catch((Exception ex) => Observable.Return(new Error(ex, ErrorSource.MessageReceiveTerminated))),
+                .Catch((Exception ex) => Observable.Return(new Error(ex, FailureSource.MessageReceiveTerminated))),
             _websocketClient.DisconnectionHappened
                 .Select(info => info.To())
                 .Catch((Exception ex) =>
-                    Observable.Return(new Error(ex, ErrorSource.DisconnectionHappenTerminated))),
+                    Observable.Return(new Error(ex, FailureSource.DisconnectionHappenTerminated))),
             _websocketClient.ConnectionHappened
                 .Select(info => info.To())
-                .Catch((Exception ex) => Observable.Return(new Error(ex, ErrorSource.ConnectionHappenTerminated)))
+                .Catch((Exception ex) => Observable.Return(new Error(ex, FailureSource.ConnectionHappenTerminated)))
         );
 
         var errorSubscription = errors
@@ -136,7 +134,7 @@ internal sealed class SignalBotReceiver : IAsyncDisposable
                     try
                     {
                         await handler.HandleErrorAsync(_client,
-                                new Error(ex, ErrorSource.Failed), _linkedCts.Token)
+                                new Error(ex, FailureSource.Failed), _linkedCts.Token)
                             .ConfigureAwait(false);
                     }
                     catch

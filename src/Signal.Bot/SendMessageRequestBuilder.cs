@@ -3,24 +3,25 @@ using Signal.Bot.Requests;
 namespace Signal.Bot;
 
 /// <summary>
-/// Fluent builder for constructing SendMessageRequest objects with various message properties and configurations.
+/// Provides a fluent interface for constructing <see cref="SendMessageRequest"/> objects with various message properties and configurations.
 /// </summary>
 public class SendMessageRequestBuilder
 {
     private SendMessageRequest _request = new();
 
     /// <summary>
-    /// Creates a new instance of the SendMessageRequestBuilder.
+    /// Creates a new instance of the <see cref="SendMessageRequestBuilder"/>.
     /// </summary>
-    /// <returns>A new SendMessageRequestBuilder instance.</returns>
+    /// <returns>A new <see cref="SendMessageRequestBuilder"/> instance.</returns>
     public static SendMessageRequestBuilder Create() => new();
 
     /// <summary>
     /// Adds an attachment from a file path, automatically encoding it as base64 with the appropriate MIME type.
     /// </summary>
     /// <param name="filePath">The path to the file to attach.</param>
-    /// <param name="includeFilename">If true, includes the filename in the data URI.</param>
+    /// <param name="includeFilename">If true, includes the filename in the data URI. Default is false.</param>
     /// <returns>The builder instance for method chaining.</returns>
+    /// <seealso cref="Base64Attachment.FromFile(string, string?, bool)"/>
     public SendMessageRequestBuilder WithAttachmentFromFile(string filePath, bool includeFilename = false)
     {
         return WithAttachment(Base64Attachment.FromFile(filePath, includeFilename: includeFilename));
@@ -30,12 +31,13 @@ public class SendMessageRequestBuilder
     /// Adds an attachment from a byte array with the specified MIME type and optional filename.
     /// </summary>
     /// <param name="bytes">The byte array containing the attachment data.</param>
-    /// <param name="mimeType">The MIME type of the attachment (e.g., "image/png").</param>
+    /// <param name="mimeType">The MIME type of the attachment (e.g., "image/png", "application/pdf").</param>
     /// <param name="filename">Optional filename to include in the data URI.</param>
     /// <returns>The builder instance for method chaining.</returns>
+    /// <seealso cref="Base64Attachment.FromDataUri(byte[], string, string)"/>
     public SendMessageRequestBuilder WithAttachmentFromBytes(byte[] bytes, string mimeType, string? filename = null)
     {
-        return WithAttachment(filename != null
+        return WithAttachment(filename is not null
             ? Base64Attachment.FromDataUri(bytes, mimeType, filename)
             : Base64Attachment.FromDataUri(bytes, mimeType));
     }
@@ -45,6 +47,7 @@ public class SendMessageRequestBuilder
     /// </summary>
     /// <param name="attachment">The base64-encoded attachment string or data URI.</param>
     /// <returns>The builder instance for method chaining.</returns>
+    /// <seealso cref="Base64Attachment"/>
     public SendMessageRequestBuilder WithAttachment(string attachment)
     {
         _request = _request with { Attachments = [.. _request.Attachments ?? [], attachment] };
@@ -67,6 +70,7 @@ public class SendMessageRequestBuilder
     /// </summary>
     /// <param name="linkPreview">The link preview configuration object.</param>
     /// <returns>The builder instance for method chaining.</returns>
+    /// <seealso cref="LinkPreview"/>
     public SendMessageRequestBuilder WithLinkPreview(LinkPreview linkPreview)
     {
         _request = _request with { LinkPreview = linkPreview };
@@ -81,6 +85,8 @@ public class SendMessageRequestBuilder
     /// <param name="description">Optional description for the link preview.</param>
     /// <param name="thumbnail">Optional thumbnail image as a byte array.</param>
     /// <returns>The builder instance for method chaining.</returns>
+    /// <seealso cref="LinkPreview"/>
+    /// <seealso cref="Base64String.FromBytes(byte[])"/>
     public SendMessageRequestBuilder WithLinkPreview(string url,
         string? title = null,
         string? description = null,
@@ -100,8 +106,9 @@ public class SendMessageRequestBuilder
     /// Sets the mentions in the message, either overwriting existing mentions or appending to them.
     /// </summary>
     /// <param name="mentions">The collection of mentions to add.</param>
-    /// <param name="overwrite">If true, replaces existing mentions; if false, appends to them.</param>
+    /// <param name="overwrite">If true, replaces existing mentions; if false, appends to them. Default is true.</param>
     /// <returns>The builder instance for method chaining.</returns>
+    /// <seealso cref="MessageMention"/>
     public SendMessageRequestBuilder WithMentions(IEnumerable<MessageMention> mentions, bool overwrite = true)
     {
         if (overwrite)
@@ -121,6 +128,7 @@ public class SendMessageRequestBuilder
     /// </summary>
     /// <param name="mention">The mention to add.</param>
     /// <returns>The builder instance for method chaining.</returns>
+    /// <seealso cref="MessageMention"/>
     public SendMessageRequestBuilder WithMention(MessageMention mention)
     {
         _request = _request with { Mentions = [.. _request.Mentions ?? [], mention] };
@@ -131,9 +139,10 @@ public class SendMessageRequestBuilder
     /// Adds a mention with the specified author and position in the message text.
     /// </summary>
     /// <param name="author">The phone number or identifier of the user being mentioned.</param>
-    /// <param name="start">The starting character position of the mention in the message text.</param>
+    /// <param name="start">The zero-based starting character position of the mention in the message text.</param>
     /// <param name="length">The length of the mention text in characters.</param>
     /// <returns>The builder instance for method chaining.</returns>
+    /// <seealso cref="MessageMention"/>
     public SendMessageRequestBuilder WithMention(string author, int start, int length)
     {
         return WithMention(new MessageMention { Author = author, Start = start, Length = length });
@@ -153,7 +162,7 @@ public class SendMessageRequestBuilder
     /// <summary>
     /// Sets whether the sender should receive a notification for their own message.
     /// </summary>
-    /// <param name="notifySelf">If true, the sender receives a notification for this message.</param>
+    /// <param name="notifySelf">If true, the sender receives a notification for this message. Default is true.</param>
     /// <returns>The builder instance for method chaining.</returns>
     public SendMessageRequestBuilder WithNotifySelf(bool notifySelf = true)
     {
@@ -164,7 +173,7 @@ public class SendMessageRequestBuilder
     /// <summary>
     /// Sets the phone number of the sender.
     /// </summary>
-    /// <param name="number">The sender's phone number.</param>
+    /// <param name="number">The sender's phone number in international format.</param>
     /// <returns>The builder instance for method chaining.</returns>
     public SendMessageRequestBuilder WithNumber(string number)
     {
@@ -187,8 +196,9 @@ public class SendMessageRequestBuilder
     /// Sets the mentions in the quoted message, either overwriting existing quote mentions or appending to them.
     /// </summary>
     /// <param name="quoteMentions">The collection of mentions in the quoted message.</param>
-    /// <param name="overwrite">If true, replaces existing quote mentions; if false, appends to them.</param>
+    /// <param name="overwrite">If true, replaces existing quote mentions; if false, appends to them. Default is true.</param>
     /// <returns>The builder instance for method chaining.</returns>
+    /// <seealso cref="MessageMention"/>
     public SendMessageRequestBuilder WithQuoteMentions(IEnumerable<MessageMention> quoteMentions, bool overwrite = true)
     {
         if (overwrite)
@@ -208,6 +218,7 @@ public class SendMessageRequestBuilder
     /// </summary>
     /// <param name="mention">The mention in the quoted message.</param>
     /// <returns>The builder instance for method chaining.</returns>
+    /// <seealso cref="MessageMention"/>
     public SendMessageRequestBuilder WithQuoteMention(MessageMention mention)
     {
         _request = _request with { QuoteMentions = [.. _request.QuoteMentions ?? [], mention] };
@@ -215,7 +226,7 @@ public class SendMessageRequestBuilder
     }
 
     /// <summary>
-    /// Sets the text content of the message being quoted/replied to.
+    /// Sets the text content of the message being quoted or replied to.
     /// </summary>
     /// <param name="quoteMessage">The text of the quoted message.</param>
     /// <returns>The builder instance for method chaining.</returns>
@@ -226,7 +237,7 @@ public class SendMessageRequestBuilder
     }
 
     /// <summary>
-    /// Sets the timestamp of the message being quoted/replied to.
+    /// Sets the timestamp of the message being quoted or replied to.
     /// </summary>
     /// <param name="quoteTimestamp">The timestamp of the quoted message.</param>
     /// <returns>The builder instance for method chaining.</returns>
@@ -240,7 +251,7 @@ public class SendMessageRequestBuilder
     /// Sets the recipients of the message, either overwriting existing recipients or appending to them.
     /// </summary>
     /// <param name="recipients">The collection of recipient phone numbers or group IDs.</param>
-    /// <param name="overwrite">If true, replaces existing recipients; if false, appends to them.</param>
+    /// <param name="overwrite">If true, replaces existing recipients; if false, appends to them. Default is true.</param>
     /// <returns>The builder instance for method chaining.</returns>
     public SendMessageRequestBuilder WithRecipients(IEnumerable<string> recipients, bool overwrite = true)
     {
@@ -270,7 +281,7 @@ public class SendMessageRequestBuilder
     /// <summary>
     /// Sets a sticker to be sent with the message.
     /// </summary>
-    /// <param name="sticker">The sticker identifier or data.</param>
+    /// <param name="sticker">The sticker identifier or base64-encoded sticker data.</param>
     /// <returns>The builder instance for method chaining.</returns>
     public SendMessageRequestBuilder WithSticker(string sticker)
     {
@@ -281,8 +292,9 @@ public class SendMessageRequestBuilder
     /// <summary>
     /// Sets the text formatting mode for the message.
     /// </summary>
-    /// <param name="textMode">The text mode (e.g., styled, normal).</param>
+    /// <param name="textMode">The text mode defining how the message should be formatted.</param>
     /// <returns>The builder instance for method chaining.</returns>
+    /// <seealso cref="TextMode"/>
     public SendMessageRequestBuilder WithTextMode(TextMode textMode)
     {
         _request = _request with { TextMode = textMode };
@@ -292,7 +304,7 @@ public class SendMessageRequestBuilder
     /// <summary>
     /// Sets whether the message should be viewable only once before disappearing.
     /// </summary>
-    /// <param name="viewOnce">If true, the message can only be viewed once.</param>
+    /// <param name="viewOnce">If true, the message can only be viewed once. Default is true.</param>
     /// <returns>The builder instance for method chaining.</returns>
     public SendMessageRequestBuilder WithViewOnce(bool viewOnce = true)
     {

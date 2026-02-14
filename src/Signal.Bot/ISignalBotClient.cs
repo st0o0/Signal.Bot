@@ -1,7 +1,6 @@
 using System.Text.Json;
 using R3;
 using Signal.Bot.Args;
-using Signal.Bot.Internal;
 using Signal.Bot.Requests;
 
 namespace Signal.Bot;

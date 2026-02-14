@@ -1,5 +1,4 @@
 using System.Net.WebSockets;
-using Signal.Bot.Polling;
 
 namespace Signal.Bot;
 
@@ -19,7 +18,7 @@ public record DisconnectionError(
     string? CloseStatusDescription = null,
     string? SubProtocol = null,
     Exception? Exception = null)
-    : Error(Exception, ErrorSource.DisconnectionHappened)
+    : Error(Exception, FailureSource.DisconnectionHappened)
 {
     internal Action? CancelReconnectionAction;
 

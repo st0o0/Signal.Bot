@@ -1,7 +1,6 @@
 using System.Net.WebSockets;
 using NSubstitute;
 using R3;
-using Signal.Bot.Polling;
 using Signal.Bot.Serialization;
 using WebSocket.Rx;
 

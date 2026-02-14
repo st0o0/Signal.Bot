@@ -1,5 +1,3 @@
-using Signal.Bot.Polling;
-
 namespace Signal.Bot.UnitTests.Polling;
 
 public class SignalBotReceiverFilterTests

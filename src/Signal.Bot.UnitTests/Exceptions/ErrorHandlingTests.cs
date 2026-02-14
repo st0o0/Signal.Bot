@@ -1,6 +1,7 @@
 using System.Net;
 using System.Net.WebSockets;
 using Signal.Bot.Exceptions;
+using Signal.Bot.Internal;
 using WebSocket.Rx;
 
 namespace Signal.Bot.UnitTests.Exceptions;
@@ -8,9 +9,9 @@ namespace Signal.Bot.UnitTests.Exceptions;
 public class ErrorHandlingTests
 {
     [Theory(Timeout = 5000)]
-    [InlineData(ConnectReason.Initial, ConnectionType.Initial)]
-    [InlineData(ConnectReason.Reconnect, ConnectionType.Reconnect)]
-    public void ConnectionError_To_MapsCorrectly(ConnectReason reason, ConnectionType expectedType)
+    [InlineData(ConnectReason.Initialized, ConnectionEvent.Initialized)]
+    [InlineData(ConnectReason.Reconnected, ConnectionEvent.Reconnected)]
+    public void ConnectionError_To_MapsCorrectly(ConnectReason reason, ConnectionEvent expectedType)
     {
         // Arrange
         var connectedInfo = new Connected(reason);
@@ -20,16 +21,17 @@ public class ErrorHandlingTests
 
         // Assert
         Assert.NotNull(error);
-        Assert.Equal(expectedType, error.Type);
+        Assert.Equal(expectedType, error.Event);
     }
 
     [Theory(Timeout = 5000)]
-    [InlineData(DisconnectReason.ConnectionLost, DisconnectionType.ConnectionLost)]
-    [InlineData(DisconnectReason.Timeout, DisconnectionType.Timeout)]
-    [InlineData(DisconnectReason.ClientInitiated, DisconnectionType.ClientInitiated)]
-    [InlineData(DisconnectReason.ServerInitiated, DisconnectionType.ServerInitiated)]
-    [InlineData(DisconnectReason.Shutdown, DisconnectionType.Shutdown)]
-    public void DisconnectionError_To_MapsCorrectly(DisconnectReason reason, DisconnectionType expectedType)
+    [InlineData(DisconnectReason.Undefined, DisconnectionEvent.Undefined)]
+    [InlineData(DisconnectReason.ClientInitiated, DisconnectionEvent.ClientInitiated)]
+    [InlineData(DisconnectReason.ServerInitiated, DisconnectionEvent.ServerInitiated)]
+    [InlineData(DisconnectReason.TimedOut, DisconnectionEvent.TimedOut)]
+    [InlineData(DisconnectReason.Dropped, DisconnectionEvent.Dropped)]
+    [InlineData(DisconnectReason.Closed, DisconnectionEvent.Closed)]
+    public void DisconnectionError_To_MapsCorrectly(DisconnectReason reason, DisconnectionEvent expectedType)
     {
         // Arrange
         var exception = new WebSocketException("Test");
@@ -40,7 +42,7 @@ public class ErrorHandlingTests
 
         // Assert
         Assert.NotNull(error);
-        Assert.Equal(expectedType, error.DisconnectionType);
+        Assert.Equal(expectedType, error.Event);
         Assert.Equal(exception, error.Exception);
     }
 
@@ -48,7 +50,7 @@ public class ErrorHandlingTests
     public void DisconnectionError_CancelActions_InvokeCorrectly()
     {
         // Arrange
-        var disconnectedInfo = new Disconnected(DisconnectReason.Timeout);
+        var disconnectedInfo = new Disconnected(DisconnectReason.TimedOut);
         var error = disconnectedInfo.To() as DisconnectionError;
         Assert.NotNull(error);
 
@@ -72,14 +74,14 @@ public class ErrorHandlingTests
     {
         // Arrange
         var exception = new Exception("msg");
-        const ErrorType errorType = ErrorType.FatalError;
+        const FailureSource errorSource = FailureSource.Undefined;
 
         // Act
-        var error = new Error(exception, errorType);
+        var error = new Error(exception, errorSource);
 
         // Assert
         Assert.Equal(exception, error.Exception);
-        Assert.Equal(errorType, error.ErrorType);
+        Assert.Equal(errorSource, error.Source);
     }
 
     [Fact(Timeout = 5000)]
@@ -128,7 +130,7 @@ public class ErrorHandlingTests
         Assert.Equal(message, ex.Message);
         Assert.Equal(statusCode, ex.HttpStatusCode);
     }
-    
+
     [Fact(Timeout = 5000)]
     public void RequestException_SetsPropertiesCorrectly4()
     {

@@ -1,8 +1,22 @@
+using System.Text.Json.Serialization;
 using Signal.Bot.Requests;
 using Signal.Bot.Types;
 
 namespace Signal.Bot.Serialization;
 
+/// <summary>
+/// Provides source-generated JSON serialization context for the Signal Bot API with optimized performance and AOT compatibility.
+/// </summary>
+/// <remarks>
+/// This context is configured with:
+/// <list type="bullet">
+/// <item><description>Snake_case property naming convention to match the Signal Bot API format</description></item>
+/// <item><description>Custom timestamp converter for handling Unix epoch timestamps</description></item>
+/// <item><description>String-based enum serialization for better API compatibility</description></item>
+/// <item><description>Default value ignoring to reduce payload size</description></item>
+/// <item><description>All Signal Bot API types, requests, and collections pre-registered for source generation</description></item>
+/// </list>
+/// </remarks>
 [JsonSourceGenerationOptions(
     Converters = [typeof(TimestampConverter)],
     UseStringEnumConverter = true,
@@ -33,7 +47,7 @@ namespace Signal.Bot.Serialization;
 [JsonSerializable(typeof(ReactionData))]
 [JsonSerializable(typeof(ReadMessage))]
 [JsonSerializable(typeof(ReceiptMessage))]
-[JsonSerializable(typeof(ReceivedMessage))]
+[JsonSerializable(typeof(ReceivedMessageEnvelope))]
 [JsonSerializable(typeof(Search))]
 [JsonSerializable(typeof(SetUsername))]
 [JsonSerializable(typeof(StickerPack))]

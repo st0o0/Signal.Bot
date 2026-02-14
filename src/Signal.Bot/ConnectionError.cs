@@ -1,5 +1,3 @@
-using Signal.Bot.Polling;
-
 namespace Signal.Bot;
 
 /// <summary>
@@ -8,4 +6,4 @@ namespace Signal.Bot;
 /// such as initial connection or reconnection events.
 /// </summary>
 /// <param name="Event">The specific connection event that occurred (see <see cref="ConnectionEvent"/> for possible values).</param>
-public record ConnectionError(ConnectionEvent Event) : Error(null, ErrorSource.ConnectionHappened);
+public record ConnectionError(ConnectionEvent Event) : Error(null, FailureSource.ConnectionHappened);

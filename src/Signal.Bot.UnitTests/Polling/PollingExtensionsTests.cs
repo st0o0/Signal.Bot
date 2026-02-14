@@ -1,4 +1,3 @@
-using Signal.Bot.Polling;
 using Signal.Bot.Types;
 using Signal.Bot.UnitTests.Utils;
 
@@ -8,7 +7,7 @@ public class PollingExtensionsTests : BotTestBase
 {
     private sealed class DummyHandler : IReceivedMessageHandler
     {
-        public Task HandleAsync(ISignalBotClient client, ReceivedMessage message, CancellationToken cancellationToken)
+        public Task HandleAsync(ISignalBotClient client, ReceivedMessageEnvelope messageEnvelope, CancellationToken cancellationToken)
             => Task.CompletedTask;
 
         public Task HandleErrorAsync(ISignalBotClient client, Error error, CancellationToken cancellationToken)
