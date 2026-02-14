@@ -10,6 +10,7 @@ using R3;
 
 namespace Signal.Bot;
 
+/// <inheritdoc />
 public sealed class SignalBotClient : ISignalBotClient
 {
     private readonly HttpClient _httpClient;
@@ -18,6 +19,10 @@ public sealed class SignalBotClient : ISignalBotClient
     private readonly Subject<OnApiResponseArgs> _onApiResponse = new();
     private readonly Subject<Exception> _onException = new();
 
+    /// <summary>
+    /// Initializes a new instance of the SignalBotClient with optional configuration.
+    /// </summary>
+    /// <param name="configure">Optional action to configure the client options via a builder.</param>
     public SignalBotClient(Action<SignalBotClientOptionsBuilder>? configure = null)
     {
         var builder = SignalBotClientOptionsBuilder.Create();
@@ -27,15 +32,25 @@ public sealed class SignalBotClient : ISignalBotClient
         JsonSerializerOptions = JsonBotAPI.Options;
     }
 
+    /// <inheritdoc />
     public string BaseUrl => _options.BaseUrl;
+
+    /// <inheritdoc />
     public string Number => _options.Number;
 
+    /// <inheritdoc />
     public JsonSerializerOptions JsonSerializerOptions { get; }
 
+    /// <inheritdoc />
     public Observable<OnApiRequestArgs> OnApiRequest => _onApiRequest.AsObservable();
+
+    /// <inheritdoc />
     public Observable<OnApiResponseArgs> OnApiResponse => _onApiResponse.AsObservable();
+
+    /// <inheritdoc />
     public Observable<Exception> OnException => _onException.AsObservable();
 
+    /// <inheritdoc />
     public async Task<HttpResponseMessage> SendAsync(IRequest request,
         IQueryParameterRegistry? queryParameters = null,
         CancellationToken cancellationToken = default)
@@ -83,6 +98,7 @@ public sealed class SignalBotClient : ISignalBotClient
         }
     }
 
+    /// <inheritdoc />
     public async Task SendRequestAsync(
         IRequest request,
         IQueryParameterRegistry? queryParameters = null,
@@ -91,6 +107,7 @@ public sealed class SignalBotClient : ISignalBotClient
         _ = await SendAsync(request, queryParameters, cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 
+    /// <inheritdoc />
     public async Task<TResponse> SendRequestAsync<TResponse>(IRequest<TResponse> request,
         IQueryParameterRegistry? queryParameters = null,
         CancellationToken cancellationToken = default)
@@ -110,6 +127,10 @@ public sealed class SignalBotClient : ISignalBotClient
         }
     }
 
+    /// <summary>
+    /// Releases the unmanaged resources used by the SignalBotClient and optionally releases the managed resources.
+    /// </summary>
+    /// <param name="disposing">True to release both managed and unmanaged resources; false to release only unmanaged resources.</param>
     private void Dispose(bool disposing)
     {
         if (!disposing) return;
@@ -120,6 +141,7 @@ public sealed class SignalBotClient : ISignalBotClient
         _onException.OnCompleted();
     }
 
+    /// <inheritdoc />
     public void Dispose()
     {
         Dispose(true);

@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace Signal.Bot.Requests;
 
 public record GetQrCodeLinkRequest() : RequestBase("v1/qrcodelink", HttpMethod.Get)

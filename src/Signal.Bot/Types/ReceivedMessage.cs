@@ -1,4 +1,6 @@
-﻿namespace Signal.Bot.Types;
+﻿using System.Text.Json.Serialization;
+
+namespace Signal.Bot.Types;
 
 public class ReceivedMessage
 {

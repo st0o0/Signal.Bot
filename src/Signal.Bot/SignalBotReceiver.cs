@@ -3,9 +3,11 @@ using R3;
 using System.Text;
 using System.Text.Json;
 using Microsoft.IO;
+using Signal.Bot.Internal;
 using Signal.Bot.Polling;
 using Signal.Bot.Serialization;
 using WebSocket.Rx;
+using ErrorSource = Signal.Bot.Polling.ErrorSource;
 using ReceivedMessage = Signal.Bot.Types.ReceivedMessage;
 
 namespace Signal.Bot;
@@ -97,7 +99,8 @@ internal sealed class SignalBotReceiver : IAsyncDisposable
                     try
                     {
                         await handler
-                            .HandleErrorAsync(_client, new Error(ex, ErrorType.MessageReceived), linkedCts.Token);
+                            .HandleErrorAsync(_client, new Error(ex, ErrorSource.MessageReceived), _linkedCts.Token)
+                            .ConfigureAwait(false);
                     }
                     catch
                     {
@@ -109,14 +112,14 @@ internal sealed class SignalBotReceiver : IAsyncDisposable
         var errors = Observable.Merge(
             messages
                 .SelectMany(_ => Observable.Empty<Error>())
-                .Catch((Exception ex) => Observable.Return(new Error(ex, ErrorType.MessageReceivedTermination))),
+                .Catch((Exception ex) => Observable.Return(new Error(ex, ErrorSource.MessageReceiveTerminated))),
             _websocketClient.DisconnectionHappened
                 .Select(info => info.To())
                 .Catch((Exception ex) =>
-                    Observable.Return(new Error(ex, ErrorType.DisconnectionHappenedTermination))),
+                    Observable.Return(new Error(ex, ErrorSource.DisconnectionHappenTerminated))),
             _websocketClient.ConnectionHappened
                 .Select(info => info.To())
-                .Catch((Exception ex) => Observable.Return(new Error(ex, ErrorType.ConnectionHappenedTermination)))
+                .Catch((Exception ex) => Observable.Return(new Error(ex, ErrorSource.ConnectionHappenTerminated)))
         );
 
         var errorSubscription = errors
@@ -133,7 +136,7 @@ internal sealed class SignalBotReceiver : IAsyncDisposable
                     try
                     {
                         await handler.HandleErrorAsync(_client,
-                                new Error(ex, ErrorType.FatalError), linkedCts.Token)
+                                new Error(ex, ErrorSource.Failed), _linkedCts.Token)
                             .ConfigureAwait(false);
                     }
                     catch

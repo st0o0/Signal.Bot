@@ -330,4 +330,6 @@ ASALocalRun/
 .mfractor/
 .Rproj.user
 
-**.env
+docs/.vitepress/dist
+docs/.vitepress/cache
+docs/api/**
