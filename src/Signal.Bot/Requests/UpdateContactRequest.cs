@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace Signal.Bot.Requests;
 
 public record UpdateContactRequest(string Number) : RequestBase($"v1/contacts/{Number}", HttpMethod.Put)

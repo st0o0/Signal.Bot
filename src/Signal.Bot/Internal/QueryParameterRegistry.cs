@@ -10,7 +10,7 @@ public interface IQueryParameterRegistry
     string Build();
 }
 
-public class QueryParameterRegistry : IQueryParameterRegistry
+internal sealed class QueryParameterRegistry : IQueryParameterRegistry
 {
     private readonly StringBuilder _builder = new(string.Empty);
 

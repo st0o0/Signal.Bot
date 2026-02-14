@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace Signal.Bot.Types;
 
 public class Configuration

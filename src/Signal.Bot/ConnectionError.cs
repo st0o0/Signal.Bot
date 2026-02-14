@@ -1,32 +1,11 @@
-using WebSocket.Rx;
+using Signal.Bot.Polling;
 
 namespace Signal.Bot;
 
-public record ConnectionError(ConnectionType Type)
-    : Error(null, ErrorType.ConnectionHappened);
-
-public enum ConnectionType
-{
-    Undefined = 0,
-    Initial = 1,
-    Reconnect = 2
-}
-
-internal static class ReconnectionTypeExtensions
-{
-    internal static Error To(this Connected info)
-    {
-        return new ConnectionError(info.Reason.To());
-    }
-
-    private static ConnectionType To(this ConnectReason value)
-    {
-        return value switch
-        {
-            ConnectReason.Undefined => ConnectionType.Undefined,
-            ConnectReason.Initial => ConnectionType.Initial,
-            ConnectReason.Reconnect => ConnectionType.Reconnect,
-            _ => ConnectionType.Undefined
-        };
-    }
-}
+/// <summary>
+/// Represents a connection-related event during WebSocket lifecycle that is reported as an error for handling purposes.
+/// This is not an actual error condition, but rather a notification mechanism for connection state changes
+/// such as initial connection or reconnection events.
+/// </summary>
+/// <param name="Event">The specific connection event that occurred (see <see cref="ConnectionEvent"/> for possible values).</param>
+public record ConnectionError(ConnectionEvent Event) : Error(null, ErrorSource.ConnectionHappened);
