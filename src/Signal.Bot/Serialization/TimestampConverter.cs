@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace Signal.Bot.Serialization;
 
-public class TimestampConverter : JsonConverter<DateTime>
+internal class TimestampConverter : JsonConverter<DateTime>
 {
     public override DateTime Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {

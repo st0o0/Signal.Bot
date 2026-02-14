@@ -18,7 +18,7 @@ public class SignalBotReceiverLifecycleTests : ReceiverIntegrationTestBase
 
         MockHandler.HandleAsync(
                 Arg.Any<ISignalBotClient>(),
-                Arg.Any<ReceivedMessage>(),
+                Arg.Any<ReceivedMessageEnvelope>(),
                 Arg.Any<CancellationToken>())
             .Returns(callInfo =>
             {

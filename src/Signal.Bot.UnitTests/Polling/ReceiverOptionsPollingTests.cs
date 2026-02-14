@@ -1,4 +1,4 @@
-using Signal.Bot.Polling;
+using Signal.Bot.Internal;
 
 namespace Signal.Bot.UnitTests.Polling;
 

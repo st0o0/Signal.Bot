@@ -21,7 +21,7 @@ public class SignalBotReceiverPerformanceTests : ReceiverIntegrationTestBase
 
         MockHandler.HandleAsync(
                 Arg.Any<ISignalBotClient>(),
-                Arg.Any<ReceivedMessage>(),
+                Arg.Any<ReceivedMessageEnvelope>(),
                 Arg.Any<CancellationToken>())
             .Returns(Task.CompletedTask)
             .AndDoes(_ =>
@@ -69,7 +69,7 @@ public class SignalBotReceiverPerformanceTests : ReceiverIntegrationTestBase
 
         MockHandler.HandleAsync(
                 Arg.Any<ISignalBotClient>(),
-                Arg.Any<ReceivedMessage>(),
+                Arg.Any<ReceivedMessageEnvelope>(),
                 Arg.Any<CancellationToken>())
             .Returns(Task.CompletedTask)
             .AndDoes(_ =>
@@ -119,12 +119,12 @@ public class SignalBotReceiverPerformanceTests : ReceiverIntegrationTestBase
 
         MockHandler.HandleAsync(
                 Arg.Any<ISignalBotClient>(),
-                Arg.Any<ReceivedMessage>(),
+                Arg.Any<ReceivedMessageEnvelope>(),
                 Arg.Any<CancellationToken>())
             .Returns(Task.CompletedTask)
             .AndDoes(callInfo =>
             {
-                var msg = callInfo.ArgAt<ReceivedMessage>(1);
+                var msg = callInfo.ArgAt<ReceivedMessageEnvelope>(1);
                 var messageText = msg.Envelope?.DataMessage?.Message ?? "";
                 var messageNumber = int.Parse(messageText.Replace("Message ", ""));
                 receivedMessages.Enqueue(messageNumber);
@@ -173,12 +173,12 @@ public class SignalBotReceiverPerformanceTests : ReceiverIntegrationTestBase
 
         MockHandler.HandleAsync(
                 Arg.Any<ISignalBotClient>(),
-                Arg.Any<ReceivedMessage>(),
+                Arg.Any<ReceivedMessageEnvelope>(),
                 Arg.Any<CancellationToken>())
             .Returns(Task.CompletedTask)
             .AndDoes(callInfo =>
             {
-                var msg = callInfo.ArgAt<ReceivedMessage>(1);
+                var msg = callInfo.ArgAt<ReceivedMessageEnvelope>(1);
                 if (msg.Envelope?.DataMessage != null)
                 {
                     Interlocked.Increment(ref dataMessageCount);
@@ -211,7 +211,7 @@ public class SignalBotReceiverPerformanceTests : ReceiverIntegrationTestBase
         await receiver.StartReceivingAsync(MockHandler, cancellationToken: TestContext.Current.CancellationToken);
 
         // Act
-        var messages = new List<ReceivedMessage>();
+        var messages = new List<ReceivedMessageEnvelope>();
         for (var i = 0; i < messagesPerType; i++)
         {
             messages.Add(CreateTestReceivedMessage($"Data {i}"));

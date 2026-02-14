@@ -48,4 +48,16 @@ internal static class Extensions
             _ => ConnectionEvent.Undefined
         };
     }
+    
+    internal static QueryParameterRegistry AsQueryParameter(this ReceiverOptions options)
+    {
+        var result = new QueryParameterRegistry();
+        result.Add("timeout", options.Timeout, x => x.Seconds.ToString());
+        result.Add("ignore_attachments", options.IgnoreAttachments);
+        result.Add("ignore_stories", options.IgnoreStories);
+        result.Add("max_messages", options.MaxMessages);
+        result.Add("send_read_receipts", options.SendReadReceipts);
+
+        return result;
+    }
 }

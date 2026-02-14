@@ -31,7 +31,7 @@
         <None Include="../../README.md" Pack="true" Visible="false" PackagePath="\"/>
         <None Include="../../LICENSE" Pack="true" Visible="false" PackagePath="\"/>
         <None Include="../../docs/public/logo_small.png" Visible="false" Pack="true" PackagePath="\"/>
-        <None Remove="packages.lock.json" />
+        <None Remove="packages.lock.json"/>
     </ItemGroup>
     <ItemGroup>
         <InternalsVisibleTo Include="Signal.Bot.UnitTests"/>

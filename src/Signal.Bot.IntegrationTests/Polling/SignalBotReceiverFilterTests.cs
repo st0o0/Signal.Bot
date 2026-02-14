@@ -13,17 +13,17 @@ public class SignalBotReceiverFilterTests : ReceiverIntegrationTestBase
     public async Task Should_Filter_Receipt_Messages_When_IgnoreReceipt_Is_True()
     {
         // Arrange
-        var receivedMessages = new ConcurrentBag<ReceivedMessage>();
+        var receivedMessages = new ConcurrentBag<ReceivedMessageEnvelope>();
         var dataMessageTcs = new TaskCompletionSource<bool>();
 
         MockHandler.HandleAsync(
                 Arg.Any<ISignalBotClient>(),
-                Arg.Any<ReceivedMessage>(),
+                Arg.Any<ReceivedMessageEnvelope>(),
                 Arg.Any<CancellationToken>())
             .Returns(Task.CompletedTask)
             .AndDoes(callInfo =>
             {
-                var msg = callInfo.ArgAt<ReceivedMessage>(1);
+                var msg = callInfo.ArgAt<ReceivedMessageEnvelope>(1);
                 receivedMessages.Add(msg);
                 if (msg.Envelope?.DataMessage != null)
                 {
@@ -56,17 +56,17 @@ public class SignalBotReceiverFilterTests : ReceiverIntegrationTestBase
     public async Task Should_Filter_Typing_Messages_When_IgnoreTyping_Is_True()
     {
         // Arrange
-        var receivedMessages = new ConcurrentBag<ReceivedMessage>();
+        var receivedMessages = new ConcurrentBag<ReceivedMessageEnvelope>();
         var dataMessageTcs = new TaskCompletionSource<bool>();
 
         MockHandler.HandleAsync(
                 Arg.Any<ISignalBotClient>(),
-                Arg.Any<ReceivedMessage>(),
+                Arg.Any<ReceivedMessageEnvelope>(),
                 Arg.Any<CancellationToken>())
             .Returns(Task.CompletedTask)
             .AndDoes(callInfo =>
             {
-                var msg = callInfo.ArgAt<ReceivedMessage>(1);
+                var msg = callInfo.ArgAt<ReceivedMessageEnvelope>(1);
                 receivedMessages.Add(msg);
                 if (msg.Envelope?.DataMessage != null)
                 {
@@ -99,17 +99,17 @@ public class SignalBotReceiverFilterTests : ReceiverIntegrationTestBase
     public async Task Should_Filter_Sync_Messages_When_IgnoreSync_Is_True()
     {
         // Arrange
-        var receivedMessages = new ConcurrentBag<ReceivedMessage>();
+        var receivedMessages = new ConcurrentBag<ReceivedMessageEnvelope>();
         var dataMessageTcs = new TaskCompletionSource<bool>();
 
         MockHandler.HandleAsync(
                 Arg.Any<ISignalBotClient>(),
-                Arg.Any<ReceivedMessage>(),
+                Arg.Any<ReceivedMessageEnvelope>(),
                 Arg.Any<CancellationToken>())
             .Returns(Task.CompletedTask)
             .AndDoes(callInfo =>
             {
-                var msg = callInfo.ArgAt<ReceivedMessage>(1);
+                var msg = callInfo.ArgAt<ReceivedMessageEnvelope>(1);
                 receivedMessages.Add(msg);
                 if (msg.Envelope?.DataMessage != null)
                 {
@@ -142,17 +142,17 @@ public class SignalBotReceiverFilterTests : ReceiverIntegrationTestBase
     public async Task Should_Filter_Multiple_Message_Types_When_All_Ignore_Options_Are_Enabled()
     {
         // Arrange
-        var receivedMessages = new ConcurrentBag<ReceivedMessage>();
+        var receivedMessages = new ConcurrentBag<ReceivedMessageEnvelope>();
         var dataMessageTcs = new TaskCompletionSource<bool>();
 
         MockHandler.HandleAsync(
                 Arg.Any<ISignalBotClient>(),
-                Arg.Any<ReceivedMessage>(),
+                Arg.Any<ReceivedMessageEnvelope>(),
                 Arg.Any<CancellationToken>())
             .Returns(Task.CompletedTask)
             .AndDoes(callInfo =>
             {
-                var msg = callInfo.ArgAt<ReceivedMessage>(1);
+                var msg = callInfo.ArgAt<ReceivedMessageEnvelope>(1);
                 receivedMessages.Add(msg);
                 if (msg.Envelope?.DataMessage != null)
                 {
@@ -192,7 +192,7 @@ public class SignalBotReceiverFilterTests : ReceiverIntegrationTestBase
 
         MockHandler.HandleAsync(
                 Arg.Any<ISignalBotClient>(),
-                Arg.Any<ReceivedMessage>(),
+                Arg.Any<ReceivedMessageEnvelope>(),
                 Arg.Any<CancellationToken>())
             .Returns(Task.CompletedTask)
             .AndDoes(_ =>

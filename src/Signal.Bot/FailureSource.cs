@@ -1,4 +1,4 @@
-namespace Signal.Bot.Polling;
+namespace Signal.Bot;
 
 /// <summary>
 /// Defines the types of errors that can occur during message polling and WebSocket communication.
@@ -14,7 +14,7 @@ namespace Signal.Bot.Polling;
 /// <item><see cref="Failed"/> - A general failure occurred.</item>
 /// </list>
 /// </summary>
-public enum ErrorSource
+public enum FailureSource
 {
     /// <summary>
     /// Undefined or unknown error type.

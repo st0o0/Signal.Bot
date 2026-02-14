@@ -1,11 +1,11 @@
 name: Deploy Documentation
-
 on:
   push:
     branches:
       - main
     paths:
       - 'docs/**'
+      - 'src/**'
       - '.github/workflows/docs.yml'
   release:
     types: [ published ]
@@ -13,7 +13,7 @@ on:
 
 env:
   GLOBAL_JSON_PATH: './src/global.json'
-  PROJECT_PATH: './src/signal.sln'
+  PROJECT_PATH: './src/signal.slnx'
 
 permissions:
   contents: read
@@ -40,11 +40,18 @@ jobs:
           cache: true
           cache-dependency-path: '**/packages.lock.json'
 
-      - name: Build
+      - name: Restore dependencies
+        run: >
+          dotnet
+          restore
+          --locked-mode
+          ${{ env.PROJECT_PATH }}
+
+      - name: Build with XML documentation
         run: >
           dotnet build
           --configuration Release
-          ${{ env.PROJECT_PATH }} 
+          ${{ env.PROJECT_PATH }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v6
@@ -60,6 +67,20 @@ jobs:
       - name: Build VitePress site
         working-directory: docs
         run: npm run build
+
+      - name: Build VitePress site with gen api
+        working-directory: docs
+        run: npm run build
+
+      - name: List generated files
+        run: |
+          echo "=== Generated VitePress dist ==="
+          ls -la docs/.vitepress/dist/
+          echo "=== API folder content ==="
+          ls -la docs/.vitepress/dist/api/ || echo "API folder not found!"
+          echo "=== api-generated folder content ==="
+          ls -la docs/api-generated/ || echo "api-generated folder not found!"
+          echo "=== End of listing ==="
 
       - name: Setup Pages
         uses: actions/configure-pages@v5

@@ -1,0 +1,82 @@
+# .github/labels.yml
+
+# Versioning
+- name: "Semver-Major"
+  color: "d73a4a"
+  description: "Breaking changes"
+
+- name: "Semver-Minor"
+  color: "0075ca"
+  description: "New features"
+
+- name: "Semver-Patch"
+  color: "a2eeef"
+  description: "Bug fixes"
+
+# Type
+- name: "breaking-change"
+  color: "d73a4a"
+  description: "Breaking API changes"
+
+- name: "enhancement"
+  color: "a2eeef"
+  description: "New feature"
+
+- name: "bug"
+  color: "d73a4a"
+  description: "Bug fix"
+
+# Signal Bot Areas
+- name: "api"
+  color: "1d76db"
+  description: "Signal Bot API"
+
+- name: "messaging"
+  color: "5319e7"
+  description: "Messages, attachments, reactions"
+
+- name: "groups"
+  color: "0e8a16"
+  description: "Group management"
+
+- name: "contacts"
+  color: "c5def5"
+  description: "Contact management"
+
+- name: "websocket"
+  color: "0052cc"
+  description: "WebSocket & polling"
+
+# General
+- name: "documentation"
+  color: "0075ca"
+  description: "Documentation"
+
+- name: "dependencies"
+  color: "0366d6"
+  description: "Dependencies"
+
+- name: "nuget"
+  color: "004880"
+  description: "NuGet packages"
+
+- name: "github-actions"
+  color: "000000"
+  description: "GitHub Actions"
+
+- name: "build"
+  color: "fbca04"
+  description: "Build system"
+
+# Status
+- name: "ignore-for-release"
+  color: "ffffff"
+  description: "Exclude from release notes"
+
+- name: "good first issue"
+  color: "7057ff"
+  description: "Good for newcomers"
+
+- name: "help wanted"
+  color: "008672"
+  description: "Help wanted"

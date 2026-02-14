@@ -17,7 +17,7 @@ public class SignalBotReceiverErrorTests : ReceiverIntegrationTestBase
 
         MockHandler.HandleAsync(
                 Arg.Any<ISignalBotClient>(),
-                Arg.Any<ReceivedMessage>(),
+                Arg.Any<ReceivedMessageEnvelope>(),
                 Arg.Any<CancellationToken>())
             .Returns(Task.FromException(expectedException));
 
@@ -25,7 +25,7 @@ public class SignalBotReceiverErrorTests : ReceiverIntegrationTestBase
                 Arg.Any<ISignalBotClient>(),
                 Arg.Is<Error>(e =>
                     e.Exception == expectedException &&
-                    e.ErrorType == ErrorType.MessageReceived),
+                    e.Source == FailureSource.MessageReceived),
                 Arg.Any<CancellationToken>())
             .Returns(Task.CompletedTask)
             .AndDoes(_ => exceptionHandledTcs.SetResult(true));
@@ -61,7 +61,7 @@ public class SignalBotReceiverErrorTests : ReceiverIntegrationTestBase
 
         MockHandler.HandleAsync(
                 Arg.Any<ISignalBotClient>(),
-                Arg.Any<ReceivedMessage>(),
+                Arg.Any<ReceivedMessageEnvelope>(),
                 Arg.Any<CancellationToken>())
             .Returns(_ =>
             {

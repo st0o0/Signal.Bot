@@ -14,7 +14,8 @@ export function csharpApiPlugin(options = {}) {
     xmlPath,
     outputDir = './api-generated',
     autoSidebar = true,
-    watch = true
+    watch = true,
+    excludeNamespaces = ['System'] // Default: exclude System namespaces
   } = options
 
   let config
@@ -22,9 +23,64 @@ export function csharpApiPlugin(options = {}) {
   let generatedFiles = []
   let resolvedXmlPath = null
 
+  // Helper function to filter out excluded namespaces
+  function filterNamespaces(docs) {
+    if (!excludeNamespaces || excludeNamespaces.length === 0) {
+      return docs
+    }
+
+    const filteredTypes = docs.types.filter(type => {
+      return !excludeNamespaces.some(excluded => 
+        type.fullName?.startsWith(excluded + '.')
+      )
+    })
+
+    const filteredMethods = docs.methods.filter(method => {
+      return !excludeNamespaces.some(excluded => 
+        method.className?.startsWith(excluded + '.')
+      )
+    })
+
+    const filteredProperties = docs.properties.filter(prop => {
+      return !excludeNamespaces.some(excluded => 
+        prop.className?.startsWith(excluded + '.')
+      )
+    })
+
+    const filteredFields = docs.fields.filter(field => {
+      return !excludeNamespaces.some(excluded => 
+        field.className?.startsWith(excluded + '.')
+      )
+    })
+
+    const filteredMembers = docs.members.filter(member => {
+      const name = member.name
+      if (name.startsWith('T:')) {
+        const fullName = name.substring(2)
+        return !excludeNamespaces.some(excluded => fullName.startsWith(excluded + '.'))
+      }
+      if (name.startsWith('M:') || name.startsWith('P:') || name.startsWith('F:')) {
+        const withoutPrefix = name.substring(2)
+        const className = withoutPrefix.substring(0, withoutPrefix.lastIndexOf('.'))
+        return !excludeNamespaces.some(excluded => className.startsWith(excluded + '.'))
+      }
+      return true
+    })
+
+    return {
+      ...docs,
+      types: filteredTypes,
+      methods: filteredMethods,
+      properties: filteredProperties,
+      fields: filteredFields,
+      members: filteredMembers
+    }
+  }
+
   return {
     name: 'vitepress-csharp-api',
     
+    enforce: /** @type {'pre'} */ ('pre'),
     configResolved(resolvedConfig) {
       config = resolvedConfig
     },
@@ -62,7 +118,18 @@ export function csharpApiPlugin(options = {}) {
 
       try {
         console.log(`📖 Parsing XML documentation from: ${resolvedXmlPath}`)
-        parsedDocs = await parseXmlDocs(resolvedXmlPath)
+        const rawDocs = await parseXmlDocs(resolvedXmlPath)
+        // Filter out excluded namespaces
+        parsedDocs = filterNamespaces(rawDocs)
+
+        if (excludeNamespaces.length > 0) {
+          console.log(`🔍 Filtered out namespaces: ${excludeNamespaces.join(', ')}`)
+          console.log(`   Removed ${rawDocs.types.length - parsedDocs.types.length} types`)
+          console.log(`   Removed ${rawDocs.methods.length - parsedDocs.methods.length} methods`)
+          console.log(`   Removed ${rawDocs.properties.length - parsedDocs.properties.length} properties`)
+          console.log(`   Removed ${rawDocs.fields.length - parsedDocs.fields.length} fields`)
+          console.log(`   Removed ${rawDocs.members.length - parsedDocs.members.length} total members`)
+        }
         
         console.log(`✨ Found ${parsedDocs.types.length} types, ${parsedDocs.members.length} members`)
         
@@ -123,7 +190,9 @@ export function csharpApiPlugin(options = {}) {
           console.log('📖 XML documentation changed, regenerating...')
           
           try {
-            parsedDocs = await parseXmlDocs(currentXmlPath)
+            const rawDocs = await parseXmlDocs(currentXmlPath)
+            parsedDocs = filterNamespaces(rawDocs)
+            
             const outputPath = path.resolve(process.cwd(), outputDir)
             generatedFiles = await generateMarkdown(parsedDocs, outputPath)
             

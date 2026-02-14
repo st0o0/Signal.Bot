@@ -3,7 +3,9 @@ changelog:
   exclude:
     labels:
       - ignore-for-release
-      - documentation
+      - duplicate
+      - wontfix
+      - invalid
 
   categories:
     - title: "🚨 Breaking Changes"
@@ -14,20 +16,39 @@ changelog:
     - title: "🎉 New Features"
       labels:
         - "Semver-Minor"
-        - enhancement
-        - feature
+        - "enhancement"
+        - "feature"
 
     - title: "🐛 Bug Fixes"
       labels:
         - "Semver-Patch"
-        - bug
-        - fix
+        - "bug"
+        - "fix"
+
+    - title: "📡 Signal Bot API"
+      labels:
+        - "api"
+        - "messaging"
+        - "groups"
+        - "contacts"
+        - "websocket"
+
+    - title: "📝 Documentation"
+      labels:
+        - "documentation"
+        - "docs"
+        - "examples"
 
     - title: "📦 Dependencies"
       labels:
-        - dependencies
-        - nuget
-        - github-actions
+        - "dependencies"
+        - "nuget"
+
+    - title: "🔄 CI/CD & Build"
+      labels:
+        - "github-actions"
+        - "build"
+        - "ci"
 
     - title: "🔧 Other Changes"
       labels:

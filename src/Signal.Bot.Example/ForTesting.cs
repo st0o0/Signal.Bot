@@ -1,23 +1,15 @@
-using Signal.Bot.Polling;
 using Signal.Bot.Types;
 using R3;
 
 namespace Signal.Bot.Example;
 
-public class Sample : BackgroundService
+public class ForTesting(IServiceProvider serviceProvider) : BackgroundService
 {
-    private readonly IServiceProvider _serviceProvider;
-
-    public Sample(IServiceProvider serviceProvider)
-    {
-        _serviceProvider = serviceProvider;
-    }
-
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        var client = _serviceProvider.GetRequiredService<ISignalBotClient>();
-        var handler = _serviceProvider.GetRequiredService<IReceivedMessageHandler>();
-        var logger = _serviceProvider.GetRequiredService<ILogger<Sample>>();
+        var client = serviceProvider.GetRequiredService<ISignalBotClient>();
+        var handler = serviceProvider.GetRequiredService<IReceivedMessageHandler>();
+        var logger = serviceProvider.GetRequiredService<ILogger<ForTesting>>();
 
         client.OnException.Subscribe(ex => logger.LogError(ex, "ERROR"));
 
@@ -56,24 +48,17 @@ public class Sample : BackgroundService
     }
 }
 
-public class TestHandler : IReceivedMessageHandler
+public class TestHandler(ILogger<TestHandler> logger) : IReceivedMessageHandler
 {
-    private readonly ILogger<TestHandler> _logger;
-
-    public TestHandler(ILogger<TestHandler> logger)
+    public Task HandleAsync(ISignalBotClient client, ReceivedMessageEnvelope messageEnvelope, CancellationToken cancellationToken)
     {
-        _logger = logger;
-    }
-
-    public Task HandleAsync(ISignalBotClient client, ReceivedMessage message, CancellationToken cancellationToken)
-    {
-        _logger.LogInformation("Received message: {@Message}", message);
+        logger.LogInformation("Received message: {@Message}", messageEnvelope);
         return Task.CompletedTask;
     }
 
     public Task HandleErrorAsync(ISignalBotClient client, Error error, CancellationToken cancellationToken)
     {
-        _logger.LogError(error.Exception, "Error: {@Error}", error);
+        logger.LogError(error.Exception, "Error: {@Error}", error);
         return Task.CompletedTask;
     }
 }

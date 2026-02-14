@@ -6,9 +6,8 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
-    <PropertyGroup Condition="$(MSBuildProjectName.EndsWith('.Tests'))">
+    <PropertyGroup Condition="$(MSBuildProjectName.EndsWith('Tests'))">
         <IsPackable>false</IsPackable>
-        <IsTestProject>true</IsTestProject>
     </PropertyGroup>
 
 </Project>

@@ -14,7 +14,7 @@ public class MessageSerializationTests
         const string json = "{\"account\": \"msg123\", \"envelope\": {\"source\": \"src123\"}}";
 
         // Act
-        var result = JsonSerializer.Deserialize<ReceivedMessage>(json, JsonBotAPI.Options);
+        var result = JsonSerializer.Deserialize<ReceivedMessageEnvelope>(json, JsonBotAPI.Options);
 
         // Assert
         Assert.NotNull(result);
@@ -30,7 +30,7 @@ public class MessageSerializationTests
     public void TestReceivedMessageSerializationAndDeserialization()
     {
         // Arrange
-        var receivedMessage = new ReceivedMessage
+        var receivedMessage = new ReceivedMessageEnvelope
         {
             Account = "msg123",
             Envelope = new Envelope
@@ -47,7 +47,7 @@ public class MessageSerializationTests
 
         // Act
         var json = JsonSerializer.Serialize(receivedMessage);
-        var deserializedReceivedMessage = JsonSerializer.Deserialize<ReceivedMessage>(json);
+        var deserializedReceivedMessage = JsonSerializer.Deserialize<ReceivedMessageEnvelope>(json);
 
         // Assert
         Assert.NotNull(deserializedReceivedMessage);

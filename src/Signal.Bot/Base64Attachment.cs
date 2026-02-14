@@ -97,11 +97,6 @@ public class Base64Attachment
     /// <returns>The Value property.</returns>
     public override string ToString() => Value;
 
-    /// <summary>
-    /// Determines the MIME type based on the file extension.
-    /// </summary>
-    /// <param name="filePath">The file path to analyze.</param>
-    /// <returns>The MIME type string, or "application/octet-stream" for unknown extensions.</returns>
     private static string GetMimeType(string filePath)
     {
         var extension = Path.GetExtension(filePath).ToLowerInvariant();

@@ -1,12 +1,31 @@
+// docs/.vitepress/config.mts
 import { defineConfig } from 'vitepress'
-import { csharpApiPlugin } from './plugins/csharp-api/index.js'
+import { csharpApiPlugin, generateSidebar } from './plugins/csharp-api/index.js'
+import { codeSnippetsPlugin } from './plugins/code-snippets/index.js'
 import fs from 'fs'
 import path from 'path'
 
-let apiSidebar = []
-const sidebarPath = path.join(process.cwd(), 'api', '_sidebar.json')
-if (fs.existsSync(sidebarPath)) {
-  apiSidebar = JSON.parse(fs.readFileSync(sidebarPath, 'utf-8'))
+// Funktion um API Sidebar zu laden (mit Fallback)
+function loadApiSidebar() {
+  const sidebarPath = path.join(process.cwd(), 'api', '_sidebar.json')
+  
+  if (fs.existsSync(sidebarPath)) {
+    try {
+      return JSON.parse(fs.readFileSync(sidebarPath, 'utf-8'))
+    } catch (error) {
+      console.warn('⚠️  Failed to load API sidebar:', error)
+    }
+  }
+  
+  // Fallback: Leere Sidebar
+  return [
+    {
+      text: 'API Reference',
+      items: [
+        { text: 'Documentation is being generated...', link: '/api/' }
+      ]
+    }
+  ]
 }
 
 export default defineConfig({
@@ -14,14 +33,23 @@ export default defineConfig({
   description: "A .NET Signal Messenger Bot Client",
   lang: 'en-US',
   lastUpdated: true,
+  base: '/Signal.Bot/',
+  srcDir: '.',
+  srcExclude: ['node_modules', '.vitepress/cache'],
   
   vite: {
     plugins: [
+      codeSnippetsPlugin({
+        sourceDir: '../src/Signal.Bot.Example',
+        exclude: ['**/obj/**', '**/bin/**', '**/*.Tests/**'],
+        verbose: false
+      }),
       csharpApiPlugin({
         xmlPath: '../src/Signal.Bot/bin/Release/*/Signal.Bot.xml',
         outputDir: 'api',
         autoSidebar: true,
-        watch: true
+        watch: true,
+        excludeNamespaces: ['System', 'Microsoft', 'Internal']
       })
     ]
   },
@@ -39,7 +67,8 @@ export default defineConfig({
     ],
     
     sidebar: {
-	    '/api/': apiSidebar,
+      '/api/': loadApiSidebar(),
+      
       '/guide/': [
         {
           text: 'Guide',
