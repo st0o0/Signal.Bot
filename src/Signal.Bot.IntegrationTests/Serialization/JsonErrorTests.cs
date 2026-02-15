@@ -5,7 +5,7 @@ using WireMock.ResponseBuilders;
 
 namespace Signal.Bot.IntegrationTests.Serialization;
 
-public class JsonErrorIntegrationTests : IntegrationTestBase
+public class JsonErrorTests : IntegrationTestBase
 {
     [Fact(Timeout = 15000)]
     public async Task ApiReturnsInvalidJson_ShouldReturnNull()
