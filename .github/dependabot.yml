@@ -18,18 +18,12 @@ updates:
         update-types:
           - "major"
 
-  - package-ecosystem: nuget
-    directory: "/.config"
+  - package-ecosystem: npm
+    directory: "/docs"
     schedule:
       interval: daily
       time: "11:00"
     groups:
-      build-tools:
+      npm:
         patterns:
           - "*"
-
-  - package-ecosystem: dotnet-sdk
-    directory: "/src"
-    schedule:
-      interval: daily
-      time: "11:00"

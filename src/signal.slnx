@@ -4,6 +4,7 @@
     <Project Path="Signal.Bot.Example/Signal.Bot.Example.csproj" />
   </Folder>
   <Folder Name="/Solution Items/">
+    <File Path="../.github/dependabot.yml" />
     <File Path="../.github/labels.yml" />
     <File Path="../.github/release.yml" />
     <File Path="../.github/workflows/build-and-release.yml" />
