@@ -4,6 +4,7 @@
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
         <PublishAot>true</PublishAot>
         <IsPackable>false</IsPackable>
+        <WarningLevel>3</WarningLevel>
     </PropertyGroup>
 
     <ItemGroup>

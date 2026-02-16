@@ -85,41 +85,18 @@ Create and manage polls in Signal groups.
 
 ### Receive Messages
 
-```csharp
-await client.StartReceiving(
-    "+1234567890",
-    handleMessage: async (client, message, ct) =>
-    {
-        Console.WriteLine($"Received: {message.DataMessage?.Message}");
-    },
-    handleError: async (client, ex, ct) =>
-    {
-        Console.WriteLine($"Error: {ex.Message}");
-    },
-    cancellationToken: CancellationToken.None
-);
-```
+<!-- snippet: ReceiveMessages show-source -->
+<!-- endSnippet -->
 
 ### Create a Group
 
-```csharp
-var group = await client.CreateGroupAsync(
-    number: "+1234567890",
-    name: "My Group",
-    members: new[] { "+1111111111", "+2222222222" }
-);
-```
+<!-- snippet: CreateAGroup show-source -->
+<!-- endSnippet -->
 
 ### Send Attachment
 
-```csharp
-await client.SendMessageAsync(
-    number: "+1234567890",
-    message: "Check this out!",
-    recipients: new[] { "+0987654321" },
-    attachments: new[] { "/path/to/file.jpg" }
-);
-```
+<!-- snippet: SendAttachment show-source -->
+<!-- endSnippet -->
 
 ## Running the Examples
 
