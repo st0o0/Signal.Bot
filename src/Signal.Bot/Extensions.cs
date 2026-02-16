@@ -581,7 +581,7 @@ public static class Extensions
         Action<SendMessageRequestBuilder> messageBuilder,
         CancellationToken cancellationToken = default)
     {
-        var builder = new SendMessageRequestBuilder();
+        var builder = SendMessageRequestBuilder.Create(client.Number);
         messageBuilder(builder);
         return await client.SendRequestAsync(builder.Build(), cancellationToken: cancellationToken);
     }

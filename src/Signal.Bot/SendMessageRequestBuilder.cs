@@ -12,8 +12,10 @@ public class SendMessageRequestBuilder
     /// <summary>
     /// Creates a new instance of the <see cref="SendMessageRequestBuilder"/>.
     /// </summary>
+    /// <param name="number">The sender's phone number in international format.</param>
     /// <returns>A new <see cref="SendMessageRequestBuilder"/> instance.</returns>
-    public static SendMessageRequestBuilder Create() => new();
+    public static SendMessageRequestBuilder Create(string number)
+        => new() { _request = { Number = number } };
 
     /// <summary>
     /// Adds an attachment from a file path, automatically encoding it as base64 with the appropriate MIME type.
@@ -167,17 +169,6 @@ public class SendMessageRequestBuilder
     public SendMessageRequestBuilder WithNotifySelf(bool notifySelf = true)
     {
         _request = _request with { NotifySelf = notifySelf };
-        return this;
-    }
-
-    /// <summary>
-    /// Sets the phone number of the sender.
-    /// </summary>
-    /// <param name="number">The sender's phone number in international format.</param>
-    /// <returns>The builder instance for method chaining.</returns>
-    public SendMessageRequestBuilder WithNumber(string number)
-    {
-        _request = _request with { Number = number };
         return this;
     }
 

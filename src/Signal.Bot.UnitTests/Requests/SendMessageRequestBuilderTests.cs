@@ -7,7 +7,7 @@ public class SendMessageRequestBuilderTests
     [Fact(Timeout = 5000)]
     public void Build_EmptyBuilder_ReturnsDefaultRequest()
     {
-        var builder = SendMessageRequestBuilder.Create();
+        var builder = SendMessageRequestBuilder.Create(string.Empty);
         var request = builder.Build();
 
         Assert.NotNull(request);
@@ -18,7 +18,7 @@ public class SendMessageRequestBuilderTests
     [Fact(Timeout = 5000)]
     public void WithMessage_SetsMessage()
     {
-        var builder = SendMessageRequestBuilder.Create();
+        var builder = SendMessageRequestBuilder.Create(string.Empty);
         var request = builder.WithMessage("Hello").Build();
 
         Assert.Equal("Hello", request.Message);
@@ -27,7 +27,7 @@ public class SendMessageRequestBuilderTests
     [Fact(Timeout = 5000)]
     public void WithRecipient_AddsRecipient()
     {
-        var builder = SendMessageRequestBuilder.Create();
+        var builder = SendMessageRequestBuilder.Create(string.Empty);
         var request = builder.WithRecipient("user1").Build();
 
         Assert.Contains("user1", request.Recipients!);
@@ -36,7 +36,7 @@ public class SendMessageRequestBuilderTests
     [Fact(Timeout = 5000)]
     public void WithRecipients_SetsRecipients()
     {
-        var builder = SendMessageRequestBuilder.Create();
+        var builder = SendMessageRequestBuilder.Create(string.Empty);
         var recipients = new[] { "user1", "user2" };
         var request = builder.WithRecipients(recipients).Build();
 
@@ -48,7 +48,7 @@ public class SendMessageRequestBuilderTests
     [Fact(Timeout = 5000)]
     public void WithRecipients_AppendMode_AppendsRecipients()
     {
-        var builder = SendMessageRequestBuilder.Create();
+        var builder = SendMessageRequestBuilder.Create(string.Empty);
         var request = builder
             .WithRecipient("user1")
             .WithRecipients(["user2", "user3"], overwrite: false)
@@ -63,7 +63,7 @@ public class SendMessageRequestBuilderTests
     [Fact(Timeout = 5000)]
     public void WithMention_AddsMention()
     {
-        var builder = SendMessageRequestBuilder.Create();
+        var builder = SendMessageRequestBuilder.Create(string.Empty);
         var request = builder.WithMention("author1", 0, 5).Build();
 
         Assert.Single(request.Mentions!);
@@ -75,7 +75,7 @@ public class SendMessageRequestBuilderTests
     [Fact(Timeout = 5000)]
     public void WithLinkPreview_SetsLinkPreview()
     {
-        var builder = SendMessageRequestBuilder.Create();
+        var builder = SendMessageRequestBuilder.Create(string.Empty);
         var request = builder.WithLinkPreview("https://example.com", "Title", "Desc").Build();
 
         Assert.NotNull(request.LinkPreview);
@@ -87,7 +87,7 @@ public class SendMessageRequestBuilderTests
     [Fact(Timeout = 5000)]
     public void WithAttachment_AddsAttachment()
     {
-        var builder = SendMessageRequestBuilder.Create();
+        var builder = SendMessageRequestBuilder.Create(string.Empty);
         var request = builder.WithAttachment("base64data").WithSticker("KEKW").WithViewOnce()
             .WithTextMode(TextMode.Styled).Build();
 
@@ -101,7 +101,7 @@ public class SendMessageRequestBuilderTests
     public void WithQuote_SetsQuoteInfo()
     {
         var timestamp = DateTime.UtcNow;
-        var builder = SendMessageRequestBuilder.Create();
+        var builder = SendMessageRequestBuilder.Create(string.Empty);
         var request = builder
             .WithQuoteAuthor("author")
             .WithQuoteMessage("text")
