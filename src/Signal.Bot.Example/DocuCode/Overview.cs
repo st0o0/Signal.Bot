@@ -1,13 +1,12 @@
 using Signal.Bot.Requests;
 
-namespace Signal.Bot.Example;
+namespace Signal.Bot.Example.DocuCode;
 
 public class Overview
 {
     public async Task SendAMessage()
     {
         #region SendAMessage
-
         var client = new SignalBotClient(builder => builder
             .WithBaseUrl("http://localhost:8080")
             .WithNumber("+1234567890"));
@@ -17,7 +16,7 @@ public class Overview
                 .WithMessage("Hello!")
                 .WithRecipient("+0987654321"));
 
-        #endregion
+        #endregion SendAMessage
     }
 
     public async Task ReceiveMessages(CancellationToken cancellationToken = default)
@@ -36,7 +35,7 @@ public class Overview
             errorHandler: (client, ex, ct) => { Console.WriteLine($"Error: {ex.Exception?.Message ?? ""}"); },
             cancellationToken: cancellationToken);
 
-        #endregion
+        #endregion ReceiveMessages
     }
 
     public async Task CreateAGroup(CancellationToken cancellationToken = default)
@@ -57,7 +56,7 @@ public class Overview
                 .WithName("My Group");
         }, cancellationToken);
 
-        #endregion
+        #endregion CreateAGroup
     }
 
     public async Task SendAttachment(CancellationToken cancellationToken = default)
@@ -75,6 +74,6 @@ public class Overview
                     .WithAttachmentFromFile("/path/to/file.jpg", includeFilename: true),
             cancellationToken);
 
-        #endregion
+        #endregion SendAttachment
     }
 }
