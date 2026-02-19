@@ -39,11 +39,6 @@ export default defineConfig({
   
   vite: {
     plugins: [
-      codeSnippetsPlugin({
-        sourceDir: '../src/Signal.Bot.Example',
-        exclude: ['**/obj/**', '**/bin/**', '**/*.Tests/**'],
-        verbose: false
-      }),
       csharpApiPlugin({
         xmlPath: '../src/Signal.Bot/bin/Release/*/Signal.Bot.xml',
         outputDir: 'api',

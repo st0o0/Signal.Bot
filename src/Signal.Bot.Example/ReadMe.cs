@@ -33,7 +33,7 @@ public class ReadMe
             },
             async (botClient, error, ct) =>
             {
-                Console.WriteLine($"Error: {error.ErrorType}:{error.Exception?.Message}");
+                Console.WriteLine($"Error: {error.Source}:{error.Exception?.Message}");
                 await Task.CompletedTask;
             }, builder => builder.WithMaxMessages(1), cts.Token);
 
