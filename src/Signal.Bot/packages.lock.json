@@ -22,9 +22,9 @@
       },
       "WebSocket.Rx": {
         "type": "Direct",
-        "requested": "[0.1.6, )",
-        "resolved": "0.1.6",
-        "contentHash": "NhiBIAp618RIB+FXfS0LLXRmz37/EPUXThzYjlRf2ayI7vsHNgUYsT+ovgKwli4UqV1IQiMcIi+/MlZISa8I3g==",
+        "requested": "[0.1.7, )",
+        "resolved": "0.1.7",
+        "contentHash": "muL+sAhLsPpo5kIjxt+6CHhxD5NrlzhbJb93oXEugJuAO9Pqqey6v1NUgi9RWU+gwGDHyhgzNiiYV8h6s+6wEw==",
         "dependencies": {
           "Microsoft.IO.RecyclableMemoryStream": "3.0.1",
           "R3": "1.3.0"
