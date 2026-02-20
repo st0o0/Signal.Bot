@@ -91,6 +91,21 @@ jobs:
           --locked-mode
           ${{ env.PROJECT_PATH }}
 
+      - name: Run Nuget-License
+        shell: pwsh
+        run: >
+          dotnet
+          tool
+          run
+          nuget-license 
+          -err
+          -t
+          -o JsonPretty
+          -a "MIT;Apache-2.0;BSD-2-Clause;BSD-3-Clause;MS-PL"
+          -i ./src/Signal.Bot/Signal.Bot.csproj
+          -fo result.json;
+          if ((Get-Content result.json | ConvertFrom-Json).Count -gt 0) { throw "License violations found!" }
+      
       - name: Build
         run: >
           dotnet build
