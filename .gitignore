@@ -330,6 +330,7 @@ ASALocalRun/
 .mfractor/
 .Rproj.user
 
-docs/.vitepress/dist
-docs/.vitepress/cache
-docs/api/**
+**changelog.md
+**/.vitepress/dist
+**/.vitepress/cache
+**/docs/api/**
