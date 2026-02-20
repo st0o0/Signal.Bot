@@ -8,6 +8,13 @@
         "slopwatch"
       ],
       "rollForward": false
+    },
+    "nuget-license": {
+      "version": "4.0.7",
+      "commands": [
+        "nuget-license"
+      ],
+      "rollForward": false
     }
   }
 }
