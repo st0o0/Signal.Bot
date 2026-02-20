@@ -7,9 +7,12 @@ on:
       - 'docs/**'
       - 'src/**'
       - '.github/workflows/docs.yml'
-  release:
-    types: [ published ]
-  workflow_dispatch:
+  pull_request:
+    branches: [ "main" ]
+    paths:
+      - 'docs/**'
+      - 'src/**'
+      - '.github/workflows/docs.yml'
 
 env:
   GLOBAL_JSON_PATH: './src/global.json'
