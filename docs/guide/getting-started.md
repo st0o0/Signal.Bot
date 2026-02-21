@@ -84,48 +84,7 @@ Install-Package Signal.Bot
 
 Create a new console application and add the following code:
 
-```csharp
-using Signal.Bot;
-using Signal.Bot.Types;
-
-// Create the bot client
-var client = new SignalBotClient("http://localhost:8080");
-
-// Your registered Signal number
-var botNumber = "+1234567890";
-
-// Start receiving messages
-using var cts = new CancellationTokenSource();
-
-await client.StartReceiving(
-    botNumber,
-    handleMessage: async (botClient, message, ct) =>
-    {
-        Console.WriteLine($"Received from {message.Source}: {message.DataMessage?.Message}");
-        
-        // Echo the message back
-        if (!string.IsNullOrEmpty(message.DataMessage?.Message))
-        {
-            await botClient.SendMessageAsync(
-                number: botNumber,
-                message: $"You said: {message.DataMessage.Message}",
-                recipients: new[] { message.Source },
-                cancellationToken: ct
-            );
-        }
-    },
-    handleError: async (botClient, exception, ct) =>
-    {
-        Console.WriteLine($"Error: {exception.Message}");
-    },
-    cancellationToken: cts.Token
-);
-
-// Keep the application running
-Console.WriteLine("Bot is running. Press any key to stop...");
-Console.ReadKey();
-cts.Cancel();
-```
+<<< ./../../src/Signal.Bot.Example/ReadMe.cs#QuickStart{csharp}
 
 ## Step 5: Run Your Bot
 

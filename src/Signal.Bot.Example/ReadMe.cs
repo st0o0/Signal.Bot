@@ -4,6 +4,7 @@ public class ReadMe
 {
     public void QuickStart()
     {
+        #region QuickStart
         const string baseUrl = "http://localhost:8080";
         // Your registered Signal number
         const string botNumber = "+1234567890";
@@ -41,6 +42,7 @@ public class ReadMe
         Console.WriteLine("Bot is running. Press any key to stop...");
         Console.ReadKey();
         cts.Cancel();
+        #endregion QuickStart
     }
 
     public void QuickExample()

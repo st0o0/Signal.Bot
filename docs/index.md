@@ -39,36 +39,7 @@ features:
 
 ## Quick Example
 
-```csharp
-using Signal.Bot;
-using Signal.Bot.Types;
-
-var client = new SignalBotClient("http://localhost:8080");
-var botNumber = "+1234567890";
-
-await client.StartReceiving(
-    botNumber,
-    handleMessage: async (botClient, message, ct) =>
-    {
-        Console.WriteLine($"Received: {message.DataMessage?.Message}");
-        
-        if (!string.IsNullOrEmpty(message.DataMessage?.Message))
-        {
-            await botClient.SendMessageAsync(
-                number: botNumber,
-                message: $"You said: {message.DataMessage.Message}",
-                recipients: new[] { message.Source },
-                cancellationToken: ct
-            );
-        }
-    },
-    handleError: async (botClient, exception, ct) =>
-    {
-        Console.WriteLine($"Error: {exception.Message}");
-    },
-    cancellationToken: CancellationToken.None
-);
-```
+<<< ./../src/Signal.Bot.Example/ReadMe.cs#QuickExample{csharp}
 
 ## Why Signal.Bot?
 

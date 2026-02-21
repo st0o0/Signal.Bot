@@ -12,10 +12,6 @@ const sidebarJson = existsSync(sidebarPath)
   ? createRequire(import.meta.url)(sidebarPath)
   : {};
 
-const EXCLUDED_NAMESPACES = ["System", "Microsoft", "Internal"];
-const XML_PATH = "../src/Signal.Bot/bin/Release/*/Signal.Bot.xml";
-const OUTPUT_DIR = "api";
-
 export default defineConfig({
   title: "Signal.Bot",
   description: "A .NET Signal Messenger Bot Client",
