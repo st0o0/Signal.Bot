@@ -107,18 +107,29 @@ jobs:
       - name: Find last successful run on same ref
         id: last-run
         run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            BRANCH="${{ github.head_ref }}"
+          else
+            BRANCH="${{ github.ref_name }}"
+          fi
+
+          echo "🔍 Searching on branch: $BRANCH"
+
           RUN_ID=$(curl -s \
             -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
             -H "Accept: application/vnd.github+json" \
-            "https://api.github.com/repos/${{ github.repository }}/actions/workflows/docs.yml/runs?status=success&branch=${{ github.ref_name }}&per_page=5" \
-            | jq -r '[.workflow_runs[] | select(.id != ${{ github.run_id }})][0].id // empty')
-          
+            "https://api.github.com/repos/${{ github.repository }}/actions/workflows/docs.yml/runs?branch=$BRANCH&per_page=10" \
+            | jq -r '[.workflow_runs[]
+                | select(.id != ${{ github.run_id }})
+                | select(.conclusion != "failure" and .conclusion != "cancelled" and .conclusion != null)
+              ][0].id // empty')
+
           echo "last_run_id=$RUN_ID" >> $GITHUB_OUTPUT
-          
+
           if [ -z "$RUN_ID" ]; then
-            echo "⚠️ No previous successful run found on ${{ github.ref_name }}"
+            echo "⚠️ No previous run found on $BRANCH"
           else
-            echo "✅ Last successful run on ${{ github.ref_name }}: $RUN_ID"
+            echo "✅ Last run found: $RUN_ID on $BRANCH"
           fi
 
       - name: Download previous checksum
@@ -129,8 +140,8 @@ jobs:
             -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
             -H "Accept: application/vnd.github+json" \
             "https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ steps.last-run.outputs.last_run_id }}/artifacts" \
-            | jq -r '.artifacts[] | select(.name == "vitepress-checksum") | .id // empty')
-          
+            | jq -r '.artifacts[] | select(.name == "vitepress-checksum") | select(.expired == false) | .id // empty')
+
           if [ -n "$ARTIFACT_ID" ]; then
             curl -sL \
               -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
@@ -140,6 +151,7 @@ jobs:
             unzip -q /tmp/prev-checksum.zip -d /tmp/prev-checksum
             echo "found=true" >> $GITHUB_OUTPUT
           else
+            echo "⚠️ No valid checksum artifact found (expired or missing)"
             echo "found=false" >> $GITHUB_OUTPUT
           fi
 
@@ -158,10 +170,10 @@ jobs:
           else
             NEW=$(cat /tmp/new-checksum/checksum.txt)
             OLD=$(cat /tmp/prev-checksum/checksum.txt)
-            
+
             echo "New: $NEW"
             echo "Old: $OLD"
-            
+
             if [ "$NEW" = "$OLD" ]; then
               echo "has_changes=false" >> $GITHUB_OUTPUT
               echo "✅ Checksums match, skipping deploy"
