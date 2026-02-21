@@ -1,6 +1,6 @@
 using Signal.Bot.Requests;
 
-namespace Signal.Bot.Example.DocuCode;
+namespace Signal.Bot.Example.Examples;
 
 public class Overview
 {

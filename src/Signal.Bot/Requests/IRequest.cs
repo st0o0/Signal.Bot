@@ -22,5 +22,4 @@ public interface IRequest
     HttpContent ToHttpContent();
 }
 
-/// <inheritdoc />
 public interface IRequest<TResponse> : IRequest;
