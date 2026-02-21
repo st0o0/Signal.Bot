@@ -1,220 +1,185 @@
-import { parseXmlDocs } from './parseXmlDocs.js'
-import { generateMarkdown } from './generateMarkdown.js'
-import { generateSidebar } from './sidebar-generator.js'
-import fs from 'fs'
-import path from 'path'
-import { fileURLToPath } from 'url'
-import { glob } from 'glob'
+import fs from "fs";
+import path from "path";
+import { glob } from "glob";
+import { parseXmlDocs } from "./parseXmlDocs.js";
+import { generateMarkdown } from "./generateMarkdown.js";
+import { generateSidebar } from "./generateSidebar.js";
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
+export { generateSidebar } from "./generateSidebar.js";
+export { parseXmlDocs } from "./parseXmlDocs.js";
+
+// Module-level cache — survives across buildStart calls within the same process
+let cachedDocs = null;
+let generatedFiles = [];
+let isGenerating = false;
+
+function filterNamespaces(docs, excludeNamespaces) {
+  if (!excludeNamespaces?.length) return docs;
+
+  const isExcluded = (name) =>
+    excludeNamespaces.some((ex) => name?.startsWith(ex + "."));
+
+  return {
+    ...docs,
+    types: docs.types.filter((t) => !isExcluded(t.fullName)),
+    methods: docs.methods.filter((m) => !isExcluded(m.className)),
+    properties: docs.properties.filter((p) => !isExcluded(p.className)),
+    fields: docs.fields.filter((f) => !isExcluded(f.className)),
+    members: docs.members.filter((m) => {
+      const name = m.name;
+      if (name.startsWith("T:")) return !isExcluded(name.substring(2));
+      if (/^[MPF]:/.test(name)) {
+        const withoutPrefix = name.substring(2);
+        const className = withoutPrefix.substring(
+          0,
+          withoutPrefix.lastIndexOf("."),
+        );
+        return !isExcluded(className);
+      }
+      return true;
+    }),
+  };
+}
+
+export async function resolveAndParseDocs(xmlPath, excludeNamespaces = []) {
+  if (cachedDocs) {
+    console.log("📦 Using cached XML docs");
+    return cachedDocs;
+  }
+
+  const searchPattern = path.resolve(process.cwd(), xmlPath);
+  const matches = await glob(searchPattern, { windowsPathsNoEscape: true });
+
+  if (matches.length === 0) {
+    console.warn(`⚠️  No XML files found matching: ${searchPattern}`);
+    return null;
+  }
+
+  if (matches.length > 1) {
+    console.log(`ℹ️  Found ${matches.length} XML files, using: ${matches[0]}`);
+  }
+
+  const resolvedPath = matches[0];
+  if (!fs.existsSync(resolvedPath)) {
+    console.warn(`⚠️  XML file not found: ${resolvedPath}`);
+    return null;
+  }
+
+  console.log(`📖 Parsing XML documentation from: ${resolvedPath}`);
+  const rawDocs = await parseXmlDocs(resolvedPath);
+  const filteredDocs = filterNamespaces(rawDocs, excludeNamespaces);
+
+  if (excludeNamespaces.length > 0) {
+    const removedTypes = rawDocs.types.length - filteredDocs.types.length;
+    console.log(
+      `🔍 Filtered out namespaces: ${excludeNamespaces.join(", ")} (${removedTypes} types removed)`,
+    );
+  }
+
+  console.log(
+    `✨ Found ${filteredDocs.types.length} types, ${filteredDocs.members.length} members`,
+  );
+
+  cachedDocs = { docs: filteredDocs, resolvedPath };
+  return cachedDocs;
+}
 
 export function csharpApiPlugin(options = {}) {
   const {
     xmlPath,
-    outputDir = './api-generated',
+    outputDir = "./api-generated",
     autoSidebar = true,
     watch = true,
-    excludeNamespaces = ['System'] // Default: exclude System namespaces
-  } = options
+    excludeNamespaces = [],
+  } = options;
 
-  let config
-  let parsedDocs
-  let generatedFiles = []
-  let resolvedXmlPath = null
+  async function generate(forceRegenerate = false) {
+    if (isGenerating) return;
+    isGenerating = true;
 
-  // Helper function to filter out excluded namespaces
-  function filterNamespaces(docs) {
-    if (!excludeNamespaces || excludeNamespaces.length === 0) {
-      return docs
-    }
+    try {
+      // Clear cache when force regenerating (watch mode)
+      if (forceRegenerate) cachedDocs = null;
 
-    const filteredTypes = docs.types.filter(type => {
-      return !excludeNamespaces.some(excluded => 
-        type.fullName?.startsWith(excluded + '.')
-      )
-    })
+      const result = await resolveAndParseDocs(xmlPath, excludeNamespaces);
+      if (!result) return;
 
-    const filteredMethods = docs.methods.filter(method => {
-      return !excludeNamespaces.some(excluded => 
-        method.className?.startsWith(excluded + '.')
-      )
-    })
+      const { docs } = result;
+      const outputPath = path.resolve(process.cwd(), outputDir);
 
-    const filteredProperties = docs.properties.filter(prop => {
-      return !excludeNamespaces.some(excluded => 
-        prop.className?.startsWith(excluded + '.')
-      )
-    })
-
-    const filteredFields = docs.fields.filter(field => {
-      return !excludeNamespaces.some(excluded => 
-        field.className?.startsWith(excluded + '.')
-      )
-    })
-
-    const filteredMembers = docs.members.filter(member => {
-      const name = member.name
-      if (name.startsWith('T:')) {
-        const fullName = name.substring(2)
-        return !excludeNamespaces.some(excluded => fullName.startsWith(excluded + '.'))
+      // Skip if already generated in this process (e.g. called by config.ts first)
+      if (
+        !forceRegenerate &&
+        generatedFiles.length > 0 &&
+        fs.existsSync(path.join(outputPath, "index.md"))
+      ) {
+        console.log("📦 API docs already generated, skipping");
+        return;
       }
-      if (name.startsWith('M:') || name.startsWith('P:') || name.startsWith('F:')) {
-        const withoutPrefix = name.substring(2)
-        const className = withoutPrefix.substring(0, withoutPrefix.lastIndexOf('.'))
-        return !excludeNamespaces.some(excluded => className.startsWith(excluded + '.'))
-      }
-      return true
-    })
 
-    return {
-      ...docs,
-      types: filteredTypes,
-      methods: filteredMethods,
-      properties: filteredProperties,
-      fields: filteredFields,
-      members: filteredMembers
+      if (fs.existsSync(outputPath)) {
+        fs.rmSync(outputPath, { recursive: true });
+      }
+      fs.mkdirSync(outputPath, { recursive: true });
+
+      console.log("📝 Generating markdown files...");
+      generatedFiles = await generateMarkdown(docs, outputPath, outputDir);
+      console.log(
+        `✅ Generated ${generatedFiles.length} API documentation files`,
+      );
+
+      if (autoSidebar) {
+        const sidebarConfig = generateSidebar(docs, outputDir);
+        const configPath = path.join(outputPath, "_sidebar.json");
+        fs.writeFileSync(configPath, JSON.stringify(sidebarConfig, null, 2));
+        console.log("📋 Generated sidebar configuration");
+      }
+    } catch (error) {
+      console.error("❌ Error generating API docs:", error);
+      throw error;
+    } finally {
+      isGenerating = false;
     }
   }
 
   return {
-    name: 'vitepress-csharp-api',
-    
-    enforce: /** @type {'pre'} */ ('pre'),
-    configResolved(resolvedConfig) {
-      config = resolvedConfig
-    },
+    name: "vitepress-csharp-api",
+    enforce: /** @type {'pre'} */ ("pre"),
 
     async buildStart() {
-      console.log('🔧 C# API Plugin: Starting...')
-      
       if (!xmlPath) {
-        console.warn('⚠️  No XML path provided, skipping API generation')
-        return
+        console.warn("⚠️  No XML path provided, skipping API generation");
+        return;
       }
-
-      // Resolve glob pattern
-      const searchPattern = path.resolve(process.cwd(), xmlPath)
-      const matches = await glob(searchPattern, { windowsPathsNoEscape: true })
-      
-      if (matches.length === 0) {
-        console.warn(`⚠️  No XML files found matching: ${searchPattern}`)
-        console.warn('   Run "dotnet build" first to generate XML documentation')
-        console.warn('   Searching for: ' + xmlPath)
-        return
-      }
-
-      // Use the first match (or most recent if multiple)
-      if (matches.length > 1) {
-        console.log(`ℹ️  Found ${matches.length} XML files, using: ${matches[0]}`)
-      }
-      
-      resolvedXmlPath = matches[0]
-      
-      if (!fs.existsSync(resolvedXmlPath)) {
-        console.warn(`⚠️  XML file not found: ${resolvedXmlPath}`)
-        return
-      }
-
-      try {
-        console.log(`📖 Parsing XML documentation from: ${resolvedXmlPath}`)
-        const rawDocs = await parseXmlDocs(resolvedXmlPath)
-        // Filter out excluded namespaces
-        parsedDocs = filterNamespaces(rawDocs)
-
-        if (excludeNamespaces.length > 0) {
-          console.log(`🔍 Filtered out namespaces: ${excludeNamespaces.join(', ')}`)
-          console.log(`   Removed ${rawDocs.types.length - parsedDocs.types.length} types`)
-          console.log(`   Removed ${rawDocs.methods.length - parsedDocs.methods.length} methods`)
-          console.log(`   Removed ${rawDocs.properties.length - parsedDocs.properties.length} properties`)
-          console.log(`   Removed ${rawDocs.fields.length - parsedDocs.fields.length} fields`)
-          console.log(`   Removed ${rawDocs.members.length - parsedDocs.members.length} total members`)
-        }
-        
-        console.log(`✨ Found ${parsedDocs.types.length} types, ${parsedDocs.members.length} members`)
-        
-        // Clear output directory
-        const outputPath = path.resolve(process.cwd(), outputDir)
-        if (fs.existsSync(outputPath)) {
-          fs.rmSync(outputPath, { recursive: true })
-        }
-        fs.mkdirSync(outputPath, { recursive: true })
-        
-        // Generate markdown files
-        console.log('📝 Generating markdown files...')
-        generatedFiles = await generateMarkdown(parsedDocs, outputPath)
-        
-        console.log(`✅ Generated ${generatedFiles.length} API documentation files`)
-        
-        // Generate sidebar config if requested
-        if (autoSidebar) {
-          const sidebarConfig = generateSidebar(parsedDocs, outputDir)
-          const configPath = path.join(outputPath, '_sidebar.json')
-          fs.writeFileSync(configPath, JSON.stringify(sidebarConfig, null, 2))
-          console.log('📋 Generated sidebar configuration')
-        }
-        
-      } catch (error) {
-        console.error('❌ Error generating API docs:', error)
-        console.error('Stack trace:', error.stack)
-        throw error
-      }
+      console.log("🔧 C# API Plugin: Starting...");
+      await generate();
     },
 
     configureServer(server) {
-      if (!watch || !xmlPath) return
+      if (!watch || !xmlPath) return;
 
-      // Initial resolve of XML path
-      const searchPattern = path.resolve(process.cwd(), xmlPath)
-      
-      // Watch for XML file changes
-      glob(searchPattern, { windowsPathsNoEscape: true }).then(matches => {
-        if (matches.length === 0) return
-        
-        resolvedXmlPath = matches[0]
-        server.watcher.add(resolvedXmlPath)
-        
-        // Also watch the directory for new builds
-        const xmlDir = path.dirname(resolvedXmlPath)
-        server.watcher.add(xmlDir)
-      })
-      
-      server.watcher.on('change', async (file) => {
-        // Re-resolve the path in case it changed
-        const matches = await glob(searchPattern, { windowsPathsNoEscape: true })
-        if (matches.length === 0) return
-        
-        const currentXmlPath = matches[0]
-        
-        if (file === currentXmlPath || file.endsWith('.xml')) {
-          console.log('📖 XML documentation changed, regenerating...')
-          
-          try {
-            const rawDocs = await parseXmlDocs(currentXmlPath)
-            parsedDocs = filterNamespaces(rawDocs)
-            
-            const outputPath = path.resolve(process.cwd(), outputDir)
-            generatedFiles = await generateMarkdown(parsedDocs, outputPath)
-            
-            console.log('✅ API documentation regenerated')
-            
-            // Trigger HMR for all generated files
-            generatedFiles.forEach(file => {
-              server.moduleGraph.onFileChange(file)
-            })
-            
-            server.ws.send({
-              type: 'full-reload',
-              path: '*'
-            })
-          } catch (error) {
-            console.error('❌ Error regenerating docs:', error)
-            console.error('Stack trace:', error.stack)
-          }
+      const searchPattern = path.resolve(process.cwd(), xmlPath);
+
+      glob(searchPattern, { windowsPathsNoEscape: true }).then((matches) => {
+        if (matches.length === 0) return;
+        server.watcher.add(matches[0]);
+        server.watcher.add(path.dirname(matches[0]));
+      });
+
+      server.watcher.on("change", async (file) => {
+        const matches = await glob(searchPattern, {
+          windowsPathsNoEscape: true,
+        });
+        if (matches.length === 0) return;
+
+        if (file === matches[0] || file.endsWith(".xml")) {
+          console.log("📖 XML documentation changed, regenerating...");
+          await generate(true); // force regenerate + clear cache
+
+          generatedFiles.forEach((f) => server.moduleGraph.onFileChange(f));
+          server.ws.send({ type: "full-reload", path: "*" });
         }
-      })
-    }
-  }
+      });
+    },
+  };
 }
-
-export { generateSidebar } from './sidebar-generator.js'

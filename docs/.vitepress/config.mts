@@ -1,39 +1,35 @@
-// docs/.vitepress/config.mts
 import { defineConfig } from "vitepress";
 import { csharpApiPlugin } from "./plugins/csharp-api/index.js";
-import { githubChangelogMDPlugin } from "./plugins/github-releases-changelog/index.js"
-import { codeSnippetsPlugin } from "./plugins/code-snippets/index.js";
-import fs from "fs";
-import path from "path";
+import { githubChangelogMDPlugin } from "./plugins/github-releases-changelog/index.js";
+import { createRequire } from "module";
+import { existsSync } from "fs";
+import { resolve, dirname } from "path";
+import { fileURLToPath } from "url";
 
-// Funktion um API Sidebar zu laden (mit Fallback)
-function loadApiSidebar() {
-  const sidebarPath = path.join(process.cwd(), "api", "_sidebar.json");
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
-  if (fs.existsSync(sidebarPath)) {
-    try {
-      return JSON.parse(fs.readFileSync(sidebarPath, "utf-8"));
-    } catch (error) {
-      console.warn("⚠️  Failed to load API sidebar:", error);
-    }
-  }
+const sidebarPath = resolve(__dirname, "../api/_sidebar.json");
+const sidebarJson = existsSync(sidebarPath)
+  ? createRequire(import.meta.url)(sidebarPath)
+  : {};
 
-  return [
-    {
-      text: "API Reference",
-      items: [{ text: "Documentation is being generated...", link: "/api/" }],
-    },
-  ];
-}
+const EXCLUDED_NAMESPACES = ["System", "Microsoft", "Internal"];
+const XML_PATH = "../src/Signal.Bot/bin/Release/*/Signal.Bot.xml";
+const OUTPUT_DIR = "api";
 
 export default defineConfig({
   title: "Signal.Bot",
   description: "A .NET Signal Messenger Bot Client",
   lang: "en-US",
   lastUpdated: true,
+  cleanUrls: true,
   base: "/Signal.Bot/",
   srcDir: ".",
-  srcExclude: ["node_modules", ".vitepress/cache"],
+  srcExclude: ["node_modules", ".vitepress/cache", "scripts"],
+  head: [["link", { rel: "icon", href: "/Signal.Bot/logo_small.png" }]],
+  markdown: { lineNumbers: true },
+  sitemap: { hostname: "https://st0o0.github.io/Signal.Bot/" },
 
   vite: {
     plugins: [
@@ -44,29 +40,26 @@ export default defineConfig({
         maxHighlights: 5,
       }),
       csharpApiPlugin({
-        xmlPath: "../src/Signal.Bot/bin/Release/*/Signal.Bot.xml",
-        outputDir: "api",
+        xmlPath: XML_PATH,
+        outputDir: OUTPUT_DIR,
         autoSidebar: true,
         watch: true,
-        excludeNamespaces: ["System", "Microsoft", "Internal"],
+        excludeNamespaces: EXCLUDED_NAMESPACES,
       }),
     ],
   },
 
   themeConfig: {
     logo: "/logo_small.png",
-
     nav: [
       { text: "Home", link: "/" },
       { text: "Guide", link: "/guide/getting-started" },
-      { text: "API Reference", link: "/api/" },
       { text: "Examples", link: "/examples/" },
-      { text: 'Changelog', link: '/changelog' }
+      { text: "API Reference", link: "/api/" },
+      { text: "Changelog", link: "/changelog" },
     ],
-
     sidebar: {
-      "/api/": loadApiSidebar(),
-
+      "/api/": sidebarJson,
       "/guide/": [
         {
           text: "Guide",
@@ -91,15 +84,14 @@ export default defineConfig({
         },
       ],
     },
-
     socialLinks: [
       { icon: "github", link: "https://github.com/st0o0/Signal.Bot" },
     ],
-
-    search: {
-      provider: "local",
+    footer: {
+      message:
+        'Released under the <a href="https://mit-license.org/">MIT License</a>.',
+      copyright: `Copyright © 2025-${new Date().getFullYear()} <a href="https://github.com/st0o0">st0o0</a>`,
     },
-
-
+    search: { provider: "local" },
   },
 });

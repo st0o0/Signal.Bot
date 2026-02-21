@@ -8,7 +8,7 @@ on:
       - 'src/**'
       - '.github/workflows/docs.yml'
   pull_request:
-    branches: [ "main" ]
+    branches: ['main']
     paths:
       - 'docs/**'
       - 'src/**'
@@ -71,34 +71,137 @@ jobs:
         working-directory: docs
         run: npm run build
 
-      - name: Build VitePress site with gen api
-        working-directory: docs
-        run: npm run build
-
       - name: List generated files
         run: |
-          echo "=== Generated VitePress dist ==="
+          echo '=== Generated VitePress dist ==='
           ls -la docs/.vitepress/dist/
-          echo "=== API folder content ==="
-          ls -la docs/.vitepress/dist/api/ || echo "API folder not found!"
-          echo "=== api-generated folder content ==="
-          ls -la docs/api-generated/ || echo "api-generated folder not found!"
-          echo "=== End of listing ==="
+          echo '=== API folder content ==='
+          ls -la docs/.vitepress/dist/api/ || echo 'API folder not found!'
+          echo '=== API md folder content ==='
+          ls -la docs/api/ || echo 'API folder not found!'
+          echo '=== End of listing ==='
+
+      - name: Generate checksum
+        run: |
+          find docs/.vitepress/dist -type f | sort | xargs md5sum | md5sum | cut -d' ' -f1 > /tmp/checksum.txt
+          echo "Checksum: $(cat /tmp/checksum.txt)"
+
+      - name: Upload checksum
+        uses: actions/upload-artifact@v4
+        with:
+          name: vitepress-checksum
+          path: /tmp/checksum.txt
+      
+      - name: Upload dist artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: vitepress-dist
+          path: docs/.vitepress/dist
+
+  compare:
+    runs-on: ubuntu-latest
+    needs: build
+    outputs:
+      has_changes: ${{ steps.compare.outputs.has_changes }}
+    steps:
+      - name: Find last successful run on same ref
+        id: last-run
+        run: |
+          RUN_ID=$(curl -s \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${{ github.repository }}/actions/workflows/docs.yml/runs?status=success&branch=${{ github.ref_name }}&per_page=5" \
+            | jq -r '[.workflow_runs[] | select(.id != ${{ github.run_id }})][0].id // empty')
+          
+          echo "last_run_id=$RUN_ID" >> $GITHUB_OUTPUT
+          
+          if [ -z "$RUN_ID" ]; then
+            echo "⚠️ No previous successful run found on ${{ github.ref_name }}"
+          else
+            echo "✅ Last successful run on ${{ github.ref_name }}: $RUN_ID"
+          fi
+
+      - name: Download previous checksum
+        id: prev-checksum
+        if: steps.last-run.outputs.last_run_id != ''
+        run: |
+          ARTIFACT_ID=$(curl -s \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ steps.last-run.outputs.last_run_id }}/artifacts" \
+            | jq -r '.artifacts[] | select(.name == "vitepress-checksum") | .id // empty')
+          
+          if [ -n "$ARTIFACT_ID" ]; then
+            curl -sL \
+              -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+              -H "Accept: application/vnd.github+json" \
+              "https://api.github.com/repos/${{ github.repository }}/actions/artifacts/$ARTIFACT_ID/zip" \
+              -o /tmp/prev-checksum.zip
+            unzip -q /tmp/prev-checksum.zip -d /tmp/prev-checksum
+            echo "found=true" >> $GITHUB_OUTPUT
+          else
+            echo "found=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Download current checksum
+        uses: actions/download-artifact@v4
+        with:
+          name: vitepress-checksum
+          path: /tmp/new-checksum
+
+      - name: Compare checksums
+        id: compare
+        run: |
+          if [ "${{ steps.prev-checksum.outputs.found }}" != "true" ]; then
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+            echo "🆕 No previous checksum found, will deploy"
+          else
+            NEW=$(cat /tmp/new-checksum/checksum.txt)
+            OLD=$(cat /tmp/prev-checksum/checksum.txt)
+            
+            echo "New: $NEW"
+            echo "Old: $OLD"
+            
+            if [ "$NEW" = "$OLD" ]; then
+              echo "has_changes=false" >> $GITHUB_OUTPUT
+              echo "✅ Checksums match, skipping deploy"
+            else
+              echo "has_changes=true" >> $GITHUB_OUTPUT
+              echo "🚀 Checksums differ, will deploy"
+            fi
+          fi
+
+  pages:
+    runs-on: ubuntu-latest
+    needs: compare
+    if: >
+      github.ref == 'refs/heads/main' &&
+      github.event_name == 'push' &&
+      needs.compare.outputs.has_changes == 'true'
+    steps:
+      - name: Download dist artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: vitepress-dist
+          path: /tmp/dist
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
-      - name: Upload artifact
+      - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
         with:
-          path: docs/.vitepress/dist
+          path: /tmp/dist
 
   deploy:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    needs: build
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    needs: pages
+    if: >
+      github.ref == 'refs/heads/main' &&
+      github.event_name == 'push' &&
+      needs.compare.outputs.has_changes == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Deploy to GitHub Pages

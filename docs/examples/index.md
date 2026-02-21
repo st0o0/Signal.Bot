@@ -80,19 +80,19 @@ Create and manage polls in Signal groups.
 
 ### Send a Message
 
-<<< ./../../src/Signal.Bot.Example/DocuCode/Overview.cs#SendAMessage{csharp}
+<<< ./../../src/Signal.Bot.Example/Examples/Overview.cs#SendAMessage{csharp}
 
 ### Receive Messages
 
-<<< ./../../src/Signal.Bot.Example/DocuCode/Overview.cs#ReceiveMessages{csharp}
+<<< ./../../src/Signal.Bot.Example/Examples/Overview.cs#ReceiveMessages{csharp}
 
 ### Create a Group
 
-<<< ./../../src/Signal.Bot.Example/DocuCode/Overview.cs#CreateAGroup{csharp}
+<<< ./../../src/Signal.Bot.Example/Examples/Overview.cs#CreateAGroup{csharp}
 
 ### Send Attachment
 
-<<< ./../../src/Signal.Bot.Example/DocuCode/Overview.cs#SendAttachment{csharp}
+<<< ./../../src/Signal.Bot.Example/Examples/Overview.cs#SendAttachment{csharp}
 
 ## Running the Examples
 

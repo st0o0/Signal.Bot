@@ -12,7 +12,7 @@ This is the most basic example of a Signal bot. It demonstrates:
 
 ## Code
 
-<<< ./../../src/Signal.Bot.Example/DocuCode/EchoBot.cs#EchoBot{csharp}
+<<< ./../../src/Signal.Bot.Example/Examples/EchoBot.cs#EchoBot{csharp}
 
 ## Configuration
 
