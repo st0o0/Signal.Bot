@@ -1,6 +1,4 @@
 import { defineConfig } from "vitepress";
-import { csharpApiPlugin } from "./plugins/csharp-api/index.js";
-import { githubChangelogMDPlugin } from "./plugins/github-releases-changelog/index.js";
 import { createRequire } from "module";
 import { existsSync } from "fs";
 import { resolve, dirname } from "path";
@@ -30,25 +28,6 @@ export default defineConfig({
   head: [["link", { rel: "icon", href: "/Signal.Bot/logo_small.png" }]],
   markdown: { lineNumbers: true },
   sitemap: { hostname: "https://st0o0.github.io/Signal.Bot/" },
-
-  vite: {
-    plugins: [
-      githubChangelogMDPlugin({
-        owner: "st0o0",
-        repo: "Signal.Bot",
-        output: "changelog.md",
-        maxHighlights: 5,
-      }),
-      csharpApiPlugin({
-        xmlPath: XML_PATH,
-        outputDir: OUTPUT_DIR,
-        autoSidebar: true,
-        watch: true,
-        excludeNamespaces: EXCLUDED_NAMESPACES,
-      }),
-    ],
-  },
-
   themeConfig: {
     logo: "/logo_small.png",
     nav: [

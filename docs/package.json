@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vitepress dev",
-    "prebuild": "node scripts/generate-api.js",
+    "prebuild": "node scripts/prebuild.js",
     "build": "vitepress build",
     "preview": "vitepress preview"
   },
