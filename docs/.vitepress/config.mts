@@ -29,7 +29,7 @@ export default defineConfig({
   srcExclude: ["node_modules", ".vitepress/cache", "scripts"],
   head: [["link", { rel: "icon", href: "/Signal.Bot/logo_small.png" }]],
   markdown: { lineNumbers: true },
-  sitemap: { hostname: "https://st0o0.net/Signal.Bot/" },
+  sitemap: { hostname: "https://st0o0.github.io/Signal.Bot/" },
 
   vite: {
     plugins: [
