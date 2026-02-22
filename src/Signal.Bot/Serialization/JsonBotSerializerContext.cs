@@ -53,6 +53,10 @@ namespace Signal.Bot.Serialization;
 [JsonSerializable(typeof(StickerPack))]
 [JsonSerializable(typeof(SyncMessage))]
 [JsonSerializable(typeof(TypingMessage))]
+[JsonSerializable(typeof(CallMessage))]
+[JsonSerializable(typeof(OfferMessage))]
+[JsonSerializable(typeof(HangupMessage))]
+[JsonSerializable(typeof(IceUpdateMessage))]
 // Requests
 [JsonSerializable(typeof(AddDeviceRequest))]
 [JsonSerializable(typeof(AddGroupAdminRequest))]

@@ -86,7 +86,10 @@ public static class JsonBotAPI
         { typeof(StickerPack), JsonBotSerializerContext.Default.StickerPack },
         { typeof(SyncMessage), JsonBotSerializerContext.Default.SyncMessage },
         { typeof(TypingMessage), JsonBotSerializerContext.Default.TypingMessage },
-
+        { typeof(CallMessage), JsonBotSerializerContext.Default.CallMessage },
+        { typeof(OfferMessage), JsonBotSerializerContext.Default.OfferMessage },
+        { typeof(HangupMessage), JsonBotSerializerContext.Default.HangupMessage },
+        { typeof(IceUpdateMessage), JsonBotSerializerContext.Default.IceUpdateMessage },
         // Request Types
         { typeof(AddDeviceRequest), JsonBotSerializerContext.Default.AddDeviceRequest },
         { typeof(AddGroupAdminRequest), JsonBotSerializerContext.Default.AddGroupAdminRequest },

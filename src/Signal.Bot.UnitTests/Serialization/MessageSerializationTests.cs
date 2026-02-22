@@ -563,4 +563,71 @@ public class MessageSerializationTests
         Assert.NotNull(preview.Image);
         Assert.Equal("Ipsum Lorem", preview.Image.Id);
     }
+
+    [Fact(Timeout = 5000)]
+    public void Deserialize_ReceivedMessage_WithCallMessage()
+    {
+        const string json = """
+                            {
+                              "envelope": {
+                                "source": "Servus Anonym",
+                                "sourceNumber": "Servus Anonym",
+                                "sourceUuid": "2ff185b5-4365-419a-b3c6-3bdfbf629f8a",
+                                "sourceName": "Lorem Leberkas",
+                                "sourceDevice": 63282,
+                                "timestamp": 1772582585300,
+                                "serverReceivedTimestamp": 1773642716538,
+                                "serverDeliveredTimestamp": 1769416216320,
+                                "callMessage": {
+                                  "hangupMessage": {
+                                    "id": 65669,
+                                    "type": "ACCEPTED",
+                                    "deviceId": 66344
+                                  },
+                                  "offerMessage": {
+                                    "id": 93200,
+                                    "type": "AUDIO_CALL",
+                                    "opaque": "KEKW Ketchup"
+                                  },
+                                  "iceUpdateMessages": [
+                                  {
+                                    "id": 94927,
+                                    "opaque": "Ipsum Ketchup"
+                                  },
+                                  {
+                                    "id": 54408,
+                                    "opaque": "KEKW KEKW"
+                                  },
+                                  {
+                                    "id": 40422,
+                                    "opaque": "Lorem Servus"
+                                  },
+                                  {
+                                    "id": 96895,
+                                    "opaque": "Ketchup KEKW"
+                                  },
+                                  {
+                                    "id": 31083,
+                                    "opaque": "KEKW Leberkas"
+                                  },
+                                  {
+                                    "id": 67296,
+                                    "opaque": "Amet Lorem"
+                                  }
+                                ]
+                                }
+                              },
+                              "account": "Amet Ipsum"
+                            }
+                            """;
+        var result = JsonSerializer.Deserialize(json, JsonBotAPI.Get<ReceivedMessage>())!;
+
+        Assert.NotNull(result.Envelope);
+        Assert.NotNull(result.Envelope.CallMessage);
+        var callMessage = result.Envelope.CallMessage;
+        Assert.NotNull(callMessage.HangupMessage);
+        Assert.Equal(65669, callMessage.HangupMessage.Id);
+        Assert.Equal(66344, callMessage.HangupMessage.DeviceId);
+        Assert.Equal(HangupType.Accepted, callMessage.HangupMessage.Type);
+    }
 }

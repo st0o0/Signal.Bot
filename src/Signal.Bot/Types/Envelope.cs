@@ -81,6 +81,12 @@ public record Envelope
     [JsonPropertyName("receiptMessage")]
     public ReceiptMessage? ReceiptMessage { get; set; }
 
+    /// <summary>
+    /// TBD
+    /// </summary>
+    [JsonPropertyName("callMessage")]
+    public CallMessage? CallMessage { get; set; }
+    
     /// <inheritdoc />
     public override string ToString() => JsonSerializer.Serialize(this, JsonBotAPI.Get(GetType()));
 }
