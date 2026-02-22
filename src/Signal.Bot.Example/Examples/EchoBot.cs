@@ -40,7 +40,7 @@ public static class EchoBotProgramm
         Console.WriteLine("Bot stopped");
     }
 
-    public static async Task HandleMessage(ISignalBotClient client, ReceivedMessageEnvelope message, CancellationToken token)
+    public static async Task HandleMessage(ISignalBotClient client, ReceivedMessage message, CancellationToken token)
     {
         var envelope = message.Envelope!;
         // Get the text message

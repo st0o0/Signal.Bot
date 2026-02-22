@@ -3,13 +3,13 @@ using Signal.Bot.Types;
 namespace Signal.Bot.Polling;
 
 internal class DefaultReceivedMessageHandler(
-    Func<ISignalBotClient, ReceivedMessageEnvelope, CancellationToken, Task> updateHandler,
+    Func<ISignalBotClient, ReceivedMessage, CancellationToken, Task> updateHandler,
     Func<ISignalBotClient, Error, CancellationToken, Task> errorHandler)
     : IReceivedMessageHandler
 {
-    public async Task HandleAsync(ISignalBotClient client, ReceivedMessageEnvelope messageEnvelope,
+    public async Task HandleAsync(ISignalBotClient client, ReceivedMessage message,
         CancellationToken cancellationToken)
-        => await updateHandler(client, messageEnvelope, cancellationToken);
+        => await updateHandler(client, message, cancellationToken);
 
     public Task HandleErrorAsync(
         ISignalBotClient client,

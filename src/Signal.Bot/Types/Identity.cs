@@ -1,16 +1,19 @@
+using System.Text.Json;
 using System.Text.Json.Serialization;
+using Signal.Bot.Serialization;
 
 namespace Signal.Bot.Types;
 
 /// <summary>
 /// Represents a Signal identity with cryptographic fingerprint and trust status information for end-to-end encryption verification.
 /// </summary>
-public class Identity
+public record Identity
 {
     /// <summary>
     /// Gets or sets the date and time when this identity was first added or discovered.
     /// </summary>
-    [JsonPropertyName("added")] public DateTime Added { get; set; }
+    [JsonPropertyName("added")]
+    public DateTime Added { get; set; }
 
     /// <summary>
     /// Gets or sets the cryptographic fingerprint of the identity key.
@@ -43,6 +46,9 @@ public class Identity
     /// </summary>
     [JsonPropertyName("uuid")]
     public Guid Id { get; set; }
+    
+    /// <inheritdoc />
+    public override string ToString() => JsonSerializer.Serialize(this, JsonBotAPI.Get(GetType()));
 }
 
 /// <summary>

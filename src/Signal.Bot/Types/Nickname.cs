@@ -1,11 +1,13 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.Text.Json;
+using System.Text.Json.Serialization;
+using Signal.Bot.Serialization;
 
 namespace Signal.Bot.Types;
 
 /// <summary>
 /// Represents the nickname components for a contact, including given name and family name.
 /// </summary>
-public class Nickname
+public record Nickname
 {
     /// <summary>
     /// Gets or sets the family name (last name) component of the nickname.
@@ -24,4 +26,7 @@ public class Nickname
     /// </summary>
     [JsonPropertyName("name")] 
     public string? Name { get; set; }
+    
+    /// <inheritdoc />
+    public override string ToString() => JsonSerializer.Serialize(this, JsonBotAPI.Get(GetType()));
 }

@@ -44,15 +44,15 @@ public class ForTesting(IServiceProvider serviceProvider) : BackgroundService
         //         .WithNotifySelf();
         // }, stoppingToken);
 
-        await Task.Delay(TimeSpan.FromMinutes(5), stoppingToken);
+        Console.ReadKey();
     }
 }
 
 public class TestHandler(ILogger<TestHandler> logger) : IReceivedMessageHandler
 {
-    public Task HandleAsync(ISignalBotClient client, ReceivedMessageEnvelope messageEnvelope, CancellationToken cancellationToken)
+    public Task HandleAsync(ISignalBotClient client, ReceivedMessage message, CancellationToken cancellationToken)
     {
-        logger.LogInformation("Received message: {@Message}", messageEnvelope);
+        logger.LogInformation("Received message: {@Message}", message);
         return Task.CompletedTask;
     }
 

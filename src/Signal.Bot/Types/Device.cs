@@ -1,11 +1,13 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.Text.Json;
+using System.Text.Json.Serialization;
+using Signal.Bot.Serialization;
 
 namespace Signal.Bot.Types;
 
 /// <summary>
 /// Represents a linked device associated with a Signal account.
 /// </summary>
-public class Device
+public record Device
 {
     /// <summary>
     /// Gets or sets the name assigned to the device.
@@ -24,4 +26,7 @@ public class Device
     /// </summary>
     [JsonPropertyName("last_seen_timestamp")] 
     public DateTime LastSeen { get; set; }
+    
+    /// <inheritdoc />
+    public override string ToString() => JsonSerializer.Serialize(this, JsonBotAPI.Get(GetType()));
 }

@@ -1,11 +1,13 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.Text.Json;
+using System.Text.Json.Serialization;
+using Signal.Bot.Serialization;
 
 namespace Signal.Bot.Types;
 
 /// <summary>
 /// Represents a received message envelope container with the message content and account information.
 /// </summary>
-public class ReceivedMessageEnvelope
+public record ReceivedMessage
 {
     /// <summary>
     /// Gets or sets the envelope containing the message metadata and content.
@@ -19,4 +21,7 @@ public class ReceivedMessageEnvelope
     /// </summary>
     [JsonPropertyName("account")] 
     public string? Account { get; set; }
+    
+    /// <inheritdoc />
+    public override string ToString() => JsonSerializer.Serialize(this, JsonBotAPI.Get(GetType()));
 }

@@ -13,14 +13,14 @@ public class SignalBotReceiverMessageTests : ReceiverIntegrationTestBase
     public async Task Should_Receive_Text_Message_From_Server()
     {
         // Arrange
-        var messageReceivedTcs = new TaskCompletionSource<ReceivedMessageEnvelope>();
+        var messageReceivedTcs = new TaskCompletionSource<ReceivedMessage>();
 
         MockHandler.HandleAsync(
                 Arg.Any<ISignalBotClient>(),
-                Arg.Any<ReceivedMessageEnvelope>(),
+                Arg.Any<ReceivedMessage>(),
                 Arg.Any<CancellationToken>())
             .Returns(Task.CompletedTask)
-            .AndDoes(callInfo => messageReceivedTcs.SetResult(callInfo.ArgAt<ReceivedMessageEnvelope>(1)));
+            .AndDoes(callInfo => messageReceivedTcs.SetResult(callInfo.ArgAt<ReceivedMessage>(1)));
 
         await TestServer.StartAsync();
         var receiver = new SignalBotReceiver(MockClient);
@@ -43,14 +43,14 @@ public class SignalBotReceiverMessageTests : ReceiverIntegrationTestBase
     public async Task Should_Receive_Binary_Message_From_Server()
     {
         // Arrange
-        var messageReceivedTcs = new TaskCompletionSource<ReceivedMessageEnvelope>();
+        var messageReceivedTcs = new TaskCompletionSource<ReceivedMessage>();
 
         MockHandler.HandleAsync(
                 Arg.Any<ISignalBotClient>(),
-                Arg.Any<ReceivedMessageEnvelope>(),
+                Arg.Any<ReceivedMessage>(),
                 Arg.Any<CancellationToken>())
             .Returns(Task.CompletedTask)
-            .AndDoes(callInfo => messageReceivedTcs.SetResult(callInfo.ArgAt<ReceivedMessageEnvelope>(1)));
+            .AndDoes(callInfo => messageReceivedTcs.SetResult(callInfo.ArgAt<ReceivedMessage>(1)));
 
         await TestServer.StartAsync();
         var receiver = new SignalBotReceiver(MockClient);
@@ -81,12 +81,12 @@ public class SignalBotReceiverMessageTests : ReceiverIntegrationTestBase
 
         MockHandler.HandleAsync(
                 Arg.Any<ISignalBotClient>(),
-                Arg.Any<ReceivedMessageEnvelope>(),
+                Arg.Any<ReceivedMessage>(),
                 Arg.Any<CancellationToken>())
             .Returns(Task.CompletedTask)
             .AndDoes(callInfo =>
             {
-                var msg = callInfo.ArgAt<ReceivedMessageEnvelope>(1);
+                var msg = callInfo.ArgAt<ReceivedMessage>(1);
                 receivedMessages.Add(msg.Envelope?.DataMessage?.Message ?? "");
 
                 if (Interlocked.Increment(ref messageCount) == 5)
@@ -128,7 +128,7 @@ public class SignalBotReceiverMessageTests : ReceiverIntegrationTestBase
 
         MockHandler.HandleAsync(
                 Arg.Any<ISignalBotClient>(),
-                Arg.Any<ReceivedMessageEnvelope>(),
+                Arg.Any<ReceivedMessage>(),
                 Arg.Any<CancellationToken>())
             .Returns(Task.CompletedTask)
             .AndDoes(_ =>
@@ -155,7 +155,7 @@ public class SignalBotReceiverMessageTests : ReceiverIntegrationTestBase
 
         await MockHandler.Received(expectedCount).HandleAsync(
             MockClient,
-            Arg.Any<ReceivedMessageEnvelope>(),
+            Arg.Any<ReceivedMessage>(),
             Arg.Any<CancellationToken>());
 
         await receiver.DisposeAsync();
@@ -165,14 +165,14 @@ public class SignalBotReceiverMessageTests : ReceiverIntegrationTestBase
     public async Task Should_Handle_Group_Message()
     {
         // Arrange
-        var messageReceivedTcs = new TaskCompletionSource<ReceivedMessageEnvelope>();
+        var messageReceivedTcs = new TaskCompletionSource<ReceivedMessage>();
 
         MockHandler.HandleAsync(
                 Arg.Any<ISignalBotClient>(),
-                Arg.Any<ReceivedMessageEnvelope>(),
+                Arg.Any<ReceivedMessage>(),
                 Arg.Any<CancellationToken>())
             .Returns(Task.CompletedTask)
-            .AndDoes(callInfo => messageReceivedTcs.SetResult(callInfo.ArgAt<ReceivedMessageEnvelope>(1)));
+            .AndDoes(callInfo => messageReceivedTcs.SetResult(callInfo.ArgAt<ReceivedMessage>(1)));
 
         await TestServer.StartAsync();
         var receiver = new SignalBotReceiver(MockClient);
@@ -197,14 +197,14 @@ public class SignalBotReceiverMessageTests : ReceiverIntegrationTestBase
     public async Task Should_Handle_Message_With_Attachment()
     {
         // Arrange
-        var messageReceivedTcs = new TaskCompletionSource<ReceivedMessageEnvelope>();
+        var messageReceivedTcs = new TaskCompletionSource<ReceivedMessage>();
 
         MockHandler.HandleAsync(
                 Arg.Any<ISignalBotClient>(),
-                Arg.Any<ReceivedMessageEnvelope>(),
+                Arg.Any<ReceivedMessage>(),
                 Arg.Any<CancellationToken>())
             .Returns(Task.CompletedTask)
-            .AndDoes(callInfo => messageReceivedTcs.SetResult(callInfo.ArgAt<ReceivedMessageEnvelope>(1)));
+            .AndDoes(callInfo => messageReceivedTcs.SetResult(callInfo.ArgAt<ReceivedMessage>(1)));
 
         await TestServer.StartAsync();
         var receiver = new SignalBotReceiver(MockClient);
@@ -230,14 +230,14 @@ public class SignalBotReceiverMessageTests : ReceiverIntegrationTestBase
     public async Task Should_Handle_Message_With_Multiple_Attachments()
     {
         // Arrange
-        var messageReceivedTcs = new TaskCompletionSource<ReceivedMessageEnvelope>();
+        var messageReceivedTcs = new TaskCompletionSource<ReceivedMessage>();
 
         MockHandler.HandleAsync(
                 Arg.Any<ISignalBotClient>(),
-                Arg.Any<ReceivedMessageEnvelope>(),
+                Arg.Any<ReceivedMessage>(),
                 Arg.Any<CancellationToken>())
             .Returns(Task.CompletedTask)
-            .AndDoes(callInfo => messageReceivedTcs.SetResult(callInfo.ArgAt<ReceivedMessageEnvelope>(1)));
+            .AndDoes(callInfo => messageReceivedTcs.SetResult(callInfo.ArgAt<ReceivedMessage>(1)));
 
         await TestServer.StartAsync();
         var receiver = new SignalBotReceiver(MockClient);

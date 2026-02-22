@@ -1,11 +1,13 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.Text.Json;
+using System.Text.Json.Serialization;
+using Signal.Bot.Serialization;
 
 namespace Signal.Bot.Types;
 
 /// <summary>
 /// Represents a Signal user's profile information including name, about text, and avatar status.
 /// </summary>
-public class Profile
+public record Profile
 {
     /// <summary>
     /// Gets or sets the given name (first name) of the user.
@@ -36,4 +38,7 @@ public class Profile
     /// </summary>
     [JsonPropertyName("last_updated_timestamp")] 
     public DateTime LastUpdated { get; set; }
+    
+    /// <inheritdoc />
+    public override string ToString() => JsonSerializer.Serialize(this, JsonBotAPI.Get(GetType()));
 }
