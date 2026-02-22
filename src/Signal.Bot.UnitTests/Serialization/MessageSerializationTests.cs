@@ -445,9 +445,8 @@ public class MessageSerializationTests
         Assert.Equal(DateTime.UnixEpoch.AddMilliseconds(17000), a.UploadTimestamp);
     }
 
-
     [Fact(Timeout = 5000)]
-    public void Test()
+    public void Deserialize_ReceivedMessage_WithSyncMessage_SentMessage_WithGroupInfo()
     {
         const string json = """
                             {
@@ -494,5 +493,74 @@ public class MessageSerializationTests
         Assert.Equal("Anonym Lorem", groupInfo.Name);
         Assert.Equal(6455, groupInfo.Revision);
         Assert.Equal("DELIVER", groupInfo.Type);
+    }
+
+    [Fact(Timeout = 5000)]
+    public void Deserialize_ReceivedMessage_WithSyncMessage_SentMessage_WithPreviews()
+    {
+        const string json = """
+                            {
+                              "envelope": {
+                                "source": "KEKW Lorem",
+                                "sourceNumber": "Dolor Dolor",
+                                "sourceUuid": "dc8a8372-019f-451d-9ad9-705a43a0050d",
+                                "sourceName": "Ketchup Dolor",
+                                "sourceDevice": 92706,
+                                "timestamp": 1770236077599,
+                                "serverReceivedTimestamp": 1771803556110,
+                                "serverDeliveredTimestamp": 1771040747066,
+                                "syncMessage": {
+                                  "sentMessage": {
+                                    "destination": null,
+                                    "destinationNumber": null,
+                                    "destinationUuid": null,
+                                    "timestamp": 1773216132161,
+                                    "message": "Amet Lorem",
+                                    "expiresInSeconds": 7200,
+                                    "isExpirationUpdate": false,
+                                    "viewOnce": true,
+                                    "previews": [
+                                      {
+                                        "url": "Dolor Amet",
+                                        "title": "Lorem Lorem",
+                                        "description": "Leberkas KEKW",
+                                        "image": {
+                                          "contentType": "Amet Anonym",
+                                          "filename": null,
+                                          "id": "Ipsum Lorem",
+                                          "size": 7828,
+                                          "width": 98039,
+                                          "height": 53244,
+                                          "caption": null,
+                                          "uploadTimestamp": 1771892460342
+                                        }
+                                      }
+                                    ],
+                                    "groupInfo": {
+                                      "groupId": "Ketchup Ketchup",
+                                      "groupName": "Ketchup Lorem",
+                                      "revision": 22044,
+                                      "type": "DELIVER"
+                                    }
+                                  }
+                                }
+                              },
+                              "account": "Ketchup KEKW"
+                            }
+                            """;
+        var result = JsonSerializer.Deserialize(json, JsonBotAPI.Get<ReceivedMessage>())!;
+
+        Assert.NotNull(result.Envelope);
+        Assert.NotNull(result.Envelope.SyncMessage);
+        Assert.NotNull(result.Envelope.SyncMessage.SentMessage);
+        Assert.NotNull(result.Envelope.SyncMessage.SentMessage.Previews);
+        var previews = result.Envelope.SyncMessage.SentMessage.Previews;
+        Assert.Single(previews);
+        var preview = previews[0];
+        Assert.Equal("Lorem Lorem", preview.Title);
+        Assert.Equal("Dolor Amet", preview.Url);
+        Assert.Equal("Leberkas KEKW", preview.Description);
+        Assert.NotNull(preview.Image);
+        Assert.Equal("Ipsum Lorem", preview.Image.Id);
     }
 }

@@ -187,8 +187,8 @@ public class SignalBotReceiverMessageTests : ReceiverIntegrationTestBase
         var completed = await messageReceivedTcs.Task;
         Assert.NotNull(completed);
         Assert.Equal("Hello group!", completed.Envelope?.DataMessage?.Message);
-        Assert.Equal("Test Group", completed.Envelope?.DataMessage?.GroupV2?.Name);
-        Assert.Equal("group-123", completed.Envelope?.DataMessage?.GroupV2?.Id);
+        Assert.Equal("Test Group", completed.Envelope?.DataMessage?.GroupInfo?.Name);
+        Assert.Equal("group-123", completed.Envelope?.DataMessage?.GroupInfo?.Id);
 
         await receiver.DisposeAsync();
     }

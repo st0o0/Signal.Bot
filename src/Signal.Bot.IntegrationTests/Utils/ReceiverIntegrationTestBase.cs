@@ -112,7 +112,7 @@ public abstract class ReceiverIntegrationTestBase : IAsyncDisposable
     protected static ReceivedMessage CreateTestGroupMessage(string body, string groupId, string groupName)
     {
         var message = CreateTestReceivedMessage(body);
-        message.Envelope!.DataMessage!.GroupV2 = new GroupInfo
+        message.Envelope!.DataMessage!.GroupInfo = new GroupInfo
         {
             Id = groupId,
             Name = groupName,

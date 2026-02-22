@@ -72,7 +72,7 @@ public static class JsonBotAPI
         { typeof(LoggingConfiguration), JsonBotSerializerContext.Default.LoggingConfiguration },
         { typeof(Mention), JsonBotSerializerContext.Default.Mention },
         { typeof(Nickname), JsonBotSerializerContext.Default.Nickname },
-        { typeof(PreviewData), JsonBotSerializerContext.Default.PreviewData },
+        { typeof(Preview), JsonBotSerializerContext.Default.Preview },
         { typeof(Profile), JsonBotSerializerContext.Default.Profile },
         { typeof(ProfileCapabilities), JsonBotSerializerContext.Default.ProfileCapabilities },
         { typeof(QuoteData), JsonBotSerializerContext.Default.QuoteData },

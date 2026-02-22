@@ -75,6 +75,18 @@ public record SentMessage
     [JsonPropertyName("groupInfo")]
     public GroupInfo GroupInfo { get; set; }
 
+    /// <summary>
+    /// TBD
+    /// </summary>
+    [JsonPropertyName("previews")]
+    public List<Preview>? Previews { get; set; }
+
+    /// <summary>
+    /// TBD
+    /// </summary>
+    [JsonPropertyName("remoteDelete")]
+    public Acknowledged? RemoteDelete { get; set; }
+
     /// <inheritdoc />
     public override string ToString() => JsonSerializer.Serialize(this, JsonBotAPI.Get(GetType()));
 }

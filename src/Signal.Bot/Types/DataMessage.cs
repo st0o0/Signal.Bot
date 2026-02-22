@@ -54,8 +54,8 @@ public record DataMessage
     /// <summary>
     /// Gets or sets the group information if this message was sent to a Signal v2 group.
     /// </summary>
-    [JsonPropertyName("groupV2")]
-    public GroupInfo? GroupV2 { get; set; }
+    [JsonPropertyName("groupInfo")]
+    public GroupInfo? GroupInfo { get; set; }
 
     /// <summary>
     /// Gets or sets the list of user mentions in the message text.
@@ -79,7 +79,7 @@ public record DataMessage
     /// Gets or sets the list of link preview data for URLs in the message.
     /// </summary>
     [JsonPropertyName("previews")]
-    public List<PreviewData>? Previews { get; set; }
+    public List<Preview>? Previews { get; set; }
     
     /// <inheritdoc />
     public override string ToString() => JsonSerializer.Serialize(this, JsonBotAPI.Get(GetType()));

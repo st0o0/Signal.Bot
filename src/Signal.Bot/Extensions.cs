@@ -507,7 +507,7 @@ public static class Extensions
     /// <param name="recipient">The phone number or group ID where the message should be deleted.</param>
     /// <param name="timestamp">The timestamp of the message to delete. If null, uses current UTC time.</param>
     /// <param name="cancellationToken">A <see cref="CancellationToken"/> to observe for cancellation requests.</param>
-    /// <returns>An <see cref="Acknowledged"/> response confirming the deletion request.</returns>
+    /// <returns>An <see cref="RemoteDelete"/> response confirming the deletion request.</returns>
     public static async Task<Acknowledged> RemoteDeleteAsync(this ISignalBotClient client,
         string recipient,
         DateTime? timestamp = null,
@@ -554,7 +554,7 @@ public static class Extensions
     /// <param name="recipient">The phone number or group ID of the recipient.</param>
     /// <param name="message">The text message to send.</param>
     /// <param name="cancellationToken">A <see cref="CancellationToken"/> to observe for cancellation requests.</param>
-    /// <returns>An <see cref="Acknowledged"/> response confirming the message was sent.</returns>
+    /// <returns>An <see cref="RemoteDelete"/> response confirming the message was sent.</returns>
     /// <exception cref="ArgumentException">Thrown when recipient or message is null or whitespace.</exception>
     public static async Task<Acknowledged> SendMessageAsync(this ISignalBotClient client,
         string recipient,
