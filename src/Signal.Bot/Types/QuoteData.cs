@@ -1,11 +1,13 @@
+using System.Text.Json;
 using System.Text.Json.Serialization;
+using Signal.Bot.Serialization;
 
 namespace Signal.Bot.Types;
 
 /// <summary>
 /// Represents a quoted (replied-to) message within a Signal message.
 /// </summary>
-public class QuoteData
+public record QuoteData
 {
     /// <summary>
     /// Gets or sets the unique identifier of the quoted message.
@@ -30,4 +32,7 @@ public class QuoteData
     /// </summary>
     [JsonPropertyName("timestamp")] 
     public DateTime Timestamp { get; set; }
+    
+    /// <inheritdoc />
+    public override string ToString() => JsonSerializer.Serialize(this, JsonBotAPI.Get(GetType()));
 }

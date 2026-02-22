@@ -1,11 +1,13 @@
+using System.Text.Json;
 using System.Text.Json.Serialization;
+using Signal.Bot.Serialization;
 
 namespace Signal.Bot.Types;
 
 /// <summary>
 /// Represents a link preview with metadata and thumbnail for a URL mentioned in a message.
 /// </summary>
-public class PreviewData
+public record PreviewData
 {
     /// <summary>
     /// Gets or sets the URL being previewed.
@@ -30,4 +32,7 @@ public class PreviewData
     /// </summary>
     [JsonPropertyName("image")] 
     public Attachment? Image { get; set; }
+    
+    /// <inheritdoc />
+    public override string ToString() => JsonSerializer.Serialize(this, JsonBotAPI.Get(GetType()));
 }

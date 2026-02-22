@@ -4,15 +4,16 @@
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
         <PublishAot>true</PublishAot>
         <IsPackable>false</IsPackable>
-        <WarningLevel>3</WarningLevel>
+        <SelfContained>true</SelfContained>
     </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="Microsoft.Extensions.Http.Resilience"/>
+        <PackageReference Include="Serilog.AspNetCore"/>
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Signal.Bot\Signal.Bot.csproj" />
+        <ProjectReference Include="..\Signal.Bot\Signal.Bot.csproj"/>
     </ItemGroup>
 
     <ItemGroup>

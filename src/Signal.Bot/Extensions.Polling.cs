@@ -31,7 +31,7 @@ public static class PollingExtensions
     /// <param name="receiverOptionsConfigure">Optional action to configure receiver options via <see cref="ReceiverOptionsBuilder"/>.</param>
     /// <param name="cancellationToken">Cancellation token to stop receiving messages.</param>
     public static void StartReceiving(this ISignalBotClient client,
-        Func<ISignalBotClient, ReceivedMessageEnvelope, CancellationToken, Task> updateHandler,
+        Func<ISignalBotClient, ReceivedMessage, CancellationToken, Task> updateHandler,
         Func<ISignalBotClient, Error, CancellationToken, Task> errorHandler,
         Action<ReceiverOptionsBuilder>? receiverOptionsConfigure = null,
         CancellationToken cancellationToken = default)
@@ -48,7 +48,7 @@ public static class PollingExtensions
     /// <param name="receiverOptionsConfigure">Optional action to configure receiver options via <see cref="ReceiverOptionsBuilder"/>.</param>
     /// <param name="cancellationToken">Cancellation token to stop receiving messages.</param>
     public static void StartReceiving(this ISignalBotClient client,
-        Action<ISignalBotClient, ReceivedMessageEnvelope, CancellationToken> updateHandler,
+        Action<ISignalBotClient, ReceivedMessage, CancellationToken> updateHandler,
         Action<ISignalBotClient, Error, CancellationToken> errorHandler,
         Action<ReceiverOptionsBuilder>? receiverOptionsConfigure = null,
         CancellationToken cancellationToken = default)
@@ -138,7 +138,7 @@ public static class PollingExtensions
     /// <param name="cancellationToken">Cancellation token to stop receiving messages.</param>
     /// <returns>An <see cref="IAsyncDisposable"/> that can be disposed to stop receiving messages.</returns>
     public static async Task<IAsyncDisposable> ReceiveAsync(this ISignalBotClient client,
-        Func<ISignalBotClient, ReceivedMessageEnvelope, CancellationToken, Task> updateHandler,
+        Func<ISignalBotClient, ReceivedMessage, CancellationToken, Task> updateHandler,
         Func<ISignalBotClient, Error, CancellationToken, Task> errorHandler,
         Action<ReceiverOptionsBuilder>? receiverOptionsConfigure = null,
         CancellationToken cancellationToken = default)
@@ -157,7 +157,7 @@ public static class PollingExtensions
     /// <param name="cancellationToken">Cancellation token to stop receiving messages.</param>
     /// <returns>An <see cref="IAsyncDisposable"/> that can be disposed to stop receiving messages.</returns>
     public static async Task<IAsyncDisposable> ReceiveAsync(this ISignalBotClient client,
-        Action<ISignalBotClient, ReceivedMessageEnvelope, CancellationToken> updateHandler,
+        Action<ISignalBotClient, ReceivedMessage, CancellationToken> updateHandler,
         Action<ISignalBotClient, Error, CancellationToken> errorHandler,
         Action<ReceiverOptionsBuilder>? receiverOptionsConfigure = null,
         CancellationToken cancellationToken = default)

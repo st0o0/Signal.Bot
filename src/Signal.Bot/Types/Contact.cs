@@ -5,7 +5,7 @@ namespace Signal.Bot.Types;
 /// <summary>
 /// Represents a Signal contact with profile information and settings.
 /// </summary>
-public class Contact
+public record Contact
 {
     /// <summary>
     /// Gets or sets the unique identifier (UUID) of the contact.

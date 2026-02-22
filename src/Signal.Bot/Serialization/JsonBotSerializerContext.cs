@@ -18,7 +18,7 @@ namespace Signal.Bot.Serialization;
 /// </list>
 /// </remarks>
 [JsonSourceGenerationOptions(
-    Converters = [typeof(TimestampConverter)],
+    Converters = [typeof(TimestampConverter), typeof(TimeSpanConverter)],
     UseStringEnumConverter = true,
     PropertyNamingPolicy = JsonKnownNamingPolicy.SnakeCaseLower,
     DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault,
@@ -34,7 +34,7 @@ namespace Signal.Bot.Serialization;
 [JsonSerializable(typeof(Envelope))]
 [JsonSerializable(typeof(ErrorResponse))]
 [JsonSerializable(typeof(Group))]
-[JsonSerializable(typeof(GroupV2Info))]
+[JsonSerializable(typeof(GroupInfo))]
 [JsonSerializable(typeof(Identity))]
 [JsonSerializable(typeof(LoggingConfiguration))]
 [JsonSerializable(typeof(Mention))]
@@ -44,10 +44,10 @@ namespace Signal.Bot.Serialization;
 [JsonSerializable(typeof(ProfileCapabilities))]
 [JsonSerializable(typeof(QuoteData))]
 [JsonSerializable(typeof(RawDeviceLink))]
-[JsonSerializable(typeof(ReactionData))]
+[JsonSerializable(typeof(Reaction))]
 [JsonSerializable(typeof(ReadMessage))]
 [JsonSerializable(typeof(ReceiptMessage))]
-[JsonSerializable(typeof(ReceivedMessageEnvelope))]
+[JsonSerializable(typeof(ReceivedMessage))]
 [JsonSerializable(typeof(Search))]
 [JsonSerializable(typeof(SetUsername))]
 [JsonSerializable(typeof(StickerPack))]

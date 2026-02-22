@@ -11,12 +11,12 @@ public interface IReceivedMessageHandler
     /// Handles an incoming Signal message received from the polling mechanism.
     /// </summary>
     /// <param name="client">The <see cref="ISignalBotClient"/> instance that received the message.</param>
-    /// <param name="messageEnvelope">The <see cref="ReceivedMessageEnvelope"/> containing the message data and metadata.</param>
+    /// <param name="message">The <see cref="ReceivedMessage"/> containing the message data and metadata.</param>
     /// <param name="cancellationToken">A <see cref="CancellationToken"/> to observe for cancellation requests.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     Task HandleAsync(
         ISignalBotClient client,
-        ReceivedMessageEnvelope messageEnvelope,
+        ReceivedMessage message,
         CancellationToken cancellationToken);
 
     /// <summary>

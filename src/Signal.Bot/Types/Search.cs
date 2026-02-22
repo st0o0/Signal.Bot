@@ -1,11 +1,13 @@
+using System.Text.Json;
 using System.Text.Json.Serialization;
+using Signal.Bot.Serialization;
 
 namespace Signal.Bot.Types;
 
 /// <summary>
 /// Represents the registration status result for a searched phone number.
 /// </summary>
-public class Search
+public record Search
 {
     /// <summary>
     /// Gets or sets the phone number that was searched.
@@ -18,4 +20,7 @@ public class Search
     /// </summary>
     [JsonPropertyName("registered")] 
     public bool? Registered { get; set; }
+    
+    /// <inheritdoc />
+    public override string ToString() => JsonSerializer.Serialize(this, JsonBotAPI.Get(GetType()));
 }

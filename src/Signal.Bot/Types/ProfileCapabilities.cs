@@ -1,11 +1,13 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.Text.Json;
+using System.Text.Json.Serialization;
+using Signal.Bot.Serialization;
 
 namespace Signal.Bot.Types;
 
 /// <summary>
 /// Represents the feature capabilities supported by a Signal user's client.
 /// </summary>
-public class ProfileCapabilities
+public record ProfileCapabilities
 {
     /// <summary>
     /// Gets or sets a value indicating whether the user supports Signal Groups v2.
@@ -54,4 +56,7 @@ public class ProfileCapabilities
     /// </summary>
     [JsonPropertyName("giftBadges")] 
     public bool? GiftBadges { get; set; }
+    
+    /// <inheritdoc />
+    public override string ToString() => JsonSerializer.Serialize(this, JsonBotAPI.Get(GetType()));
 }

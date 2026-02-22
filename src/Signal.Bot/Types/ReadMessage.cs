@@ -1,11 +1,13 @@
+using System.Text.Json;
 using System.Text.Json.Serialization;
+using Signal.Bot.Serialization;
 
 namespace Signal.Bot.Types;
 
 /// <summary>
 /// Represents a read receipt for a message, indicating that a specific user has read the message.
 /// </summary>
-public class ReadMessage
+public record ReadMessage
 {
     /// <summary>
     /// Gets or sets the identifier of the user who read the message.
@@ -23,11 +25,14 @@ public class ReadMessage
     /// Gets or sets the UUID of the user who read the message.
     /// </summary>
     [JsonPropertyName("senderUuid")] 
-    public Guid SenderUuid { get; set; }
+    public Guid SenderId { get; set; }
 
     /// <summary>
     /// Gets or sets the timestamp when the message was read.
     /// </summary>
     [JsonPropertyName("timestamp")] 
     public DateTime Timestamp { get; set; }
+    
+    /// <inheritdoc />
+    public override string ToString() => JsonSerializer.Serialize(this, JsonBotAPI.Get(GetType()));
 }

@@ -31,7 +31,7 @@ public static class CommandBot
         _client.StartReceiving(updateHandler: HandleMessage, errorHandler: HandleError, cancellationToken: cts.Token);
     }
 
-    public static async Task HandleMessage(ISignalBotClient client, ReceivedMessageEnvelope message,
+    public static async Task HandleMessage(ISignalBotClient client, ReceivedMessage message,
         CancellationToken cancellationToken)
     {
         var envelope = message.Envelope!;

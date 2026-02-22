@@ -10,6 +10,7 @@ namespace Signal.Bot.Serialization;
 /// <summary>
 /// Provides centralized JSON serialization configuration for the Signal Bot API client with source-generated serialization support.
 /// </summary>
+// ReSharper disable once InconsistentNaming
 public static class JsonBotAPI
 {
     /// <summary>
@@ -66,7 +67,7 @@ public static class JsonBotAPI
         { typeof(Envelope), JsonBotSerializerContext.Default.Envelope },
         { typeof(ErrorResponse), JsonBotSerializerContext.Default.ErrorResponse },
         { typeof(Group), JsonBotSerializerContext.Default.Group },
-        { typeof(GroupV2Info), JsonBotSerializerContext.Default.GroupV2Info },
+        { typeof(GroupInfo), JsonBotSerializerContext.Default.GroupInfo },
         { typeof(Identity), JsonBotSerializerContext.Default.Identity },
         { typeof(LoggingConfiguration), JsonBotSerializerContext.Default.LoggingConfiguration },
         { typeof(Mention), JsonBotSerializerContext.Default.Mention },
@@ -76,10 +77,10 @@ public static class JsonBotAPI
         { typeof(ProfileCapabilities), JsonBotSerializerContext.Default.ProfileCapabilities },
         { typeof(QuoteData), JsonBotSerializerContext.Default.QuoteData },
         { typeof(RawDeviceLink), JsonBotSerializerContext.Default.RawDeviceLink },
-        { typeof(ReactionData), JsonBotSerializerContext.Default.ReactionData },
+        { typeof(Reaction), JsonBotSerializerContext.Default.Reaction },
         { typeof(ReadMessage), JsonBotSerializerContext.Default.ReadMessage },
         { typeof(ReceiptMessage), JsonBotSerializerContext.Default.ReceiptMessage },
-        { typeof(ReceivedMessageEnvelope), JsonBotSerializerContext.Default.ReceivedMessageEnvelope },
+        { typeof(ReceivedMessage), JsonBotSerializerContext.Default.ReceivedMessage },
         { typeof(Search), JsonBotSerializerContext.Default.Search },
         { typeof(SetUsername), JsonBotSerializerContext.Default.SetUsername },
         { typeof(StickerPack), JsonBotSerializerContext.Default.StickerPack },
@@ -149,6 +150,6 @@ public static class JsonBotAPI
         { typeof(List<StickerPack>), JsonBotSerializerContext.Default.ListStickerPack },
         { typeof(List<string>), JsonBotSerializerContext.Default.ListString },
         { typeof(string[]), JsonBotSerializerContext.Default.StringArray },
-        { typeof(string), JsonBotSerializerContext.Default.String },
+        { typeof(string), JsonBotSerializerContext.Default.String }
     }.ToImmutableDictionary();
 }

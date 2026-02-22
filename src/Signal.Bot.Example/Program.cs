@@ -1,7 +1,9 @@
+using Serilog;
 using Signal.Bot;
 using Signal.Bot.Example;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Host.UseSerilog((_, config) => config.WriteTo.Console());
 Console.WriteLine($"Phone {Environment.GetEnvironmentVariable("NUMBER")!}");
 builder.Services.AddSingleton<IReceivedMessageHandler, TestHandler>();
 builder.Services

@@ -30,9 +30,9 @@ public abstract class ReceiverIntegrationTestBase : IAsyncDisposable
         GC.SuppressFinalize(this);
     }
 
-    protected static ReceivedMessageEnvelope CreateTestReceivedMessage(string message)
+    protected static ReceivedMessage CreateTestReceivedMessage(string message)
     {
-        return new ReceivedMessageEnvelope
+        return new ReceivedMessage
         {
             Account = "+1234567890",
             Envelope = new Envelope
@@ -50,9 +50,9 @@ public abstract class ReceiverIntegrationTestBase : IAsyncDisposable
         };
     }
 
-    protected static ReceivedMessageEnvelope CreateTestReceiptMessage()
+    protected static ReceivedMessage CreateTestReceiptMessage()
     {
-        return new ReceivedMessageEnvelope
+        return new ReceivedMessage
         {
             Account = "+1234567890",
             Envelope = new Envelope
@@ -70,9 +70,9 @@ public abstract class ReceiverIntegrationTestBase : IAsyncDisposable
         };
     }
 
-    protected static ReceivedMessageEnvelope CreateTestTypingMessage()
+    protected static ReceivedMessage CreateTestTypingMessage()
     {
-        return new ReceivedMessageEnvelope
+        return new ReceivedMessage
         {
             Account = "+1234567890",
             Envelope = new Envelope
@@ -83,16 +83,16 @@ public abstract class ReceiverIntegrationTestBase : IAsyncDisposable
                 Timestamp = DateTime.UtcNow,
                 TypingMessage = new TypingMessage
                 {
-                    Action = "STARTED",
+                    Action = TypingAction.Started,
                     Timestamp = DateTime.UtcNow
                 }
             }
         };
     }
 
-    protected static ReceivedMessageEnvelope CreateTestSyncMessage()
+    protected static ReceivedMessage CreateTestSyncMessage()
     {
-        return new ReceivedMessageEnvelope
+        return new ReceivedMessage
         {
             Account = "+1234567890",
             Envelope = new Envelope
@@ -109,10 +109,10 @@ public abstract class ReceiverIntegrationTestBase : IAsyncDisposable
         };
     }
 
-    protected static ReceivedMessageEnvelope CreateTestGroupMessage(string body, string groupId, string groupName)
+    protected static ReceivedMessage CreateTestGroupMessage(string body, string groupId, string groupName)
     {
         var message = CreateTestReceivedMessage(body);
-        message.Envelope!.DataMessage!.GroupV2 = new GroupV2Info
+        message.Envelope!.DataMessage!.GroupV2 = new GroupInfo
         {
             Id = groupId,
             Name = groupName,
@@ -121,7 +121,7 @@ public abstract class ReceiverIntegrationTestBase : IAsyncDisposable
         return message;
     }
 
-    protected static ReceivedMessageEnvelope CreateTestMessageWithAttachment(string body, string filename, string contentType)
+    protected static ReceivedMessage CreateTestMessageWithAttachment(string body, string filename, string contentType)
     {
         var message = CreateTestReceivedMessage(body);
         message.Envelope!.DataMessage!.Attachments =
@@ -137,7 +137,7 @@ public abstract class ReceiverIntegrationTestBase : IAsyncDisposable
         return message;
     }
 
-    protected static ReceivedMessageEnvelope CreateTestMessageWithMultipleAttachments(string body, int attachmentCount)
+    protected static ReceivedMessage CreateTestMessageWithMultipleAttachments(string body, int attachmentCount)
     {
         var message = CreateTestReceivedMessage(body);
         var attachments = new List<Attachment>();

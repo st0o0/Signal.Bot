@@ -1,11 +1,13 @@
+using System.Text.Json;
 using System.Text.Json.Serialization;
+using Signal.Bot.Serialization;
 
 namespace Signal.Bot.Types;
 
 /// <summary>
 /// Represents a mention of a user within a message, specifying their position in the text.
 /// </summary>
-public class Mention
+public record Mention
 {
     /// <summary>
     /// Gets or sets the zero-based starting character position of the mention in the message text.
@@ -24,4 +26,7 @@ public class Mention
     /// </summary>
     [JsonPropertyName("uuid")] 
     public Guid Id { get; set; }
+    
+    /// <inheritdoc />
+    public override string ToString() => JsonSerializer.Serialize(this, JsonBotAPI.Get(GetType()));
 }
