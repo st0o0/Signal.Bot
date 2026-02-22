@@ -203,6 +203,4 @@ public static class PollingExtensions
             .StartReceivingAsync(handler, receiverOptionsConfigure, cancellationToken)
             .ConfigureAwait(false);
     }
-
-
 }

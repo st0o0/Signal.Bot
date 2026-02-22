@@ -7,7 +7,7 @@ namespace Signal.Bot.Types;
 /// <summary>
 /// Represents a link preview with metadata and thumbnail for a URL mentioned in a message.
 /// </summary>
-public record PreviewData
+public record Preview
 {
     /// <summary>
     /// Gets or sets the URL being previewed.
