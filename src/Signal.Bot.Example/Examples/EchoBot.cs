@@ -1,6 +1,6 @@
 using Signal.Bot.Types;
 
-namespace Signal.Bot.Example.DocuCode;
+namespace Signal.Bot.Example.Examples;
 
 public static class EchoBotProgramm
 {
