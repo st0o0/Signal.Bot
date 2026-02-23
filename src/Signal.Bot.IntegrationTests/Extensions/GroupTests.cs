@@ -102,6 +102,7 @@ public class GroupTests : IntegrationTestBase
 
         // Assert
         Assert.Single(MockServer.LogEntries);
+        Assert.Single(result);
     }
 
     [Fact(Timeout = 15000)]
