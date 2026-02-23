@@ -75,7 +75,7 @@ public static class JsonBotAPI
         { typeof(Preview), JsonBotSerializerContext.Default.Preview },
         { typeof(Profile), JsonBotSerializerContext.Default.Profile },
         { typeof(ProfileCapabilities), JsonBotSerializerContext.Default.ProfileCapabilities },
-        { typeof(QuoteData), JsonBotSerializerContext.Default.QuoteData },
+        { typeof(Quote), JsonBotSerializerContext.Default.Quote },
         { typeof(RawDeviceLink), JsonBotSerializerContext.Default.RawDeviceLink },
         { typeof(Reaction), JsonBotSerializerContext.Default.Reaction },
         { typeof(ReadMessage), JsonBotSerializerContext.Default.ReadMessage },

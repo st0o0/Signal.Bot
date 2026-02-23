@@ -73,7 +73,7 @@ public record SentMessage
     /// TBD
     /// </summary>
     [JsonPropertyName("groupInfo")]
-    public GroupInfo GroupInfo { get; set; }
+    public GroupInfo? GroupInfo { get; set; }
 
     /// <summary>
     /// TBD

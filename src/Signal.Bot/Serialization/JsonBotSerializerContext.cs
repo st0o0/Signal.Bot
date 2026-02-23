@@ -42,7 +42,7 @@ namespace Signal.Bot.Serialization;
 [JsonSerializable(typeof(Preview))]
 [JsonSerializable(typeof(Profile))]
 [JsonSerializable(typeof(ProfileCapabilities))]
-[JsonSerializable(typeof(QuoteData))]
+[JsonSerializable(typeof(Quote))]
 [JsonSerializable(typeof(RawDeviceLink))]
 [JsonSerializable(typeof(Reaction))]
 [JsonSerializable(typeof(ReadMessage))]
