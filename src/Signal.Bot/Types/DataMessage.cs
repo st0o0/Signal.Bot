@@ -67,7 +67,7 @@ public record DataMessage
     /// Gets or sets the quoted message data if this message is a reply to another message.
     /// </summary>
     [JsonPropertyName("quote")]
-    public QuoteData? Quote { get; set; }
+    public Quote? Quote { get; set; }
 
     /// <summary>
     /// Gets or sets the list of read receipts for messages.

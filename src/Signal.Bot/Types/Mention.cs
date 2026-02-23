@@ -27,6 +27,18 @@ public record Mention
     [JsonPropertyName("uuid")] 
     public Guid Id { get; set; }
     
+    /// <summary>
+    /// TBD
+    /// </summary>
+    [JsonPropertyName("number")]
+    public string? Number { get; set; }
+    
+    /// <summary>
+    /// TBD
+    /// </summary>
+    [JsonPropertyName("name")]
+    public string? Name { get; set; }
+    
     /// <inheritdoc />
     public override string ToString() => JsonSerializer.Serialize(this, JsonBotAPI.Get(GetType()));
 }
