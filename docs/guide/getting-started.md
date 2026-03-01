@@ -98,8 +98,6 @@ Send a message to your bot's phone number from another Signal account, and you s
 
 Now that you have a basic bot running, you can:
 
-- Learn about [sending messages](/guide/sending-messages)
-- Explore [receiving and handling messages](/guide/receiving-messages)
 - Manage [groups](/guide/groups)
 - Work with [attachments](/guide/attachments)
 - Check out the [examples](/examples/)
