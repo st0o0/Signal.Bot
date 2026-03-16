@@ -307,13 +307,17 @@ public static class Extensions
     /// Retrieves all Signal groups that the bot is a member of.
     /// </summary>
     /// <param name="client">The <see cref="ISignalBotClient"/> instance.</param>
+    /// <param name="useOnlyIdAsIdentifier">Use UUIDs instead of phone numbers as identifier for (pending|requesting) members</param>
     /// <param name="cancellationToken">A <see cref="CancellationToken"/> to observe for cancellation requests.</param>
     /// <returns>A collection of <see cref="Group"/> objects.</returns>
     public static async Task<ICollection<Group>> GetGroupsAsync(this ISignalBotClient client,
+        bool useOnlyIdAsIdentifier = false,
         CancellationToken cancellationToken = default)
     {
         var request = new GetGroupsRequest(client.Number);
-        var result = await client.SendRequestAsync(request, cancellationToken: cancellationToken);
+        var queryParameter = new QueryParameterRegistry();
+        queryParameter.Add("use_only_uuid_as_identifier", useOnlyIdAsIdentifier);
+        var result = await client.SendRequestAsync(request, queryParameter, cancellationToken);
         return result?.ToArray() ?? [];
     }
 
@@ -339,14 +343,18 @@ public static class Extensions
     /// </summary>
     /// <param name="client">The <see cref="ISignalBotClient"/> instance.</param>
     /// <param name="groupId">The unique identifier of the group.</param>
+    /// <param name="useOnlyIdAsIdentifier">Use UUIDs instead of phone numbers as identifier for (pending|requesting) members</param>
     /// <param name="cancellationToken">A <see cref="CancellationToken"/> to observe for cancellation requests.</param>
     /// <returns>A <see cref="Group"/> object containing the group details.</returns>
     public static async Task<Group> GetGroupAsync(this ISignalBotClient client,
         string groupId,
+        bool useOnlyIdAsIdentifier = false,
         CancellationToken cancellationToken = default)
     {
         var request = new GetGroupRequest(client.Number, groupId);
-        return await client.SendRequestAsync(request, cancellationToken: cancellationToken);
+        var queryParameter = new QueryParameterRegistry();
+        queryParameter.Add("use_only_uuid_as_identifier", useOnlyIdAsIdentifier);
+        return await client.SendRequestAsync(request, queryParameter, cancellationToken);
     }
 
     /// <summary>
