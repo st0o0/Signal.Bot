@@ -956,7 +956,7 @@ public static class Extensions
     /// <param name="recipient">The recipient for this poll (user or group)</param>
     /// <param name="cancellationToken">A <see cref="CancellationToken"/> to observe for cancellation requests.</param>
     /// <returns></returns>
-    public static async Task<PollResponse> CreatePollAsync(this ISignalBotClient client,
+    public static async Task<PollResponse> AddPollAsync(this ISignalBotClient client,
         bool? allowMultipleSelections,
         string[]? answers,
         string? question,
