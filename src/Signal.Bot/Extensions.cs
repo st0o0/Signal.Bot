@@ -943,4 +943,81 @@ public static class Extensions
     }
 
     #endregion
+    
+    #region Polls
+
+    /// <summary>
+    /// Creates a new poll
+    /// </summary>
+    /// <param name="client">The <see cref="ISignalBotClient"/> instance.</param>
+    /// <param name="allowMultipleSelections">A flag indicating if multiple answers are allowed</param>
+    /// <param name="answers">A list of possible answers</param>
+    /// <param name="question">The question for the poll</param>
+    /// <param name="recipient">The recipient for this poll (user or group)</param>
+    /// <param name="cancellationToken">A <see cref="CancellationToken"/> to observe for cancellation requests.</param>
+    /// <returns></returns>
+    public static async Task<PollResponse> CreatePollAsync(this ISignalBotClient client,
+        bool? allowMultipleSelections,
+        string[]? answers,
+        string? question,
+        string? recipient,
+        CancellationToken cancellationToken = default)
+    {
+        var request = new AddPollRequest(client.Number)
+        {
+            AllowMultipleSelections = allowMultipleSelections,
+            Answers = answers,
+            Question = question,
+            Recipient = recipient
+        };
+        return await client.SendRequestAsync(request, cancellationToken: cancellationToken);
+    }
+
+    /// <summary>
+    /// Closes an open poll
+    /// </summary>
+    /// <param name="client">The <see cref="ISignalBotClient"/> instance.</param>
+    /// <param name="timestamp">The timestamp of the poll to close</param>
+    /// <param name="recipient">The recipient where the  poll to close is located (user or group)</param>
+    /// <param name="cancellationToken">A <see cref="CancellationToken"/> to observe for cancellation requests.</param>
+    public static async Task ClosePollAsync(this ISignalBotClient client,
+        DateTime timestamp,
+        string recipient,
+        CancellationToken cancellationToken = default)
+    {
+        var request = new ClosePollRequest(client.Number)
+        {
+            Timestamp = timestamp,
+            Recipient = recipient
+        };
+        await client.SendRequestAsync(request, cancellationToken: cancellationToken);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="client">The <see cref="ISignalBotClient"/> instance.</param>
+    /// <param name="pollAuthor">The phone number OR uuid of the author of the poll to vote for</param>
+    /// <param name="timestamp">The timestamp of the poll to vor in</param>
+    /// <param name="recipient">The recipient where the  poll to vote in is located (user or group)</param>
+    /// <param name="selectedAnswers">The answer(s) to vote for. Voting for multiple answers may not always be possible.</param>
+    /// <param name="cancellationToken">A <see cref="CancellationToken"/> to observe for cancellation requests.</param>
+    public static async Task VotePollAsync(this ISignalBotClient client,
+        string pollAuthor,
+        DateTime timestamp,
+        string recipient,
+        int[]? selectedAnswers,
+        CancellationToken cancellationToken = default)
+    {
+        var request = new VotePollRequest(client.Number)
+        {
+            PollAuthor = pollAuthor,
+            Timestamp = timestamp,
+            Recipient = recipient,
+            SelectedAnswers = selectedAnswers,
+        };
+        await client.SendRequestAsync(request, cancellationToken: cancellationToken);
+    }
+    
+    #endregion
 }

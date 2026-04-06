@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using Signal.Bot.Types;
 
 namespace Signal.Bot.Requests;
 
@@ -6,7 +7,7 @@ namespace Signal.Bot.Requests;
 /// Represents a request to create a new poll
 /// </summary>
 /// <param name="Number">The phone number of the Signal account from which the poll will be created.</param>
-public record AddPollRequest(string Number) : RequestBase($"v1/polls/{Number}", HttpMethod.Post)
+public record AddPollRequest(string Number) : RequestBase<PollResponse>($"v1/polls/{Number}", HttpMethod.Post)
 {
     /// <summary>
     /// Gets or sets the indicator if multiple selections are allowed
