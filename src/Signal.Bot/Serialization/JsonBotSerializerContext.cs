@@ -57,6 +57,7 @@ namespace Signal.Bot.Serialization;
 [JsonSerializable(typeof(OfferMessage))]
 [JsonSerializable(typeof(HangupMessage))]
 [JsonSerializable(typeof(IceUpdateMessage))]
+[JsonSerializable(typeof(PollResponse))]
 // Requests
 [JsonSerializable(typeof(AddDeviceRequest))]
 [JsonSerializable(typeof(AddGroupAdminRequest))]
@@ -108,6 +109,9 @@ namespace Signal.Bot.Serialization;
 [JsonSerializable(typeof(UpdateGroupRequest))]
 [JsonSerializable(typeof(UpdateProfileRequest))]
 [JsonSerializable(typeof(VerifyNumberRequest))]
+[JsonSerializable(typeof(AddPollRequest))]
+[JsonSerializable(typeof(ClosePollRequest))]
+[JsonSerializable(typeof(VotePollRequest))]
 
 // Arrays/Collections
 [JsonSerializable(typeof(List<Group>))]

@@ -90,6 +90,7 @@ public static class JsonBotAPI
         { typeof(OfferMessage), JsonBotSerializerContext.Default.OfferMessage },
         { typeof(HangupMessage), JsonBotSerializerContext.Default.HangupMessage },
         { typeof(IceUpdateMessage), JsonBotSerializerContext.Default.IceUpdateMessage },
+        { typeof(PollResponse), JsonBotSerializerContext.Default.PollResponse },
         // Request Types
         { typeof(AddDeviceRequest), JsonBotSerializerContext.Default.AddDeviceRequest },
         { typeof(AddGroupAdminRequest), JsonBotSerializerContext.Default.AddGroupAdminRequest },
@@ -141,7 +142,10 @@ public static class JsonBotAPI
         { typeof(UpdateGroupRequest), JsonBotSerializerContext.Default.UpdateGroupRequest },
         { typeof(UpdateProfileRequest), JsonBotSerializerContext.Default.UpdateProfileRequest },
         { typeof(VerifyNumberRequest), JsonBotSerializerContext.Default.VerifyNumberRequest },
-
+        { typeof(AddPollRequest), JsonBotSerializerContext.Default.AddPollRequest },
+        { typeof(ClosePollRequest), JsonBotSerializerContext.Default.ClosePollRequest },
+        { typeof(VotePollRequest), JsonBotSerializerContext.Default.VotePollRequest },
+        
         // Collection Types
         { typeof(List<Group>), JsonBotSerializerContext.Default.ListGroup },
         { typeof(List<Attachment>), JsonBotSerializerContext.Default.ListAttachment },
