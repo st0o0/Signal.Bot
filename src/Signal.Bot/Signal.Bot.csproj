@@ -36,6 +36,8 @@
         <InternalsVisibleTo Include="Signal.Bot.IntegrationTests"/>
     </ItemGroup>
     <ItemGroup>
+        <PackageReference Include="Microsoft.DotNet.ILCompiler" />
+        <PackageReference Include="Microsoft.NET.ILLink.Tasks" />
         <PackageReference Include="R3"/>
         <PackageReference Include="WebSocket.Rx"/>
     </ItemGroup>
