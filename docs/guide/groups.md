@@ -64,5 +64,6 @@ Send a message to a group:
 ## Next Steps
 
 - Learn about [attachments](/guide/attachments)
+- Learn about [polls](/guide/polls)
 - Explore [profile management](/guide/profiles)
 - Check out [advanced examples](/examples/)
