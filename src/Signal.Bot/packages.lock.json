@@ -10,9 +10,9 @@
       },
       "R3": {
         "type": "Direct",
-        "requested": "[1.3.0, )",
-        "resolved": "1.3.0",
-        "contentHash": "c4bL37HGimYon/qfRTZOJE41M3cgdMJn/p4O5Jq+WHTJGNXUb1x2DlVI+iZk5phCBwq3ERfrgbaPu9WdG2OS+w=="
+        "requested": "[1.3.1, )",
+        "resolved": "1.3.1",
+        "contentHash": "HzZ2wGlkxOgpMhtTtJkBUP5xiKqeH5P9oD0Ll1JfO8mMyA75u0zwDssN/TGb1/5EIOY0Vuv07unyVtAaPmV6Tg=="
       },
       "WebSocket.Rx": {
         "type": "Direct",
