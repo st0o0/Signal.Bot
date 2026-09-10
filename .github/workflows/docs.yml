@@ -1,102 +1,23 @@
-name: Deploy Documentation
+name: Docs
+
 on:
   push:
-    branches:
-      - main
+    branches: [main]
     paths:
-      - "docs/**"
-      - "src/**"
-      - ".github/workflows/docs.yml"
-  pull_request:
-    branches: ["main"]
-    paths:
-      - "docs/**"
-      - "src/**"
-      - ".github/workflows/docs.yml"
-
-env:
-  GLOBAL_JSON_PATH: "./src/global.json"
-  PROJECT_PATH: "./src/signal.slnx"
-
-permissions:
-  contents: read
-  pages: write
-  id-token: write
+      - 'docs/**'
+      - 'src/**'
 
 concurrency:
-  group: pages
+  group: docs
   cancel-in-progress: false
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
-
-      - name: Install .NET Core
-        uses: actions/setup-dotnet@v5
-        with:
-          global-json-file: ${{ env.GLOBAL_JSON_PATH }}
-          cache: true
-          cache-dependency-path: "**/packages.lock.json"
-
-      - name: Restore dependencies
-        run: >
-          dotnet
-          restore
-          --locked-mode
-          ${{ env.PROJECT_PATH }}
-
-      - name: Build with XML documentation
-        run: >
-          dotnet build
-          --configuration Release
-          ${{ env.PROJECT_PATH }}
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v6
-        with:
-          node-version: 24
-          cache: "npm"
-          cache-dependency-path: "docs/package-lock.json"
-
-      - name: Install npm dependencies
-        working-directory: docs
-        run: npm install
-
-      - name: Build VitePress site
-        working-directory: docs
-        run: npm run build
-
-      - name: List generated files
-        run: |
-          echo '=== Generated VitePress dist ==='
-          ls -la docs/.vitepress/dist/
-          echo '=== API folder content ==='
-          ls -la docs/.vitepress/dist/api/ || echo 'API folder not found!'
-          echo '=== API md folder content ==='
-          ls -la docs/api/ || echo 'API folder not found!'
-          echo '=== End of listing ==='
-
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v4
-        with:
-          path: docs/.vitepress/dist
-
   deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    needs: build
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+    uses: st0o0/github-workflows/.github/workflows/docs.yml@main
+    with:
+      needs-dotnet-build: true
+      dotnet-project-path: src
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
