@@ -1,0 +1,23 @@
+name: CI
+
+on:
+  pull_request:
+    paths:
+      - 'src/**'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ci:
+    uses: st0o0/github-workflows/.github/workflows/dotnet-ci.yml@main
+    with:
+      solution-file: signal.slnx
+      has-dockerfile: false
+
+  commitlint:
+    uses: st0o0/github-workflows/.github/workflows/commitlint.yml@main
