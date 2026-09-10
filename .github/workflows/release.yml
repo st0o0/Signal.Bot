@@ -1,0 +1,25 @@
+name: Release
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/**'
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    uses: st0o0/github-workflows/.github/workflows/dotnet-release-nuget.yml@main
+    with:
+      solution-file: signal.slnx
+      package-name: Signal.Bot
+    secrets:
+      NUGET_USER: ${{ secrets.NUGET_USER }}
+    permissions:
+      contents: write
+      pull-requests: write
+      checks: write
+      id-token: write
