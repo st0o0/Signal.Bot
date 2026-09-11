@@ -6,7 +6,7 @@ namespace Signal.Bot.Requests;
 /// Represents a request to unregister the current device from Signal and optionally delete the account and local data.
 /// </summary>
 /// <param name="Number">The phone number of the Signal account to unregister.</param>
-public record UnregisterDeviceRequest(string Number) : RequestBase($"v1/unregister/{Number}", HttpMethod.Delete)
+public record UnregisterDeviceRequest(string Number) : RequestBase($"v1/unregister/{Number}")
 {
     /// <summary>
     /// Gets or sets whether to permanently delete the Signal account. If <see langword="true"/>, the account cannot be recovered.

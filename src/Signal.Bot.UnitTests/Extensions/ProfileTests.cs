@@ -34,7 +34,7 @@ public class ProfileTests : BotTestBase
             .Received(1)
             .SendAsync(
                 Arg.Is<HttpRequestMessage>(req =>
-                    req.Method == HttpMethod.Post),
+                    req.Method == HttpMethod.Put),
                 Arg.Any<CancellationToken>());
     }
 

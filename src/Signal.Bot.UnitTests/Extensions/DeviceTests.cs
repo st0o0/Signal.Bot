@@ -95,7 +95,7 @@ public class DeviceTests : BotTestBase
             .Received(1)
             .SendAsync(
                 Arg.Is<HttpRequestMessage>(req =>
-                    req.Method == HttpMethod.Delete),
+                    req.Method == HttpMethod.Post),
                 Arg.Any<CancellationToken>());
     }
 

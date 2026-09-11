@@ -7,7 +7,7 @@ namespace Signal.Bot.Requests;
 /// Represents a request to remotely delete a message from a conversation for all participants.
 /// </summary>
 /// <param name="Number">The phone number of the Signal account deleting the message.</param>
-public record RemoteDeleteRequest(string Number) : RequestBase<Acknowledged>($"v1/remote-delete/{Number}")
+public record RemoteDeleteRequest(string Number) : RequestBase<Acknowledged>($"v1/remote-delete/{Number}", HttpMethod.Delete)
 {
     /// <summary>
     /// Gets or sets the phone number or group ID of the conversation where the message should be deleted.

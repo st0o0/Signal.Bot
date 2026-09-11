@@ -6,7 +6,7 @@ namespace Signal.Bot.Requests;
 /// Represents a request to update the Signal profile information including name, about text, and avatar image.
 /// </summary>
 /// <param name="Number">The phone number of the Signal account whose profile is being updated.</param>
-public record UpdateProfileRequest(string Number) : RequestBase($"v1/profiles/{Number}")
+public record UpdateProfileRequest(string Number) : RequestBase($"v1/profiles/{Number}", HttpMethod.Put)
 {
     /// <summary>
     /// Gets or sets the about/status text to display on the profile.
