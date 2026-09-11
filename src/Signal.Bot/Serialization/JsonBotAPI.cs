@@ -91,6 +91,10 @@ public static class JsonBotAPI
         { typeof(HangupMessage), JsonBotSerializerContext.Default.HangupMessage },
         { typeof(IceUpdateMessage), JsonBotSerializerContext.Default.IceUpdateMessage },
         { typeof(PollResponse), JsonBotSerializerContext.Default.PollResponse },
+        { typeof(GroupPermissions), JsonBotSerializerContext.Default.GroupPermissions },
+        { typeof(TrustModeSettings), JsonBotSerializerContext.Default.TrustModeSettings },
+        { typeof(SendMessageErrors), JsonBotSerializerContext.Default.SendMessageErrors },
+        { typeof(RecipientError), JsonBotSerializerContext.Default.RecipientError },
         // Request Types
         { typeof(AddDeviceRequest), JsonBotSerializerContext.Default.AddDeviceRequest },
         { typeof(AddGroupAdminRequest), JsonBotSerializerContext.Default.AddGroupAdminRequest },
@@ -145,7 +149,16 @@ public static class JsonBotAPI
         { typeof(AddPollRequest), JsonBotSerializerContext.Default.AddPollRequest },
         { typeof(ClosePollRequest), JsonBotSerializerContext.Default.ClosePollRequest },
         { typeof(VotePollRequest), JsonBotSerializerContext.Default.VotePollRequest },
-        
+        { typeof(RemoveDeviceRequest), JsonBotSerializerContext.Default.RemoveDeviceRequest },
+        { typeof(DeleteLocalDataRequest), JsonBotSerializerContext.Default.DeleteLocalDataRequest },
+        { typeof(GetTrustModeRequest), JsonBotSerializerContext.Default.GetTrustModeRequest },
+        { typeof(SetTrustModeRequest), JsonBotSerializerContext.Default.SetTrustModeRequest },
+        { typeof(PinMessageRequest), JsonBotSerializerContext.Default.PinMessageRequest },
+        { typeof(UnpinMessageRequest), JsonBotSerializerContext.Default.UnpinMessageRequest },
+        { typeof(GetGroupAvatarRequest), JsonBotSerializerContext.Default.GetGroupAvatarRequest },
+        { typeof(GetContactAvatarRequest), JsonBotSerializerContext.Default.GetContactAvatarRequest },
+        { typeof(GetHealthRequest), JsonBotSerializerContext.Default.GetHealthRequest },
+
         // Collection Types
         { typeof(List<Group>), JsonBotSerializerContext.Default.ListGroup },
         { typeof(List<Attachment>), JsonBotSerializerContext.Default.ListAttachment },

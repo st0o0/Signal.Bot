@@ -53,6 +53,52 @@ public static class Extensions
 
     #endregion
 
+    #region Health
+
+    /// <summary>
+    /// Checks the health status of the Signal Bot API.
+    /// </summary>
+    /// <param name="client">The <see cref="ISignalBotClient"/> instance.</param>
+    /// <param name="cancellationToken">A <see cref="CancellationToken"/> to observe for cancellation requests.</param>
+    /// <returns><see langword="true"/> if the API is healthy; otherwise <see langword="false"/>.</returns>
+    public static async Task<bool> IsHealthyAsync(this ISignalBotClient client,
+        CancellationToken cancellationToken = default)
+    {
+        var request = new GetHealthRequest();
+        var response = await client.SendAsync(request, cancellationToken: cancellationToken);
+        return response?.IsSuccessStatusCode ?? false;
+    }
+
+    /// <summary>
+    /// Retrieves the trust mode settings for the current Signal account.
+    /// </summary>
+    /// <param name="client">The <see cref="ISignalBotClient"/> instance.</param>
+    /// <param name="cancellationToken">A <see cref="CancellationToken"/> to observe for cancellation requests.</param>
+    /// <returns>A <see cref="TrustModeSettings"/> object containing the trust mode configuration.</returns>
+    public static async Task<TrustModeSettings> GetTrustModeAsync(this ISignalBotClient client,
+        CancellationToken cancellationToken = default)
+    {
+        var request = new GetTrustModeRequest(client.Number);
+        return await client.SendRequestAsync(request, cancellationToken: cancellationToken);
+    }
+
+    /// <summary>
+    /// Sets the trust mode for the current Signal account.
+    /// </summary>
+    /// <param name="client">The <see cref="ISignalBotClient"/> instance.</param>
+    /// <param name="trustMode">The trust mode to set (e.g., "always", "on-first-use", "never").</param>
+    /// <param name="cancellationToken">A <see cref="CancellationToken"/> to observe for cancellation requests.</param>
+    /// <returns>A <see cref="TrustModeSettings"/> object containing the updated trust mode configuration.</returns>
+    public static async Task<TrustModeSettings> SetTrustModeAsync(this ISignalBotClient client,
+        string trustMode,
+        CancellationToken cancellationToken = default)
+    {
+        var request = new SetTrustModeRequest(client.Number) { TrustMode = trustMode };
+        return await client.SendRequestAsync(request, cancellationToken: cancellationToken);
+    }
+
+    #endregion
+
     #region Devices
 
     /// <summary>
@@ -80,6 +126,39 @@ public static class Extensions
         CancellationToken cancellationToken = default)
     {
         var request = new AddDeviceRequest(client.Number) { Uri = uri };
+        await client.SendRequestAsync(request, cancellationToken: cancellationToken);
+    }
+
+    /// <summary>
+    /// Removes a specific linked device from the Signal account.
+    /// </summary>
+    /// <param name="client">The <see cref="ISignalBotClient"/> instance.</param>
+    /// <param name="deviceId">The ID of the device to remove.</param>
+    /// <param name="cancellationToken">A <see cref="CancellationToken"/> to observe for cancellation requests.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public static async Task RemoveDeviceAsync(this ISignalBotClient client,
+        int deviceId,
+        CancellationToken cancellationToken = default)
+    {
+        var request = new RemoveDeviceRequest(client.Number, deviceId);
+        await client.SendRequestAsync(request, cancellationToken: cancellationToken);
+    }
+
+    /// <summary>
+    /// Deletes all local data for the Signal account.
+    /// </summary>
+    /// <param name="client">The <see cref="ISignalBotClient"/> instance.</param>
+    /// <param name="ignoreRegistered">If true, deletes data even if the account is still registered.</param>
+    /// <param name="cancellationToken">A <see cref="CancellationToken"/> to observe for cancellation requests.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public static async Task DeleteLocalDataAsync(this ISignalBotClient client,
+        bool ignoreRegistered = false,
+        CancellationToken cancellationToken = default)
+    {
+        var request = new DeleteLocalDataRequest(client.Number)
+        {
+            IgnoreRegistered = ignoreRegistered
+        };
         await client.SendRequestAsync(request, cancellationToken: cancellationToken);
     }
 
@@ -494,6 +573,72 @@ public static class Extensions
     {
         var request = new QuitGroupRequest(client.Number, groupId);
         await client.SendRequestAsync(request, cancellationToken: cancellationToken);
+    }
+
+    /// <summary>
+    /// Pins a message in a Signal group.
+    /// </summary>
+    /// <param name="client">The <see cref="ISignalBotClient"/> instance.</param>
+    /// <param name="groupId">The unique identifier of the group.</param>
+    /// <param name="targetAuthor">The phone number of the message author.</param>
+    /// <param name="timestamp">The timestamp of the message to pin. If null, uses current UTC time.</param>
+    /// <param name="duration">Optional duration for the pin.</param>
+    /// <param name="cancellationToken">A <see cref="CancellationToken"/> to observe for cancellation requests.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public static async Task PinMessageAsync(this ISignalBotClient client,
+        string groupId,
+        string targetAuthor,
+        DateTime? timestamp = null,
+        int? duration = null,
+        CancellationToken cancellationToken = default)
+    {
+        var request = new PinMessageRequest(client.Number, groupId)
+        {
+            TargetAuthor = targetAuthor,
+            Timestamp = timestamp ?? DateTime.UtcNow,
+            Duration = duration
+        };
+        await client.SendRequestAsync(request, cancellationToken: cancellationToken);
+    }
+
+    /// <summary>
+    /// Unpins a message in a Signal group.
+    /// </summary>
+    /// <param name="client">The <see cref="ISignalBotClient"/> instance.</param>
+    /// <param name="groupId">The unique identifier of the group.</param>
+    /// <param name="targetAuthor">The phone number of the message author.</param>
+    /// <param name="timestamp">The timestamp of the message to unpin. If null, uses current UTC time.</param>
+    /// <param name="cancellationToken">A <see cref="CancellationToken"/> to observe for cancellation requests.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public static async Task UnpinMessageAsync(this ISignalBotClient client,
+        string groupId,
+        string targetAuthor,
+        DateTime? timestamp = null,
+        CancellationToken cancellationToken = default)
+    {
+        var request = new UnpinMessageRequest(client.Number, groupId)
+        {
+            TargetAuthor = targetAuthor,
+            Timestamp = timestamp ?? DateTime.UtcNow
+        };
+        await client.SendRequestAsync(request, cancellationToken: cancellationToken);
+    }
+
+    /// <summary>
+    /// Retrieves the avatar image of a Signal group.
+    /// </summary>
+    /// <param name="client">The <see cref="ISignalBotClient"/> instance.</param>
+    /// <param name="groupId">The unique identifier of the group.</param>
+    /// <param name="cancellationToken">A <see cref="CancellationToken"/> to observe for cancellation requests.</param>
+    /// <returns>A byte array containing the avatar image data, or an empty array if not available.</returns>
+    public static async Task<byte[]> GetGroupAvatarAsync(this ISignalBotClient client,
+        string groupId,
+        CancellationToken cancellationToken = default)
+    {
+        var request = new GetGroupAvatarRequest(client.Number, groupId);
+        var result = await client.SendAsync(request, cancellationToken: cancellationToken);
+        if (!result.IsSuccessStatusCode) return [];
+        return await result.Content.ReadAsByteArrayAsync(cancellationToken);
     }
 
     #endregion
@@ -940,6 +1085,23 @@ public static class Extensions
     {
         var request = new GetContactRequest(client.Number, contactId);
         return await client.SendRequestAsync(request, cancellationToken: cancellationToken);
+    }
+
+    /// <summary>
+    /// Retrieves the avatar image of a contact.
+    /// </summary>
+    /// <param name="client">The <see cref="ISignalBotClient"/> instance.</param>
+    /// <param name="contactUuid">The UUID of the contact.</param>
+    /// <param name="cancellationToken">A <see cref="CancellationToken"/> to observe for cancellation requests.</param>
+    /// <returns>A byte array containing the avatar image data, or an empty array if not available.</returns>
+    public static async Task<byte[]> GetContactAvatarAsync(this ISignalBotClient client,
+        string contactUuid,
+        CancellationToken cancellationToken = default)
+    {
+        var request = new GetContactAvatarRequest(client.Number, contactUuid);
+        var result = await client.SendAsync(request, cancellationToken: cancellationToken);
+        if (!result.IsSuccessStatusCode) return [];
+        return await result.Content.ReadAsByteArrayAsync(cancellationToken);
     }
 
     #endregion

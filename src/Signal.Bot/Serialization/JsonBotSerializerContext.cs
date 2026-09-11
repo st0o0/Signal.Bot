@@ -58,6 +58,11 @@ namespace Signal.Bot.Serialization;
 [JsonSerializable(typeof(HangupMessage))]
 [JsonSerializable(typeof(IceUpdateMessage))]
 [JsonSerializable(typeof(PollResponse))]
+[JsonSerializable(typeof(GroupPermissions))]
+[JsonSerializable(typeof(TrustModeSettings))]
+[JsonSerializable(typeof(SendMessageErrors))]
+[JsonSerializable(typeof(RecipientError))]
+[JsonSerializable(typeof(List<RecipientError>))]
 // Requests
 [JsonSerializable(typeof(AddDeviceRequest))]
 [JsonSerializable(typeof(AddGroupAdminRequest))]
@@ -112,6 +117,15 @@ namespace Signal.Bot.Serialization;
 [JsonSerializable(typeof(AddPollRequest))]
 [JsonSerializable(typeof(ClosePollRequest))]
 [JsonSerializable(typeof(VotePollRequest))]
+[JsonSerializable(typeof(RemoveDeviceRequest))]
+[JsonSerializable(typeof(DeleteLocalDataRequest))]
+[JsonSerializable(typeof(GetTrustModeRequest))]
+[JsonSerializable(typeof(SetTrustModeRequest))]
+[JsonSerializable(typeof(PinMessageRequest))]
+[JsonSerializable(typeof(UnpinMessageRequest))]
+[JsonSerializable(typeof(GetGroupAvatarRequest))]
+[JsonSerializable(typeof(GetContactAvatarRequest))]
+[JsonSerializable(typeof(GetHealthRequest))]
 
 // Arrays/Collections
 [JsonSerializable(typeof(List<Group>))]
