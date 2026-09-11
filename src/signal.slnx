@@ -9,7 +9,6 @@
     <File Path="../.github/release.yml" />
     <File Path="../.github/workflows/build-and-release.yml" />
     <File Path="../.github/workflows/docs.yml" />
-    <File Path="../.slopwatch/baseline.json" />
     <File Path="../LICENSE" />
     <File Path="../README.md" />
     <File Path="Directory.Build.props" />
