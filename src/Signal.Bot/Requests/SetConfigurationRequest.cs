@@ -11,7 +11,7 @@ public record SetConfigurationRequest() : RequestBase("v1/configuration")
     /// Gets or sets the logging configuration for the Signal Bot API.
     /// </summary>
     /// <seealso cref="Logging"/>
-    [JsonPropertyName("logging")] 
+    [JsonPropertyName("logging")]
     public Logging? Logging { get; set; }
 }
 
@@ -23,6 +23,6 @@ public class Logging
     /// <summary>
     /// Gets or sets the logging level (e.g., "debug", "info", "warn", "error").
     /// </summary>
-    [JsonPropertyName("Level")] 
+    [JsonPropertyName("Level")]
     public string? Level { get; set; }
 }

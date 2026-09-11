@@ -11,12 +11,12 @@ public record UnregisterDeviceRequest(string Number) : RequestBase($"v1/unregist
     /// <summary>
     /// Gets or sets whether to permanently delete the Signal account. If <see langword="true"/>, the account cannot be recovered.
     /// </summary>
-    [JsonPropertyName("delete_account")] 
+    [JsonPropertyName("delete_account")]
     public bool DeleteAccount { get; set; }
 
     /// <summary>
     /// Gets or sets whether to delete local data stored by the bot, including messages and attachments.
     /// </summary>
-    [JsonPropertyName("delete_local_data")] 
+    [JsonPropertyName("delete_local_data")]
     public bool DeleteLocalData { get; set; }
 }

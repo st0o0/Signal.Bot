@@ -13,19 +13,19 @@ public record VotePollRequest(string Number) : RequestBase($"v1/polls/{Number}/v
     /// </summary>
     [JsonPropertyName("poll_author")]
     public string? PollAuthor { get; set; }
-    
+
     /// <summary>
     /// Gets or sets the timestamp of the poll to delete
     /// </summary>
     [JsonPropertyName("poll_timestamp")]
     public DateTime Timestamp { get; set; }
-    
+
     /// <summary>
     /// Gets or sets the recipient for this poll
     /// </summary>
     [JsonPropertyName("recipient")]
     public string? Recipient { get; set; }
-    
+
     /// <summary>
     /// Gets or sets an array of answers to vote for
     /// </summary>

@@ -11,12 +11,12 @@ public record RegisterNumberRequest(string Number) : RequestBase($"v1/register/{
     /// <summary>
     /// Gets or sets the CAPTCHA token if required by Signal to prevent automated registrations.
     /// </summary>
-    [JsonPropertyName("captcha")] 
+    [JsonPropertyName("captcha")]
     public string? Captcha { get; set; }
-    
+
     /// <summary>
     /// Gets or sets whether to use a voice call instead of SMS for receiving the verification code. Default is <see langword="false"/>.
     /// </summary>
-    [JsonPropertyName("use_voice")] 
+    [JsonPropertyName("use_voice")]
     public bool? UseVoice { get; set; }
 }

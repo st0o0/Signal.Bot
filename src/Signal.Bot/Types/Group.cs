@@ -38,7 +38,7 @@ public record Group
     /// </summary>
     [JsonPropertyName("members")]
     public List<string>? Members { get; set; }
-    
+
     /// <summary>
     /// Gets or sets the list of phone numbers of group administrators.
     /// </summary>
@@ -50,13 +50,13 @@ public record Group
     /// </summary>
     [JsonPropertyName("blocked")]
     public bool? Blocked { get; set; }
-    
+
     /// <summary>
     /// Gets or sets the invitation link URL for joining the group.
     /// </summary>
     [JsonPropertyName("invite_link")]
     public string? InviteLink { get; set; }
-    
+
     /// <summary>
     /// Gets or sets the list of phone numbers of users with pending invitations to the group.
     /// </summary>
@@ -68,7 +68,7 @@ public record Group
     /// </summary>
     [JsonPropertyName("pending_requests")]
     public List<string>? PendingRequests { get; set; }
-    
+
     /// <inheritdoc />
     public override string ToString() => JsonSerializer.Serialize(this, JsonBotAPI.Get(GetType()));
 }

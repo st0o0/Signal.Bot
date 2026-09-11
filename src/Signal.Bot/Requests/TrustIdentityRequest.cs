@@ -13,12 +13,12 @@ public record TrustIdentityRequest(string Number, string VerifiedNumber)
     /// <summary>
     /// Gets or sets whether to trust all known keys for this contact. If <see langword="true"/>, trusts all existing keys without individual verification.
     /// </summary>
-    [JsonPropertyName("trust_all_known_keys")] 
+    [JsonPropertyName("trust_all_known_keys")]
     public bool? TrustAllKnownKeys { get; set; }
 
     /// <summary>
     /// Gets or sets the safety number to verify, obtained through QR code scanning or manual comparison with the contact.
     /// </summary>
-    [JsonPropertyName("verified_safety_number")] 
+    [JsonPropertyName("verified_safety_number")]
     public string? VerifiedSafetyNumber { get; set; }
 }

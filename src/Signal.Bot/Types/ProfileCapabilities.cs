@@ -12,51 +12,51 @@ public record ProfileCapabilities
     /// <summary>
     /// Gets or sets a value indicating whether the user supports Signal Groups v2.
     /// </summary>
-    [JsonPropertyName("gv2")] 
+    [JsonPropertyName("gv2")]
     public bool? Gv2 { get; set; }
 
     /// <summary>
     /// Gets or sets a value indicating whether the user supports Signal's cloud storage feature.
     /// </summary>
-    [JsonPropertyName("storage")] 
+    [JsonPropertyName("storage")]
     public bool? Storage { get; set; }
 
     /// <summary>
     /// Gets or sets a value indicating whether the user supports migration from Groups v1 to v2.
     /// </summary>
-    [JsonPropertyName("gv1-migration")] 
+    [JsonPropertyName("gv1-migration")]
     public bool? Gv1Migration { get; set; }
 
     /// <summary>
     /// Gets or sets a value indicating whether the user supports sender key distribution for efficient group messaging.
     /// </summary>
-    [JsonPropertyName("senderKey")] 
+    [JsonPropertyName("senderKey")]
     public bool? SenderKey { get; set; }
 
     /// <summary>
     /// Gets or sets a value indicating whether the user supports announcement-only groups.
     /// </summary>
-    [JsonPropertyName("announcementGroup")] 
+    [JsonPropertyName("announcementGroup")]
     public bool? AnnouncementGroup { get; set; }
 
     /// <summary>
     /// Gets or sets a value indicating whether the user supports changing their phone number while keeping their account.
     /// </summary>
-    [JsonPropertyName("changeNumber")] 
+    [JsonPropertyName("changeNumber")]
     public bool? ChangeNumber { get; set; }
 
     /// <summary>
     /// Gets or sets a value indicating whether the user supports Signal Stories feature.
     /// </summary>
-    [JsonPropertyName("stories")] 
+    [JsonPropertyName("stories")]
     public bool? Stories { get; set; }
 
     /// <summary>
     /// Gets or sets a value indicating whether the user supports sending and receiving gift badges.
     /// </summary>
-    [JsonPropertyName("giftBadges")] 
+    [JsonPropertyName("giftBadges")]
     public bool? GiftBadges { get; set; }
-    
+
     /// <inheritdoc />
     public override string ToString() => JsonSerializer.Serialize(this, JsonBotAPI.Get(GetType()));
 }

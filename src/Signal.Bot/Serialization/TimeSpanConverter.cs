@@ -10,20 +10,20 @@ internal class TimeSpanConverter : JsonConverter<TimeSpan>
         switch (reader.TokenType)
         {
             case JsonTokenType.Number:
-            {
-                var seconds = reader.GetInt32();
-                return TimeSpan.FromSeconds(seconds);
-            }
-            case JsonTokenType.String:
-            {
-                var stringValue = reader.GetString();
-                if (int.TryParse(stringValue, out var seconds))
                 {
+                    var seconds = reader.GetInt32();
                     return TimeSpan.FromSeconds(seconds);
                 }
+            case JsonTokenType.String:
+                {
+                    var stringValue = reader.GetString();
+                    if (int.TryParse(stringValue, out var seconds))
+                    {
+                        return TimeSpan.FromSeconds(seconds);
+                    }
 
-                break;
-            }
+                    break;
+                }
             case JsonTokenType.None:
             case JsonTokenType.StartObject:
             case JsonTokenType.EndObject:

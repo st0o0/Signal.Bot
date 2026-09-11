@@ -48,7 +48,7 @@ internal static class Extensions
             _ => ConnectionEvent.Undefined
         };
     }
-    
+
     internal static QueryParameterRegistry AsQueryParameter(this ReceiverOptions options)
     {
         var result = new QueryParameterRegistry();

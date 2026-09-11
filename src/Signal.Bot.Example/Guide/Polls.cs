@@ -13,15 +13,15 @@ public class Polls
             "+1111111111");
         #endregion
     }
-    
+
     public async Task ClosingPoll()
     {
         #region ClosingPoll
-        await client.ClosePollAsync( new DateTime(2026,04,06,12,00,00),
+        await client.ClosePollAsync(new DateTime(2026, 04, 06, 12, 00, 00),
             "+1111111111");
         #endregion
     }
-    
+
     public async Task VotingInPoll()
     {
         #region VotingInPoll

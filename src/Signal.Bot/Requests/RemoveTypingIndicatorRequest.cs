@@ -12,6 +12,6 @@ public record RemoveTypingIndicatorRequest(string Number)
     /// <summary>
     /// Gets or sets the phone number or group ID of the recipient who will no longer see the typing indicator.
     /// </summary>
-    [JsonPropertyName("recipient")] 
+    [JsonPropertyName("recipient")]
     public string? Recipient { get; set; }
 }

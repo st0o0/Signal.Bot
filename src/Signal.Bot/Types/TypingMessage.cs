@@ -20,7 +20,7 @@ public record TypingMessage
     /// </summary>
     [JsonPropertyName("action")]
     public TypingAction Action { get; set; }
-    
+
     /// <inheritdoc />
     public override string ToString() => JsonSerializer.Serialize(this, JsonBotAPI.Get(GetType()));
 }

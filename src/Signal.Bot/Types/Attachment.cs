@@ -56,7 +56,7 @@ public record Attachment
     /// </summary>
     [JsonPropertyName("uploadTimestamp")]
     public DateTime? UploadTimestamp { get; set; }
-    
+
     /// <inheritdoc />
     public override string ToString() => JsonSerializer.Serialize(this, JsonBotAPI.Get(GetType()));
 }

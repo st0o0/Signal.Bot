@@ -11,24 +11,24 @@ public record AddReactionRequest(string Number) : RequestBase($"v1/reactions/{Nu
     /// <summary>
     /// Gets or sets the emoji to react with (e.g., "👍", "❤️", "😂").
     /// </summary>
-    [JsonPropertyName("reaction")] 
+    [JsonPropertyName("reaction")]
     public string? Reaction { get; set; }
 
     /// <summary>
     /// Gets or sets the phone number or group ID of the conversation containing the message.
     /// </summary>
-    [JsonPropertyName("recipient")] 
+    [JsonPropertyName("recipient")]
     public string? Recipient { get; set; }
 
     /// <summary>
     /// Gets or sets the phone number of the author of the message being reacted to.
     /// </summary>
-    [JsonPropertyName("target_author")] 
+    [JsonPropertyName("target_author")]
     public string? TargetAuthor { get; set; }
 
     /// <summary>
     /// Gets or sets the timestamp of the message being reacted to.
     /// </summary>
-    [JsonPropertyName("timestamp")] 
+    [JsonPropertyName("timestamp")]
     public DateTime Timestamp { get; set; }
 }

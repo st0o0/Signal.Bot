@@ -20,7 +20,7 @@ public record DataMessage
     /// </summary>
     [JsonPropertyName("message")]
     public string? Message { get; set; }
-    
+
     /// <summary>
     /// Gets or sets the list of file attachments included with the message.
     /// </summary>
@@ -80,13 +80,13 @@ public record DataMessage
     /// </summary>
     [JsonPropertyName("previews")]
     public List<Preview>? Previews { get; set; }
-    
+
     /// <summary>
     /// TBD
     /// </summary>
     [JsonPropertyName("remoteDelete")]
     public Acknowledged? RemoteDelete { get; set; }
-    
+
     /// <inheritdoc />
     public override string ToString() => JsonSerializer.Serialize(this, JsonBotAPI.Get(GetType()));
 }

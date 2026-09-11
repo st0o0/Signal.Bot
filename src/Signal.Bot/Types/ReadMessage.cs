@@ -12,27 +12,27 @@ public record ReadMessage
     /// <summary>
     /// Gets or sets the identifier of the user who read the message.
     /// </summary>
-    [JsonPropertyName("sender")] 
+    [JsonPropertyName("sender")]
     public string? Sender { get; set; }
 
     /// <summary>
     /// Gets or sets the phone number of the user who read the message.
     /// </summary>
-    [JsonPropertyName("senderNumber")] 
+    [JsonPropertyName("senderNumber")]
     public string? SenderNumber { get; set; }
 
     /// <summary>
     /// Gets or sets the UUID of the user who read the message.
     /// </summary>
-    [JsonPropertyName("senderUuid")] 
+    [JsonPropertyName("senderUuid")]
     public Guid SenderId { get; set; }
 
     /// <summary>
     /// Gets or sets the timestamp when the message was read.
     /// </summary>
-    [JsonPropertyName("timestamp")] 
+    [JsonPropertyName("timestamp")]
     public DateTime Timestamp { get; set; }
-    
+
     /// <inheritdoc />
     public override string ToString() => JsonSerializer.Serialize(this, JsonBotAPI.Get(GetType()));
 }

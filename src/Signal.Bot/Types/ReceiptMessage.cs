@@ -12,15 +12,15 @@ public record ReceiptMessage
     /// <summary>
     /// Gets or sets the list of timestamps of messages for which receipts are being sent.
     /// </summary>
-    [JsonPropertyName("timestamps")] 
+    [JsonPropertyName("timestamps")]
     public List<DateTime>? Timestamps { get; set; }
 
     /// <summary>
     /// Gets or sets the type of receipt (e.g., "read", "delivery", "viewed").
     /// </summary>
-    [JsonPropertyName("type")] 
+    [JsonPropertyName("type")]
     public string? Type { get; set; }
-    
+
     /// <inheritdoc />
     public override string ToString() => JsonSerializer.Serialize(this, JsonBotAPI.Get(GetType()));
 }

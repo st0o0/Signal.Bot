@@ -943,7 +943,7 @@ public static class Extensions
     }
 
     #endregion
-    
+
     #region Polls
 
     /// <summary>
@@ -1018,6 +1018,6 @@ public static class Extensions
         };
         await client.SendRequestAsync(request, cancellationToken: cancellationToken);
     }
-    
+
     #endregion
 }

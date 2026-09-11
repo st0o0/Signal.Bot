@@ -14,13 +14,13 @@ public record AddPollRequest(string Number) : RequestBase<PollResponse>($"v1/pol
     /// </summary>
     [JsonPropertyName("allow_multiple_selections")]
     public bool? AllowMultipleSelections { get; set; }
-    
+
     /// <summary>
     /// Gets or sets the answers for this poll request
     /// </summary>
     [JsonPropertyName("answers")]
     public string[]? Answers { get; set; }
-    
+
     /// <summary>
     /// Gets or sets the question of this poll
     /// </summary>

@@ -12,15 +12,15 @@ public record Search
     /// <summary>
     /// Gets or sets the phone number that was searched.
     /// </summary>
-    [JsonPropertyName("number")] 
+    [JsonPropertyName("number")]
     public string? Number { get; set; }
 
     /// <summary>
     /// Gets or sets a value indicating whether the phone number is registered on Signal.
     /// </summary>
-    [JsonPropertyName("registered")] 
+    [JsonPropertyName("registered")]
     public bool? Registered { get; set; }
-    
+
     /// <inheritdoc />
     public override string ToString() => JsonSerializer.Serialize(this, JsonBotAPI.Get(GetType()));
 }

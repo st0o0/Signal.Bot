@@ -44,7 +44,7 @@ public record Reaction
     /// </summary>
     [JsonPropertyName("targetSentTimestamp")]
     public DateTime TargetSent { get; set; }
-    
+
     /// <inheritdoc />
     public override string ToString() => JsonSerializer.Serialize(this, JsonBotAPI.Get(GetType()));
 }

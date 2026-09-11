@@ -13,6 +13,6 @@ public record VerifyNumberRequest(string Number, string Token)
     /// <summary>
     /// Gets or sets the registration lock PIN if the Signal account has PIN protection enabled.
     /// </summary>
-    [JsonPropertyName("pin")] 
+    [JsonPropertyName("pin")]
     public string? Pin { get; set; }
 }

@@ -12,12 +12,12 @@ public record UpdateAccountSettingsRequest(string Number)
     /// <summary>
     /// Gets or sets whether the account can be discovered by others using the phone number.
     /// </summary>
-    [JsonPropertyName("discoverable_by_number")] 
+    [JsonPropertyName("discoverable_by_number")]
     public bool DiscoverableByNumber { get; set; }
 
     /// <summary>
     /// Gets or sets whether to share the phone number with contacts.
     /// </summary>
-    [JsonPropertyName("share_number")] 
+    [JsonPropertyName("share_number")]
     public bool ShareNumber { get; set; }
 }

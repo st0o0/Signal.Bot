@@ -11,12 +11,12 @@ public record RateLimitChallengeRequest(string Number) : RequestBase($"v1/accoun
     /// <summary>
     /// Gets or sets the solved CAPTCHA token obtained from the CAPTCHA provider.
     /// </summary>
-    [JsonPropertyName("captcha")] 
+    [JsonPropertyName("captcha")]
     public string? Captcha { get; set; }
 
     /// <summary>
     /// Gets or sets the challenge token provided by Signal when the rate limit is triggered.
     /// </summary>
-    [JsonPropertyName("challenge_token")] 
+    [JsonPropertyName("challenge_token")]
     public string? ChallengeToken { get; set; }
 }

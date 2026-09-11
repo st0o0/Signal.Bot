@@ -10,20 +10,20 @@ internal class TimestampConverter : JsonConverter<DateTime>
         switch (reader.TokenType)
         {
             case JsonTokenType.String:
-            {
-                var stringValue = reader.GetString();
-                if (long.TryParse(stringValue, out var milliseconds))
                 {
+                    var stringValue = reader.GetString();
+                    if (long.TryParse(stringValue, out var milliseconds))
+                    {
+                        return DateTimeOffset.FromUnixTimeMilliseconds(milliseconds).DateTime;
+                    }
+
+                    break;
+                }
+            case JsonTokenType.Number:
+                {
+                    var milliseconds = reader.GetInt64();
                     return DateTimeOffset.FromUnixTimeMilliseconds(milliseconds).DateTime;
                 }
-
-                break;
-            }
-            case JsonTokenType.Number:
-            {
-                var milliseconds = reader.GetInt64();
-                return DateTimeOffset.FromUnixTimeMilliseconds(milliseconds).DateTime;
-            }
             case JsonTokenType.None:
             case JsonTokenType.StartObject:
             case JsonTokenType.EndObject:

@@ -11,12 +11,12 @@ public record AddStickerPackRequest(string Number) : RequestBase($"v1/sticker-pa
     /// <summary>
     /// Gets or sets the unique identifier of the sticker pack to install.
     /// </summary>
-    [JsonPropertyName("pack_id")] 
+    [JsonPropertyName("pack_id")]
     public string? PackId { get; set; }
-    
+
     /// <summary>
     /// Gets or sets the decryption key for the sticker pack.
     /// </summary>
-    [JsonPropertyName("pack_key")] 
+    [JsonPropertyName("pack_key")]
     public string? PackKey { get; set; }
 }

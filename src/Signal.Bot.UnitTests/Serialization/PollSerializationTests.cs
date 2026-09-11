@@ -2,6 +2,7 @@ using System.Text.Json;
 using Signal.Bot.Requests;
 
 namespace Signal.Bot.UnitTests.Serialization;
+
 public class PollSerializationTests
 {
     [Fact(Timeout = 5000)]
@@ -15,11 +16,11 @@ public class PollSerializationTests
             Question = "Does this test succeed?",
             Recipient = "123456789"
         };
-        
+
         // Act
         var json = JsonSerializer.Serialize(addPollRequest);
         var deserialized = JsonSerializer.Deserialize<AddPollRequest>(json);
-        
+
         // Assert
         Assert.NotNull(deserialized);
         Assert.NotNull(deserialized.AllowMultipleSelections);
@@ -44,11 +45,11 @@ public class PollSerializationTests
             Timestamp = timestamp,
             Recipient = "123456789"
         };
-        
+
         // Act
-        var json =  JsonSerializer.Serialize(closePollRequest);
+        var json = JsonSerializer.Serialize(closePollRequest);
         var deserialized = JsonSerializer.Deserialize<ClosePollRequest>(json);
-        
+
         // Assert
         Assert.NotNull(deserialized);
         Assert.Equal(timestamp, deserialized.Timestamp);
@@ -68,11 +69,11 @@ public class PollSerializationTests
             SelectedAnswers = [0],
             PollAuthor = "98765421"
         };
-        
+
         // Act
         var json = JsonSerializer.Serialize(votePollRequest);
         var deserialized = JsonSerializer.Deserialize<VotePollRequest>(json);
-        
+
         // Assert
         Assert.NotNull(deserialized);
         Assert.Equal(timestamp, deserialized.Timestamp);
@@ -83,8 +84,6 @@ public class PollSerializationTests
         Assert.NotNull(deserialized.Recipient);
         Assert.Equal("123456789", deserialized.Recipient);
     }
-    
-    
 
     [Fact(Timeout = 5000)]
     public void TestVotePollRequestSerializationAndDeserialization_MultipleAnswers()
@@ -98,11 +97,11 @@ public class PollSerializationTests
             SelectedAnswers = [2, 0],
             PollAuthor = "98765421"
         };
-        
+
         // Act
         var json = JsonSerializer.Serialize(votePollRequest);
         var deserialized = JsonSerializer.Deserialize<VotePollRequest>(json);
-        
+
         // Assert
         Assert.NotNull(deserialized);
         Assert.Equal(timestamp, deserialized.Timestamp);

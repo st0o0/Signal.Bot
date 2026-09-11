@@ -119,7 +119,7 @@ public class SendMessageRequestBuilder
         }
         else
         {
-            _request = _request with { Mentions = [.. _request.Mentions ?? [], ..mentions] };
+            _request = _request with { Mentions = [.. _request.Mentions ?? [], .. mentions] };
         }
 
         return this;
@@ -198,7 +198,7 @@ public class SendMessageRequestBuilder
         }
         else
         {
-            _request = _request with { QuoteMentions = [.. _request.QuoteMentions ?? [], ..quoteMentions] };
+            _request = _request with { QuoteMentions = [.. _request.QuoteMentions ?? [], .. quoteMentions] };
         }
 
         return this;
@@ -252,7 +252,7 @@ public class SendMessageRequestBuilder
         }
         else
         {
-            _request = _request with { Recipients = [.. _request.Recipients ?? [], ..recipients] };
+            _request = _request with { Recipients = [.. _request.Recipients ?? [], .. recipients] };
         }
 
         return this;

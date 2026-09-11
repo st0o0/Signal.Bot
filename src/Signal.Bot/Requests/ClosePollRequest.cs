@@ -13,7 +13,7 @@ public record ClosePollRequest(string Number) : RequestBase($"v1/polls/{Number}"
     /// </summary>
     [JsonPropertyName("poll_timestamp")]
     public DateTime Timestamp { get; set; }
-    
+
     /// <summary>
     /// Gets or sets the recipient for this poll
     /// </summary>

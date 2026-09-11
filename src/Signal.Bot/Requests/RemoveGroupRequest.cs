@@ -5,4 +5,4 @@ namespace Signal.Bot.Requests;
 /// </summary>
 /// <param name="Number">The phone number of the Signal account deleting the group.</param>
 /// <param name="GroupId">The unique identifier of the group to delete.</param>
-public record RemoveGroupRequest(string Number, string GroupId) : RequestBase($"v1/groups/{Number}/{GroupId}",  HttpMethod.Delete);
+public record RemoveGroupRequest(string Number, string GroupId) : RequestBase($"v1/groups/{Number}/{GroupId}", HttpMethod.Delete);

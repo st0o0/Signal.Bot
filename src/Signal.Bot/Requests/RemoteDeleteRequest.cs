@@ -12,12 +12,12 @@ public record RemoteDeleteRequest(string Number) : RequestBase<Acknowledged>($"v
     /// <summary>
     /// Gets or sets the phone number or group ID of the conversation where the message should be deleted.
     /// </summary>
-    [JsonPropertyName("recipient")] 
+    [JsonPropertyName("recipient")]
     public string? Recipient { get; set; }
-    
+
     /// <summary>
     /// Gets or sets the timestamp of the message to delete.
     /// </summary>
-    [JsonPropertyName("timestamp")] 
+    [JsonPropertyName("timestamp")]
     public DateTime Timestamp { get; set; }
 }

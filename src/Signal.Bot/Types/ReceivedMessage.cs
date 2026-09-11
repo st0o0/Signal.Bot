@@ -13,15 +13,15 @@ public record ReceivedMessage
     /// Gets or sets the envelope containing the message metadata and content.
     /// </summary>
     /// <seealso cref="Envelope"/>
-    [JsonPropertyName("envelope")] 
+    [JsonPropertyName("envelope")]
     public Envelope? Envelope { get; set; }
 
     /// <summary>
     /// Gets or sets the phone number of the Signal account that received the message.
     /// </summary>
-    [JsonPropertyName("account")] 
+    [JsonPropertyName("account")]
     public string? Account { get; set; }
-    
+
     /// <inheritdoc />
     public override string ToString() => JsonSerializer.Serialize(this, JsonBotAPI.Get(GetType()));
 }

@@ -12,19 +12,19 @@ public record SendReceiptsRequest(string Number) : RequestBase($"/v1/receipts/{N
     /// Gets or sets the type of receipt to send (read, viewed, etc.).
     /// </summary>
     /// <seealso cref="ReceiptType"/>
-    [JsonPropertyName("receipt_type")] 
+    [JsonPropertyName("receipt_type")]
     public ReceiptType ReceiptType { get; set; }
 
     /// <summary>
     /// Gets or sets the phone number of the message sender to whom the receipt is being sent.
     /// </summary>
-    [JsonPropertyName("recipient")] 
+    [JsonPropertyName("recipient")]
     public string? Recipient { get; set; }
 
     /// <summary>
     /// Gets or sets the timestamp of the message for which the receipt is being sent.
     /// </summary>
-    [JsonPropertyName("timestamp")] 
+    [JsonPropertyName("timestamp")]
     public DateTime Timestamp { get; set; }
 }
 
@@ -36,12 +36,12 @@ public enum ReceiptType
     /// <summary>
     /// Read receipt indicating the message has been read by the recipient.
     /// </summary>
-    [JsonStringEnumMemberName("read")] 
+    [JsonStringEnumMemberName("read")]
     Read = 1,
 
     /// <summary>
     /// Viewed receipt indicating the message content (typically media) has been viewed.
     /// </summary>
-    [JsonStringEnumMemberName("viewed")] 
+    [JsonStringEnumMemberName("viewed")]
     Viewed = 2,
 }

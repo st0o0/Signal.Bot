@@ -18,7 +18,7 @@ public record SyncMessage
     /// </summary>
     [JsonPropertyName("readMessages")]
     public List<ReadMessage>? ReadMessages { get; set; }
-    
+
     /// <inheritdoc />
     public override string ToString() => JsonSerializer.Serialize(this, JsonBotAPI.Get(GetType()));
 }

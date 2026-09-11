@@ -11,18 +11,18 @@ public record UpdateContactRequest(string Number) : RequestBase($"v1/contacts/{N
     /// <summary>
     /// Gets or sets the display name to assign to this contact.
     /// </summary>
-    [JsonPropertyName("name")] 
+    [JsonPropertyName("name")]
     public string? Name { get; set; }
 
     /// <summary>
     /// Gets or sets the phone number of the contact being updated.
     /// </summary>
-    [JsonPropertyName("recipient")] 
+    [JsonPropertyName("recipient")]
     public string? Recipient { get; set; }
 
     /// <summary>
     /// Gets or sets the disappearing message timer in seconds. Set to 0 to disable disappearing messages.
     /// </summary>
-    [JsonPropertyName("expiration_in_seconds")] 
+    [JsonPropertyName("expiration_in_seconds")]
     public int? ExpirationTimeInSeconds { get; set; }
 }

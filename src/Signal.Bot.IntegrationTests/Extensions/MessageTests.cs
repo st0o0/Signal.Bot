@@ -32,7 +32,7 @@ public class MessageTests : IntegrationTestBase
 
         // Assert
         Assert.NotNull(result);
-        
+
         var expectedLocal = DateTimeOffset.FromUnixTimeMilliseconds(timestamp).DateTime;
         var diff = Math.Abs((result.Timestamp - expectedLocal).TotalMilliseconds);
         Assert.True(diff < 1_000, $"Timestamp differs more than tolerance. diff={diff}ms");
@@ -178,7 +178,7 @@ public class MessageTests : IntegrationTestBase
         var timestamp = DateTime.UtcNow;
         var acknowledged = new Acknowledged { Timestamp = timestamp };
         var json = JsonSerializer.Serialize(acknowledged, JsonBotAPI.Options);
-        
+
         MockServer
             .Given(Request.Create()
                 .WithPath(path => path.Contains("/remote-delete"))

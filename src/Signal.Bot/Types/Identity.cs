@@ -46,7 +46,7 @@ public record Identity
     /// </summary>
     [JsonPropertyName("uuid")]
     public Guid Id { get; set; }
-    
+
     /// <inheritdoc />
     public override string ToString() => JsonSerializer.Serialize(this, JsonBotAPI.Get(GetType()));
 }

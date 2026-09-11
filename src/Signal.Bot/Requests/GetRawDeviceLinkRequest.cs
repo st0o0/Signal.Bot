@@ -11,6 +11,6 @@ public record GetRawDeviceLinkRequest() : RequestBase<RawDeviceLink>("/v1/qrcode
     /// <summary>
     /// Gets or sets the name to assign to the new device being linked.
     /// </summary>
-    [JsonPropertyName("device_name")] 
+    [JsonPropertyName("device_name")]
     public required string DeviceName { get; set; }
 }

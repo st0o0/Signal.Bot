@@ -13,6 +13,6 @@ public record RemoveGroupMemberRequest(string Number, string GroupId)
     /// <summary>
     /// Gets or sets the array of phone numbers of members to remove from the group.
     /// </summary>
-    [JsonPropertyName("members")] 
+    [JsonPropertyName("members")]
     public string[]? Members { get; set; }
 }

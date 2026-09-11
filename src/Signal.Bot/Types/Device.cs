@@ -12,21 +12,21 @@ public record Device
     /// <summary>
     /// Gets or sets the name assigned to the device.
     /// </summary>
-    [JsonPropertyName("name")] 
+    [JsonPropertyName("name")]
     public string? Name { get; set; }
 
     /// <summary>
     /// Gets or sets the timestamp when the device was linked to the account.
     /// </summary>
-    [JsonPropertyName("creation_timestamp")] 
+    [JsonPropertyName("creation_timestamp")]
     public DateTime Created { get; set; }
 
     /// <summary>
     /// Gets or sets the timestamp when the device was last active.
     /// </summary>
-    [JsonPropertyName("last_seen_timestamp")] 
+    [JsonPropertyName("last_seen_timestamp")]
     public DateTime LastSeen { get; set; }
-    
+
     /// <inheritdoc />
     public override string ToString() => JsonSerializer.Serialize(this, JsonBotAPI.Get(GetType()));
 }

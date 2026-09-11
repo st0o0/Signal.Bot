@@ -22,7 +22,7 @@ public abstract class BotTestBase
                 Content = new StringContent(json)
             }));
     }
-    
+
     protected void SetupResponse(HttpStatusCode statusCode = HttpStatusCode.OK)
     {
         HttpClientMock.SendAsync(Arg.Any<HttpRequestMessage>(), Arg.Any<CancellationToken>())

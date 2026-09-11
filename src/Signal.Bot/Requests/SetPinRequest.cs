@@ -11,6 +11,6 @@ public record SetPinRequest(string Number) : RequestBase($"v1/accounts/{Number}/
     /// <summary>
     /// Gets or sets the PIN to set for registration lock (typically 4-8 digits).
     /// </summary>
-    [JsonPropertyName("pin")] 
+    [JsonPropertyName("pin")]
     public string? Pin { get; set; }
 }

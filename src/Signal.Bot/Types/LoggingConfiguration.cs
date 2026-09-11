@@ -14,7 +14,7 @@ public record LoggingConfiguration
     /// </summary>
     [JsonPropertyName("Level")]
     public string? Level { get; set; }
-    
+
     /// <inheritdoc />
     public override string ToString() => JsonSerializer.Serialize(this, JsonBotAPI.Get(GetType()));
 }

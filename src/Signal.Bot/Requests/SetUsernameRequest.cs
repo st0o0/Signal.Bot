@@ -12,6 +12,6 @@ public record SetUsernameRequest(string Number) : RequestBase<SetUsername>($"v1/
     /// <summary>
     /// Gets or sets the username to set. Must be unique across all Signal users.
     /// </summary>
-    [JsonPropertyName("username")] 
+    [JsonPropertyName("username")]
     public string? Username { get; set; }
 }

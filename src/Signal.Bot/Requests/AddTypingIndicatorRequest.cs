@@ -11,6 +11,6 @@ public record AddTypingIndicatorRequest(string Number) : RequestBase($"v1/typing
     /// <summary>
     /// Gets or sets the phone number or group ID of the recipient who will see the typing indicator.
     /// </summary>
-    [JsonPropertyName("recipient")] 
+    [JsonPropertyName("recipient")]
     public string? Recipient { get; set; }
 }

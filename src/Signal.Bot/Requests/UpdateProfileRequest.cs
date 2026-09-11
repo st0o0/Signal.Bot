@@ -11,18 +11,18 @@ public record UpdateProfileRequest(string Number) : RequestBase($"v1/profiles/{N
     /// <summary>
     /// Gets or sets the about/status text to display on the profile.
     /// </summary>
-    [JsonPropertyName("about")] 
+    [JsonPropertyName("about")]
     public string? About { get; set; }
 
     /// <summary>
     /// Gets or sets the base64-encoded avatar image. Recommended formats are JPEG or PNG.
     /// </summary>
-    [JsonPropertyName("base64_avatar")] 
+    [JsonPropertyName("base64_avatar")]
     public string? Avatar { get; set; }
 
     /// <summary>
     /// Gets or sets the display name for the profile.
     /// </summary>
-    [JsonPropertyName("name")] 
+    [JsonPropertyName("name")]
     public string? Name { get; set; }
 }
