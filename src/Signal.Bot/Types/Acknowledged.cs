@@ -15,6 +15,12 @@ public record Acknowledged
     [JsonPropertyName("timestamp")]
     public DateTime Timestamp { get; set; }
 
+    /// <summary>
+    /// Gets or sets per-recipient error details, if any occurred during message delivery.
+    /// </summary>
+    [JsonPropertyName("errors")]
+    public SendMessageErrors? Errors { get; set; }
+
     /// <inheritdoc />
     public override string ToString() => JsonSerializer.Serialize(this, JsonBotAPI.Get(GetType()));
 }

@@ -69,6 +69,18 @@ public record Group
     [JsonPropertyName("pending_requests")]
     public List<string>? PendingRequests { get; set; }
 
+    /// <summary>
+    /// Gets or sets whether the current account is a member of this group.
+    /// </summary>
+    [JsonPropertyName("member")]
+    public bool? IsMember { get; set; }
+
+    /// <summary>
+    /// Gets or sets the group permission settings.
+    /// </summary>
+    [JsonPropertyName("permissions")]
+    public GroupPermissions? Permissions { get; set; }
+
     /// <inheritdoc />
     public override string ToString() => JsonSerializer.Serialize(this, JsonBotAPI.Get(GetType()));
 }

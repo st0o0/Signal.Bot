@@ -10,6 +10,12 @@ namespace Signal.Bot.Types;
 public record Device
 {
     /// <summary>
+    /// Gets or sets the unique identifier of the device.
+    /// </summary>
+    [JsonPropertyName("id")]
+    public int Id { get; set; }
+
+    /// <summary>
     /// Gets or sets the name assigned to the device.
     /// </summary>
     [JsonPropertyName("name")]
