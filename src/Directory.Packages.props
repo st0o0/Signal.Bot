@@ -12,7 +12,7 @@
     <PackageVersion Include="NSubstitute" Version="6.2.0" />
     <PackageVersion Include="FakeItEasy" Version="9.0.1" />
     <PackageVersion Include="WireMock.Net" Version="2.15.0" />
-    <PackageVersion Include="xunit.v3.mtp-v2" Version="4.0.0" />
+    <PackageVersion Include="xunit.v3.mtp-v2" Version="4.0.1" />
     <!--- Example -->
     <PackageVersion Include="Microsoft.Extensions.Http.Resilience" Version="10.10.0" />
     <PackageVersion Include="Serilog.AspNetCore" Version="10.0.0" />
