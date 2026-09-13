@@ -181,10 +181,10 @@ internal sealed class SignalBotReceiver : IAsyncDisposable
         }
 
         await (_disposeCts?.CancelAsync() ?? Task.CompletedTask);
+        _disposables?.Dispose();
+        await (_websocketClient?.DisposeAsync() ?? ValueTask.CompletedTask);
         _linkedCts?.Dispose();
         _disposeCts?.Dispose();
-        await (_websocketClient?.DisposeAsync() ?? ValueTask.CompletedTask);
-        _disposables?.Dispose();
     }
 
     public async ValueTask DisposeAsync()

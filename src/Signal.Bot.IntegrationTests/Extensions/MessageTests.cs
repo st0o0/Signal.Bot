@@ -182,7 +182,7 @@ public class MessageTests : IntegrationTestBase
         MockServer
             .Given(Request.Create()
                 .WithPath(path => path.Contains("/remote-delete"))
-                .UsingPost())
+                .UsingDelete())
             .RespondWith(Response.Create()
                 .WithStatusCode(HttpStatusCode.OK)
                 .WithHeader("Content-Type", "application/json")
