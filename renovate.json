@@ -2,6 +2,6 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "local>st0o0/renovate-config:dotnet",
-    "local>st0o0/renovate-config:vitepress"
+    "local>st0o0/renovate-config:npm"
   ]
 }
