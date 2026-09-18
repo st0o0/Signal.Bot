@@ -30,3 +30,15 @@ jobs:
       contents: write
       checks: write
       id-token: write
+
+  docs:
+    needs: release-please
+    if: needs.release-please.outputs.release_created == 'true'
+    uses: st0o0/github-workflows/.github/workflows/docs.yml@main
+    with:
+      needs-dotnet-build: true
+      dotnet-project-path: src
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
