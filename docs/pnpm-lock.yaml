@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       npm:
-        specifier: ^11.11.1
-        version: 11.19.1
+        specifier: ^12.0.0
+        version: 12.0.2
     devDependencies:
       glob:
         specifier: ^13.0.6
@@ -703,15 +703,16 @@ packages:
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
 
-  npm@11.19.1:
-    resolution: {integrity: sha512-ztsxKxt/kkIaAs+2i0GU6I+DRmUdrNasxTZKJe9TCdSjKxlhah/4r/hl5ygMD6XAg1qZ9c2TNomR4qgOydp10g==}
-    engines: {node: ^20.17.0 || >=22.9.0}
+  npm@12.0.2:
+    resolution: {integrity: sha512-uIXokLlBj6FpNUTQX1PmT5pz7BlIN9QlixX+zdaSNHsd0qUXsbDLr50xzY6Sw7cJVr0uzHKDOle0swmPW/p5Qw==}
+    engines: {node: ^22.22.2 || ^24.15.0 || >=26.0.0}
     hasBin: true
     bundledDependencies:
       - '@isaacs/string-locale-compare'
       - '@npmcli/arborist'
       - '@npmcli/config'
       - '@npmcli/fs'
+      - '@npmcli/git'
       - '@npmcli/map-workspaces'
       - '@npmcli/metavuln-calculator'
       - '@npmcli/package-json'
@@ -721,9 +722,11 @@ packages:
       - '@sigstore/tuf'
       - abbrev
       - archy
+      - bin-links
       - cacache
       - chalk
       - ci-info
+      - diff
       - fastest-levenshtein
       - fs-minipass
       - glob
@@ -1571,7 +1574,7 @@ snapshots:
 
   nanoid@3.3.19: {}
 
-  npm@11.19.1: {}
+  npm@12.0.2: {}
 
   oniguruma-to-es@3.1.1:
     dependencies:
