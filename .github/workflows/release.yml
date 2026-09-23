@@ -16,20 +16,46 @@ jobs:
       contents: write
       pull-requests: write
 
-  nuget:
+  build:
     needs: release-please
     if: needs.release-please.outputs.release_created == 'true'
-    uses: st0o0/github-workflows/.github/workflows/dotnet-release-nuget.yml@main
+    uses: st0o0/github-workflows/.github/workflows/dotnet-build-nuget.yml@main
+    permissions:
+      contents: read
     with:
       version: ${{ needs.release-please.outputs.version }}
       solution-file: signal.slnx
-      package-name: Signal.Bot
-    secrets:
-      NUGET_USER: ${{ secrets.NUGET_USER }}
+
+  publish:
+    needs: [release-please, build]
+    runs-on: ubuntu-latest
     permissions:
       contents: write
-      checks: write
       id-token: write
+    environment:
+      name: nuget
+      url: https://www.nuget.org/packages/Signal.Bot
+    steps:
+      - uses: actions/setup-dotnet@v6
+      - uses: actions/download-artifact@v8
+        with:
+          name: nuget-packages
+          path: ./packages
+      - uses: NuGet/login@v1
+        id: nuget-login
+        with:
+          user: ${{ secrets.NUGET_USER }}
+      - name: Push to NuGet
+        run: >-
+          dotnet nuget push
+          --api-key ${{ steps.nuget-login.outputs.NUGET_API_KEY }}
+          --source https://api.nuget.org/v3/index.json
+          --skip-duplicate ./packages/*.nupkg
+      - name: Attach .nupkg to GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ needs.release-please.outputs.version }}
+        run: gh release upload "v${VERSION}" ./packages/*.nupkg --clobber
 
   docs:
     needs: release-please
