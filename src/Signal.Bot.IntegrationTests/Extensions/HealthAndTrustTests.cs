@@ -49,7 +49,7 @@ public class HealthAndTrustTests : IntegrationTestBase
     [Fact(Timeout = 5000)]
     public async Task IsHealthy_WhenNoServerConfigured_ShouldReturnFalse()
     {
-        // Act — no mock configured, so the request gets a default non-match response
+        // Act - no mock configured, so the request gets a default non-match response
         var result = await Client.IsHealthyAsync(cancellationToken: TestContext.Current.CancellationToken);
 
         // Assert

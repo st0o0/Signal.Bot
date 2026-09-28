@@ -151,7 +151,7 @@ public class SignalBotReceiverTests
             _mockHandler,
             cancellationToken: TestContext.Current.CancellationToken);
 
-        // Act — double dispose should not throw
+        // Act - double dispose should not throw
         await receiver.DisposeAsync();
         await receiver.DisposeAsync();
     }

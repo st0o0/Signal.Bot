@@ -22,7 +22,7 @@ If you've ever wanted to build a Signal bot in .NET but were put off by the lack
 
 **Key highlights:**
 
-- Telegram.Bot-inspired API — feels immediately familiar
+- Telegram.Bot-inspired API - feels immediately familiar
 - Built-in polling via `StartReceiving`
 - Full feature support: messages, attachments, groups, profiles
 - Modern async/await with proper `CancellationToken` handling
@@ -190,7 +190,7 @@ Please keep changes focused, follow the existing code style, and update docs for
 
 ## License
 
-MIT — see [LICENSE](LICENSE) for details.
+MIT - see [LICENSE](LICENSE) for details.
 
 ---
 
@@ -198,6 +198,6 @@ MIT — see [LICENSE](LICENSE) for details.
 
 ### Related Projects
 
-- [signal-cli-rest-api](https://github.com/bbernhard/signal-cli-rest-api) — Required backend
-- [signal-cli](https://github.com/AsamK/signal-cli) — Underlying CLI tool
-- [Telegram.Bot](https://github.com/TelegramBots/Telegram.Bot) — Design inspiration
+- [signal-cli-rest-api](https://github.com/bbernhard/signal-cli-rest-api) - Required backend
+- [signal-cli](https://github.com/AsamK/signal-cli) - Underlying CLI tool
+- [Telegram.Bot](https://github.com/TelegramBots/Telegram.Bot) - Design inspiration

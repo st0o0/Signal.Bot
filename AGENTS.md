@@ -112,7 +112,7 @@ public record SendMessageRequest() : RequestBase<Acknowledged>("v2/send")
 - Inherit `BotTestBase` for client tests.
 - Use `SetupJsonResponse(json)` or `SetupResponse(statusCode)` for mock setup.
 - Async tests: `[Fact(Timeout = 5000)]` with `TestContext.Current.CancellationToken`.
-- Sync tests: plain `[Fact]` (no Timeout — xUnit1069 warns when Timeout is set
+- Sync tests: plain `[Fact]` (no Timeout - xUnit1069 warns when Timeout is set
   without observing `CancellationToken`).
 - Use `Assert.Multiple(...)` to group related assertions on the same object.
 - Assert with `HttpClientMock.Received(1).SendAsync(...)`.
