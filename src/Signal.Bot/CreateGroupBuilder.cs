@@ -110,7 +110,7 @@ public class CreateGroupBuilder
     /// <returns>The builder instance for method chaining.</returns>
     public CreateGroupBuilder WithMembers(IEnumerable<string> members)
     {
-        _request.Members = members.ToArray();
+        _request.Members = [.. members];
         return this;
     }
 

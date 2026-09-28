@@ -2,7 +2,7 @@ namespace Signal.Bot.Example.Guide;
 
 public class Attachments
 {
-    private readonly SignalBotClient client = null;
+    private readonly SignalBotClient client = null!;
     public async Task SingleAttachment()
     {
         #region SingleAttachment

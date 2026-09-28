@@ -475,7 +475,7 @@ public static class Extensions
         IEnumerable<string> admins,
         CancellationToken cancellationToken = default)
     {
-        var request = new AddGroupAdminRequest(client.Number, groupId) { Admins = admins.ToArray() };
+        var request = new AddGroupAdminRequest(client.Number, groupId) { Admins = [.. admins] };
         await client.SendRequestAsync(request, cancellationToken: cancellationToken);
     }
 
@@ -492,7 +492,7 @@ public static class Extensions
         ICollection<string> admins,
         CancellationToken cancellationToken = default)
     {
-        var request = new RemoveGroupAdminRequest(client.Number, groupId) { Admins = admins.ToArray() };
+        var request = new RemoveGroupAdminRequest(client.Number, groupId) { Admins = [.. admins] };
         await client.SendRequestAsync(request, cancellationToken: cancellationToken);
     }
 
@@ -539,7 +539,7 @@ public static class Extensions
         ICollection<string> members,
         CancellationToken cancellationToken = default)
     {
-        var request = new AddGroupMemberRequest(client.Number, groupId) { Members = members.ToArray() };
+        var request = new AddGroupMemberRequest(client.Number, groupId) { Members = [.. members] };
         await client.SendRequestAsync(request, cancellationToken: cancellationToken);
     }
 
@@ -556,7 +556,7 @@ public static class Extensions
         ICollection<string> members,
         CancellationToken cancellationToken = default)
     {
-        var request = new RemoveGroupMemberRequest(client.Number, groupId) { Members = members.ToArray() };
+        var request = new RemoveGroupMemberRequest(client.Number, groupId) { Members = [.. members] };
         await client.SendRequestAsync(request, cancellationToken: cancellationToken);
     }
 

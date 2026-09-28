@@ -8,7 +8,7 @@ public class Polls
     {
         #region CreatingPoll
         await client.AddPollAsync(true,
-            new[] { "Option 1", "Option 2", "Option 3" },
+            ["Option 1", "Option 2", "Option 3"],
             "Question",
             "+1111111111");
         #endregion

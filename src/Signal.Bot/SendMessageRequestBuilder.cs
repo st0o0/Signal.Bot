@@ -115,7 +115,7 @@ public class SendMessageRequestBuilder
     {
         if (overwrite)
         {
-            _request = _request with { Mentions = mentions.ToArray() };
+            _request = _request with { Mentions = [.. mentions] };
         }
         else
         {
@@ -194,7 +194,7 @@ public class SendMessageRequestBuilder
     {
         if (overwrite)
         {
-            _request = _request with { QuoteMentions = quoteMentions.ToArray() };
+            _request = _request with { QuoteMentions = [.. quoteMentions] };
         }
         else
         {
@@ -248,7 +248,7 @@ public class SendMessageRequestBuilder
     {
         if (overwrite)
         {
-            _request = _request with { Recipients = recipients.ToArray() };
+            _request = _request with { Recipients = [.. recipients] };
         }
         else
         {
