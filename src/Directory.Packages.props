@@ -6,7 +6,7 @@
     <PackageVersion Include="Microsoft.DotNet.ILCompiler" Version="10.0.12" />
     <PackageVersion Include="Microsoft.NET.ILLink.Tasks" Version="10.0.12" />
     <PackageVersion Include="R3" Version="[1.3.1,)" />
-    <PackageVersion Include="WebSocket.Rx" Version="[0.1.9,)" />
+    <PackageVersion Include="WebSocket.Rx" Version="[0.1.10,)" />
     <!--- Testing -->
     <PackageVersion Include="Microsoft.Testing.Extensions.CodeCoverage" Version="18.11.2" />
     <PackageVersion Include="NSubstitute" Version="6.2.0" />

@@ -1,7 +1,6 @@
 using System.Net;
 using System.Text.Json;
 using Signal.Bot.IntegrationTests.Utils;
-using Signal.Bot.Requests;
 using Signal.Bot.Serialization;
 using Signal.Bot.Types;
 using WireMock.RequestBuilders;
@@ -82,7 +81,9 @@ public class MessageTests : IntegrationTestBase
 
         // Assert
         var entry = Assert.Single(MockServer.LogEntries);
-        var request = JsonSerializer.Deserialize(entry.RequestMessage.Body!, JsonBotSerializerContext.Default.SendMessageRequest);
+        Assert.NotNull(entry.RequestMessage);
+        Assert.NotNull(entry.RequestMessage.Body);
+        var request = JsonSerializer.Deserialize(entry.RequestMessage.Body, JsonBotSerializerContext.Default.SendMessageRequest);
         Assert.Equal(messageWithEmojis, request!.Message);
     }
 
@@ -106,7 +107,9 @@ public class MessageTests : IntegrationTestBase
 
         // Assert
         var entry = Assert.Single(MockServer.LogEntries);
-        var request = JsonSerializer.Deserialize(entry.RequestMessage.Body!, JsonBotSerializerContext.Default.SendMessageRequest);
+        Assert.NotNull(entry.RequestMessage);
+        Assert.NotNull(entry.RequestMessage.Body);
+        var request = JsonSerializer.Deserialize(entry.RequestMessage.Body, JsonBotSerializerContext.Default.SendMessageRequest);
         Assert.Equal(rtlMessage, request!.Message);
     }
 
@@ -130,7 +133,9 @@ public class MessageTests : IntegrationTestBase
 
         // Assert
         var entry = Assert.Single(MockServer.LogEntries);
-        var request = JsonSerializer.Deserialize(entry.RequestMessage.Body!, JsonBotSerializerContext.Default.SendMessageRequest);
+        Assert.NotNull(entry.RequestMessage);
+        Assert.NotNull(entry.RequestMessage.Body);
+        var request = JsonSerializer.Deserialize(entry.RequestMessage.Body, JsonBotSerializerContext.Default.SendMessageRequest);
         Assert.Equal(longMessage, request!.Message);
     }
 

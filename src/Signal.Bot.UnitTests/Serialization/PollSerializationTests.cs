@@ -23,8 +23,11 @@ public class PollSerializationTests
 
         // Assert
         Assert.NotNull(deserialized);
+        Assert.NotNull(deserialized.AllowMultipleSelections);
+        Assert.NotNull(deserialized.Answers);
+        Assert.NotEmpty(deserialized.Answers);
         Assert.Multiple(
-            () => Assert.True(deserialized.AllowMultipleSelections!.Value),
+            () => Assert.True(deserialized.AllowMultipleSelections.Value),
             () => Assert.Equal(["yes", "no", "maybe"], deserialized.Answers),
             () => Assert.Equal("Does this test succeed?", deserialized.Question),
             () => Assert.Equal("123456789", deserialized.Recipient));
@@ -71,6 +74,8 @@ public class PollSerializationTests
 
         // Assert
         Assert.NotNull(deserialized);
+        Assert.NotNull(deserialized.SelectedAnswers);
+        Assert.NotEmpty(deserialized.SelectedAnswers);
         Assert.Multiple(
             () => Assert.Equal(timestamp, deserialized.Timestamp),
             () => Assert.Equal([0], deserialized.SelectedAnswers),
@@ -97,6 +102,8 @@ public class PollSerializationTests
 
         // Assert
         Assert.NotNull(deserialized);
+        Assert.NotNull(deserialized.SelectedAnswers);
+        Assert.NotEmpty(deserialized.SelectedAnswers);
         Assert.Multiple(
             () => Assert.Equal(timestamp, deserialized.Timestamp),
             () => Assert.Equal([2, 0], deserialized.SelectedAnswers),

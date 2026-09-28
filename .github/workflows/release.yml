@@ -24,7 +24,7 @@ jobs:
       contents: read
     with:
       version: ${{ needs.release-please.outputs.version }}
-      solution-file: signal.slnx
+      solution-file: Signal.slnx
 
   publish:
     needs: [release-please, build]

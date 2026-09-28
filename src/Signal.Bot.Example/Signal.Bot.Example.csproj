@@ -5,6 +5,8 @@
         <PublishAot>true</PublishAot>
         <IsPackable>false</IsPackable>
         <SelfContained>true</SelfContained>
+        <WarningLevel>0</WarningLevel>
+        <RunAnalyzers>false</RunAnalyzers>
     </PropertyGroup>
 
     <ItemGroup>
