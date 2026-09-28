@@ -28,16 +28,16 @@ public record Reaction
     public string? TargetAuthor { get; set; }
 
     /// <summary>
-    /// TBD
+    /// Gets or sets the phone number of the author of the message being reacted to.
     /// </summary>
     [JsonPropertyName("targetAuthorNumber")]
     public string? TargetAuthorNumber { get; set; }
 
     /// <summary>
-    /// TBD
+    /// Gets or sets the UUID of the author of the message being reacted to.
     /// </summary>
     [JsonPropertyName("targetAuthorUuid")]
-    public Guid TargetAuthorUuid { get; set; }
+    public Guid TargetAuthorId { get; set; }
 
     /// <summary>
     /// Gets or sets the timestamp when the target message was sent.

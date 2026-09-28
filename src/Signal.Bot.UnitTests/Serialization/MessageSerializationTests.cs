@@ -340,7 +340,7 @@ public class MessageSerializationTests
 
         Assert.Equal("👍", reaction.Emoji);
         Assert.Equal("Eve", reaction.TargetAuthor);
-        Assert.Equal(Guid.Parse("2450bb5a-d476-44b9-8986-4866a48f1c65"), reaction.TargetAuthorUuid);
+        Assert.Equal(Guid.Parse("2450bb5a-d476-44b9-8986-4866a48f1c65"), reaction.TargetAuthorId);
         Assert.Equal(DateTime.UnixEpoch.AddMilliseconds(13000), reaction.TargetSent);
         Assert.True(reaction.IsRemove);
     }
@@ -382,7 +382,7 @@ public class MessageSerializationTests
 
         Assert.Equal("❤️", reaction.Emoji);
         Assert.Equal("Grace", reaction.TargetAuthor);
-        Assert.Equal(Guid.Parse("f1badf5e-36f7-4d67-a2cc-6caf86296693"), reaction.TargetAuthorUuid);
+        Assert.Equal(Guid.Parse("f1badf5e-36f7-4d67-a2cc-6caf86296693"), reaction.TargetAuthorId);
         Assert.Equal(DateTime.UnixEpoch.AddMilliseconds(15000), reaction.TargetSent);
         Assert.False(reaction.IsRemove);
     }
@@ -492,7 +492,7 @@ public class MessageSerializationTests
         Assert.Equal("Dolor Servus", groupInfo.Id);
         Assert.Equal("Anonym Lorem", groupInfo.Name);
         Assert.Equal(6455, groupInfo.Revision);
-        Assert.Equal("DELIVER", groupInfo.Type);
+        Assert.Equal(GroupInfoType.Deliver, groupInfo.Type);
     }
 
     [Fact(Timeout = 5000)]

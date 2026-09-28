@@ -28,10 +28,10 @@ public record GroupInfo
     public int? Revision { get; set; }
 
     /// <summary>
-    /// TBD
+    /// Gets or sets the group update type.
     /// </summary>
     [JsonPropertyName("type")]
-    public string Type { get; set; }
+    public GroupInfoType? Type { get; set; }
 
     /// <inheritdoc />
     public override string ToString() => JsonSerializer.Serialize(this, JsonBotAPI.Get(GetType()));
