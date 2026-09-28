@@ -18,12 +18,12 @@ export default defineConfig({
   lang: "en-US",
   lastUpdated: true,
   cleanUrls: true,
-  base: "/Signal.Bot/",
+  base: "/",
   srcDir: ".",
   srcExclude: ["node_modules", ".vitepress/cache", "scripts"],
-  head: [["link", { rel: "icon", href: "/Signal.Bot/logo_small.png" }]],
+  head: [["link", { rel: "icon", href: "/logo_small.png" }]],
   markdown: { lineNumbers: true },
-  sitemap: { hostname: "https://st0o0.github.io/Signal.Bot/" },
+  sitemap: { hostname: "https://signal.bot.st0o0.net/" },
   themeConfig: {
     logo: "/logo_small.png",
     nav: [
