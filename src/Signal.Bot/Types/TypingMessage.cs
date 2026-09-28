@@ -26,17 +26,17 @@ public record TypingMessage
 }
 
 /// <summary>
-/// TBD
+/// Defines the typing indicator actions.
 /// </summary>
 public enum TypingAction
 {
     /// <summary>
-    /// TBD
+    /// The user has stopped typing.
     /// </summary>
     [JsonStringEnumMemberName("STOPPED")] Stopped = 0,
 
     /// <summary>
-    /// TBD
+    /// The user has started typing.
     /// </summary>
     [JsonStringEnumMemberName("STARTED")] Started = 1,
 }

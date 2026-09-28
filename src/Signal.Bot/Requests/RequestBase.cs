@@ -23,5 +23,6 @@ public abstract record RequestBase(string MethodName, HttpMethod? Method = null)
     public virtual HttpContent ToHttpContent() => JsonContent.Create(this, JsonBotAPI.Get(GetType()));
 }
 
+/// <inheritdoc />
 public abstract record RequestBase<TResponse>(string MethodName, HttpMethod? Method = null)
     : RequestBase(MethodName, Method), IRequest<TResponse>;

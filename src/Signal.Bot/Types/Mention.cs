@@ -28,13 +28,13 @@ public record Mention
     public Guid Id { get; set; }
 
     /// <summary>
-    /// TBD
+    /// Gets or sets the phone number of the mentioned user.
     /// </summary>
     [JsonPropertyName("number")]
     public string? Number { get; set; }
 
     /// <summary>
-    /// TBD
+    /// Gets or sets the display name of the mentioned user.
     /// </summary>
     [JsonPropertyName("name")]
     public string? Name { get; set; }

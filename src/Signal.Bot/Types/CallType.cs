@@ -3,17 +3,17 @@ using System.Text.Json.Serialization;
 namespace Signal.Bot.Types;
 
 /// <summary>
-/// TBD
+/// Defines the types of calls that can be made in Signal.
 /// </summary>
 public enum CallType
 {
     /// <summary>
-    /// TBD
+    /// An audio-only voice call.
     /// </summary>
     [JsonStringEnumMemberName("AUDIO_CALL")] AudioCall,
 
     /// <summary>
-    /// TBD
+    /// A video call.
     /// </summary>
     [JsonStringEnumMemberName("VIDEO_CALL")] VideoCall
 }

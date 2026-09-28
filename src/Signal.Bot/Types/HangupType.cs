@@ -3,32 +3,32 @@ using System.Text.Json.Serialization;
 namespace Signal.Bot.Types;
 
 /// <summary>
-/// TBD
+/// Defines the types of call hangup events in Signal.
 /// </summary>
 public enum HangupType
 {
     /// <summary>
-    /// TBD
+    /// The call ended normally.
     /// </summary>
     [JsonStringEnumMemberName("NORMAL")] Normal,
 
     /// <summary>
-    /// TBD
+    /// The call was accepted.
     /// </summary>
     [JsonStringEnumMemberName("ACCEPTED")] Accepted,
 
     /// <summary>
-    /// TBD
+    /// The call was declined by the recipient.
     /// </summary>
     [JsonStringEnumMemberName("DECLINED")] Declined,
 
     /// <summary>
-    /// TBD
+    /// The recipient is busy on another call.
     /// </summary>
     [JsonStringEnumMemberName("BUSY")] Busy,
 
     /// <summary>
-    /// TBD
+    /// The call requires permission to proceed.
     /// </summary>
     [JsonStringEnumMemberName("NEED_PERMISSION")] NeedPermission
 }
