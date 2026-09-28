@@ -35,8 +35,8 @@ public class AboutTests : BotTestBase
     {
         // Arrange
         using var ctsCanceled = new CancellationTokenSource();
-        using var cts =  CancellationTokenSource.CreateLinkedTokenSource(TestContext.Current.CancellationToken, ctsCanceled.Token);
-       
+        using var cts = CancellationTokenSource.CreateLinkedTokenSource(TestContext.Current.CancellationToken, ctsCanceled.Token);
+
         await ctsCanceled.CancelAsync();
         var about = new About { Version = "1.0.0" };
         var json = JsonSerializer.Serialize(about, JsonBotAPI.Options);

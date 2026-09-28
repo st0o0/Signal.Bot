@@ -13,7 +13,7 @@ public class SignalBotReceiverLifecycleTests : ReceiverIntegrationTestBase
     {
         // Arrange
         using var ctsCanceled = new CancellationTokenSource();
-        using var cts =  CancellationTokenSource.CreateLinkedTokenSource(TestContext.Current.CancellationToken, ctsCanceled.Token);
+        using var cts = CancellationTokenSource.CreateLinkedTokenSource(TestContext.Current.CancellationToken, ctsCanceled.Token);
         var processedAfterCancel = false;
         var firstMessageTcs = new TaskCompletionSource<bool>();
 

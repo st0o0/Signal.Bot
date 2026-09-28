@@ -126,8 +126,8 @@ public class SendMessageTests : BotTestBase
     {
         // Arrange
         using var ctsCanceled = new CancellationTokenSource();
-        using var cts =  CancellationTokenSource.CreateLinkedTokenSource(TestContext.Current.CancellationToken, ctsCanceled.Token);
-       
+        using var cts = CancellationTokenSource.CreateLinkedTokenSource(TestContext.Current.CancellationToken, ctsCanceled.Token);
+
         await ctsCanceled.CancelAsync();
 
         SetupResponse();
