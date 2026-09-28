@@ -6,7 +6,7 @@ public class CreateGroupBuilderTests
 {
     private const string TestNumber = "+1234567890";
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void Constructor_SetsDefaultPermissions()
     {
         // Arrange & Act
@@ -21,7 +21,7 @@ public class CreateGroupBuilderTests
         Assert.Equal(GroupPermission.OnlyAdmins, request.Permissions.SendMessages);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void WithName_SetsName()
     {
         // Arrange
@@ -35,7 +35,7 @@ public class CreateGroupBuilderTests
         Assert.Equal(name, request.Name);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void WithDescription_SetsDescription()
     {
         // Arrange
@@ -49,7 +49,7 @@ public class CreateGroupBuilderTests
         Assert.Equal(description, request.Description);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void WithExpirationTime_SetsExpirationTime()
     {
         // Arrange
@@ -63,7 +63,7 @@ public class CreateGroupBuilderTests
         Assert.Equal(expiration, request.ExpirationTime);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void WithGroupLink_SetsGroupLink()
     {
         // Arrange
@@ -77,7 +77,7 @@ public class CreateGroupBuilderTests
         Assert.Equal(link, request.GroupLink);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void WithAddMemberPermission_UpdatesPermission()
     {
         // Arrange
@@ -90,7 +90,7 @@ public class CreateGroupBuilderTests
         Assert.Equal(GroupPermission.EveryMember, request.Permissions!.AddMembers);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void WithEditGroupPermission_UpdatesPermission()
     {
         // Arrange
@@ -103,7 +103,7 @@ public class CreateGroupBuilderTests
         Assert.Equal(GroupPermission.EveryMember, request.Permissions!.EditGroup);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void WithSendMessagesPermission_UpdatesPermission()
     {
         // Arrange
@@ -116,7 +116,7 @@ public class CreateGroupBuilderTests
         Assert.Equal(GroupPermission.EveryMember, request.Permissions!.SendMessages);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void WithMembers_SetsMembers()
     {
         // Arrange

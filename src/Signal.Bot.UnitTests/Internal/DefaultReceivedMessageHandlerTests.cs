@@ -13,7 +13,6 @@ public class DefaultReceivedMessageHandlerTests
     private readonly ISignalBotClient _clientMock;
     private readonly ReceivedMessage _message;
     private readonly Error _error;
-    private readonly CancellationToken _cancellationToken;
 
     public DefaultReceivedMessageHandlerTests()
     {
@@ -25,17 +24,16 @@ public class DefaultReceivedMessageHandlerTests
         _clientMock = Substitute.For<ISignalBotClient>();
         _message = new ReceivedMessage { Envelope = new Envelope { SourceNumber = "test", SourceId = Guid.NewGuid() } };
         _error = new Error(null, FailureSource.Failed);
-        _cancellationToken = CancellationToken.None;
     }
 
     [Fact(Timeout = 5000)]
     public async Task HandleAsync_CallsUpdateHandlerWithCorrectParameters()
     {
         // Act
-        await _handler.HandleAsync(_clientMock, _message, _cancellationToken);
+        await _handler.HandleAsync(_clientMock, _message, TestContext.Current.CancellationToken);
 
         // Assert
-        await _updateHandlerMock.Received(1)(Arg.Is(_clientMock), Arg.Is(_message), Arg.Is(_cancellationToken));
+        await _updateHandlerMock.Received(1)(Arg.Is(_clientMock), Arg.Is(_message), Arg.Is(TestContext.Current.CancellationToken));
     }
 
 
@@ -49,7 +47,7 @@ public class DefaultReceivedMessageHandlerTests
 
         // Act & Assert
         var thrownException = await Assert.ThrowsAsync<InvalidOperationException>(() =>
-            _handler.HandleAsync(_clientMock, _message, _cancellationToken));
+            _handler.HandleAsync(_clientMock, _message, TestContext.Current.CancellationToken));
         Assert.Equal("Test exception", thrownException.Message);
     }
 
@@ -57,7 +55,7 @@ public class DefaultReceivedMessageHandlerTests
     public async Task HandleAsync_ValidParameters_CallsOnlyUpdateHandler()
     {
         // Act
-        await _handler.HandleAsync(_clientMock, _message, _cancellationToken);
+        await _handler.HandleAsync(_clientMock, _message, TestContext.Current.CancellationToken);
 
         // Assert
         await _updateHandlerMock.Received(1)(Arg.Any<ISignalBotClient>(), Arg.Any<ReceivedMessage>(),
@@ -70,18 +68,20 @@ public class DefaultReceivedMessageHandlerTests
     public async Task HandleErrorAsync_CallsErrorHandlerWithCorrectParameters()
     {
         // Act
-        await _handler.HandleErrorAsync(_clientMock, _error, _cancellationToken);
+        await _handler.HandleErrorAsync(_clientMock, _error, TestContext.Current.CancellationToken);
 
         // Assert
-        await _errorHandlerMock.Received(1)(Arg.Is(_clientMock), Arg.Is(_error), Arg.Is(_cancellationToken));
+        await _errorHandlerMock.Received(1)(Arg.Is(_clientMock), Arg.Is(_error), Arg.Is(TestContext.Current.CancellationToken));
     }
 
     [Fact(Timeout = 5000)]
     public async Task HandleErrorAsync_CancelledToken_CallsErrorHandler()
     {
         // Arrange
-        using var cts = new CancellationTokenSource();
-        await cts.CancelAsync();
+        using var ctsCanceled = new CancellationTokenSource();
+        using var cts =  CancellationTokenSource.CreateLinkedTokenSource(TestContext.Current.CancellationToken, ctsCanceled.Token);
+       
+        await ctsCanceled.CancelAsync();
 
         // Act
         await _handler.HandleErrorAsync(_clientMock, _error, cts.Token);
@@ -100,7 +100,7 @@ public class DefaultReceivedMessageHandlerTests
 
         // Act & Assert
         var thrownException = await Assert.ThrowsAsync<InvalidOperationException>(() =>
-            _handler.HandleErrorAsync(_clientMock, _error, _cancellationToken));
+            _handler.HandleErrorAsync(_clientMock, _error, TestContext.Current.CancellationToken));
         Assert.Equal("Error handler failed", thrownException.Message);
     }
 
@@ -114,11 +114,11 @@ public class DefaultReceivedMessageHandlerTests
             .Returns(Task.CompletedTask);
 
         // Act
-        await _handler.HandleAsync(_clientMock, _message, _cancellationToken);
-        await _handler.HandleErrorAsync(_clientMock, _error, _cancellationToken);
+        await _handler.HandleAsync(_clientMock, _message, TestContext.Current.CancellationToken);
+        await _handler.HandleErrorAsync(_clientMock, _error, TestContext.Current.CancellationToken);
 
         // Assert
-        await _updateHandlerMock.Received(1)(Arg.Is(_clientMock), Arg.Is(_message), Arg.Is(_cancellationToken));
-        await _errorHandlerMock.Received(1)(Arg.Is(_clientMock), Arg.Is(_error), Arg.Is(_cancellationToken));
+        await _updateHandlerMock.Received(1)(Arg.Is(_clientMock), Arg.Is(_message), Arg.Is(TestContext.Current.CancellationToken));
+        await _errorHandlerMock.Received(1)(Arg.Is(_clientMock), Arg.Is(_error), Arg.Is(TestContext.Current.CancellationToken));
     }
 }

@@ -60,7 +60,7 @@ public class GroupTests : BotTestBase
     {
         SetupResponse();
 
-        await Client.AddGroupAdminAsync("group-id", new[] { "+100" }, cancellationToken: TestContext.Current.CancellationToken);
+        await Client.AddGroupAdminAsync("group-id", ["+100"], cancellationToken: TestContext.Current.CancellationToken);
 
         await HttpClientMock.Received(1).SendAsync(Arg.Any<HttpRequestMessage>(), Arg.Any<CancellationToken>());
     }

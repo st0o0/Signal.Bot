@@ -6,7 +6,7 @@ namespace Signal.Bot.UnitTests.Serialization;
 
 public class ContactSerializationTests
 {
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void TestContactSerializationAndDeserialization()
     {
         // Arrange
@@ -26,7 +26,7 @@ public class ContactSerializationTests
         Assert.Equal(contact.Name, deserializedContact.Name);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void TestUpdateContactRequestSerializationAndDeserialization()
     {
         // Arrange

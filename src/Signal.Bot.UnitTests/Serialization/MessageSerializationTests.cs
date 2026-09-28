@@ -7,7 +7,7 @@ namespace Signal.Bot.UnitTests.Serialization;
 
 public class MessageSerializationTests
 {
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void TestReceivedMessage_OptionalFieldsMissing_DeserializesCorrectly()
     {
         // Arrange
@@ -26,7 +26,7 @@ public class MessageSerializationTests
         Assert.Null(result.Envelope.TypingMessage);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void TestReceivedMessageSerializationAndDeserialization()
     {
         // Arrange
@@ -58,7 +58,7 @@ public class MessageSerializationTests
             deserializedReceivedMessage.Envelope.DataMessage.Message);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void TestRemoteDeleteMessageSerializationAndDeserialization()
     {
         // Arrange
@@ -76,7 +76,7 @@ public class MessageSerializationTests
         Assert.Equal(remoteDeleteMessage.Timestamp, deserializedRemoteDeleteMessage.Timestamp);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void TestSendMessageRequestSerializationAndDeserialization()
     {
         // Arrange
@@ -96,7 +96,7 @@ public class MessageSerializationTests
         Assert.Equal(sendMessageRequest.QuoteAuthor, deserializedSendMessageRequest.QuoteAuthor);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void Deserialize_SignalMessage_WithDataMessage_MapsAllFields()
     {
         const string json = """
@@ -149,7 +149,7 @@ public class MessageSerializationTests
         Assert.Null(dm.Attachments);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void Deserialize_DataMessage_NullMessage_IsAllowed()
     {
         const string json = """
@@ -179,7 +179,7 @@ public class MessageSerializationTests
         Assert.Equal(TimeSpan.FromSeconds(600), result.Envelope.DataMessage.ExpiresIn);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void Deserialize_ReceivedMessage_WithTypingMessage_MapsAllFields()
     {
         const string json = """
@@ -207,7 +207,7 @@ public class MessageSerializationTests
         Assert.Null(result.Envelope.DataMessage);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void Deserialize_ReceivedMessage_WithSyncMessage_ReadMessages_MapsAllFields()
     {
         const string json = """
@@ -254,7 +254,7 @@ public class MessageSerializationTests
         Assert.Equal(Guid.Parse("068b6bfd-9317-49f0-b00e-d399a66fee45"), reads[1].SenderId);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void Deserialize_ReceivedMessage_WithSyncMessage_SentMessage_ExpirationUpdate()
     {
         const string json = """
@@ -298,7 +298,7 @@ public class MessageSerializationTests
         Assert.Null(sent.Attachments);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void Deserialize_ReceivedMessage_WithSyncMessage_SentMessage_WithReaction()
     {
         const string json = """
@@ -345,7 +345,7 @@ public class MessageSerializationTests
         Assert.True(reaction.IsRemove);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void Deserialize_ReceivedMessage_DataMessage_WithReaction()
     {
         const string json = """
@@ -387,7 +387,7 @@ public class MessageSerializationTests
         Assert.False(reaction.IsRemove);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void Deserialize_ReceivedMessage_WithSyncMessage_SentMessage_WithAttachment()
     {
         const string json = """
@@ -433,19 +433,18 @@ public class MessageSerializationTests
         Assert.NotNull(result.Envelope.SyncMessage.SentMessage.Attachments);
         var attachments = result.Envelope.SyncMessage.SentMessage.Attachments;
 
-        Assert.Single(attachments);
-        var a = attachments[0];
-        Assert.Equal("audio/aac", a.ContentType);
-        Assert.Null(a.Filename);
-        Assert.Equal("attach-001", a.Id);
-        Assert.Equal(62869L, a.Size);
-        Assert.Null(a.Width);
-        Assert.Null(a.Height);
-        Assert.Null(a.Caption);
-        Assert.Equal(DateTime.UnixEpoch.AddMilliseconds(17000), a.UploadTimestamp);
+        var item = Assert.Single(attachments);
+        Assert.Equal("audio/aac", item.ContentType);
+        Assert.Null(item.Filename);
+        Assert.Equal("attach-001", item.Id);
+        Assert.Equal(62869L, item.Size);
+        Assert.Null(item.Width);
+        Assert.Null(item.Height);
+        Assert.Null(item.Caption);
+        Assert.Equal(DateTime.UnixEpoch.AddMilliseconds(17000), item.UploadTimestamp);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void Deserialize_ReceivedMessage_WithSyncMessage_SentMessage_WithGroupInfo()
     {
         const string json = """
@@ -495,7 +494,7 @@ public class MessageSerializationTests
         Assert.Equal(GroupInfoType.Deliver, groupInfo.Type);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void Deserialize_ReceivedMessage_WithSyncMessage_SentMessage_WithPreviews()
     {
         const string json = """
@@ -555,16 +554,15 @@ public class MessageSerializationTests
         Assert.NotNull(result.Envelope.SyncMessage.SentMessage);
         Assert.NotNull(result.Envelope.SyncMessage.SentMessage.Previews);
         var previews = result.Envelope.SyncMessage.SentMessage.Previews;
-        Assert.Single(previews);
-        var preview = previews[0];
-        Assert.Equal("Lorem Lorem", preview.Title);
-        Assert.Equal("Dolor Amet", preview.Url);
-        Assert.Equal("Leberkas KEKW", preview.Description);
-        Assert.NotNull(preview.Image);
-        Assert.Equal("Ipsum Lorem", preview.Image.Id);
+        var item = Assert.Single(previews);
+        Assert.Equal("Lorem Lorem", item.Title);
+        Assert.Equal("Dolor Amet", item.Url);
+        Assert.Equal("Leberkas KEKW", item.Description);
+        Assert.NotNull(item.Image);
+        Assert.Equal("Ipsum Lorem", item.Image.Id);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void Deserialize_ReceivedMessage_WithCallMessage()
     {
         const string json = """

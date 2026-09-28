@@ -6,7 +6,7 @@ namespace Signal.Bot.UnitTests.Serialization;
 
 public class MiscTypesSerializationTests
 {
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void TestPaymentSerializationAndDeserialization()
     {
         // Arrange
@@ -26,7 +26,7 @@ public class MiscTypesSerializationTests
         Assert.Equal("receipt-data-base64", deserialized.Receipt);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void TestGroupCallUpdateSerializationAndDeserialization()
     {
         // Arrange
@@ -41,7 +41,7 @@ public class MiscTypesSerializationTests
         Assert.Equal("era-abc-123", deserialized.EraId);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void TestTextStyleSerializationAndDeserialization()
     {
         // Arrange
@@ -58,7 +58,7 @@ public class MiscTypesSerializationTests
         Assert.Equal(TextStyleType.Bold, deserialized.Style);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void TestStickerSerializationAndDeserialization()
     {
         // Arrange

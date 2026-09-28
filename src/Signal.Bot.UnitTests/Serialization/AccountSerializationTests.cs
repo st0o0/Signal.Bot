@@ -5,7 +5,7 @@ namespace Signal.Bot.UnitTests.Serialization;
 
 public class AccountSerializationTests
 {
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void TestRegisterNumberRequestSerializationAndDeserialization()
     {
         // Arrange
@@ -24,7 +24,7 @@ public class AccountSerializationTests
         Assert.Equal(registerNumberRequest.UseVoice, deserializedRegisterNumberRequest.UseVoice);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void TestVerifyNumberRequestSerializationAndDeserialization()
     {
         // Arrange
@@ -42,7 +42,7 @@ public class AccountSerializationTests
         Assert.Equal(verifyNumberRequest.Pin, deserializedVerifyNumberRequest.Pin);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void TestRateLimitChallengeRequestSerializationAndDeserialization()
     {
         // Arrange
@@ -62,7 +62,7 @@ public class AccountSerializationTests
         Assert.Equal(rateLimitChallengeRequest.ChallengeToken, deserializedRateLimitChallengeRequest.ChallengeToken);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void TestUpdateAccountSettingsRequestSerializationAndDeserialization()
     {
         // Arrange

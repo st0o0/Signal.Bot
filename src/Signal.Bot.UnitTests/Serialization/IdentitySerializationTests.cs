@@ -8,7 +8,7 @@ namespace Signal.Bot.UnitTests.Serialization;
 
 public class IdentitySerializationTests
 {
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void Deserialize_WithAllProperties_ShouldSucceed()
     {
         // Arrange
@@ -37,7 +37,7 @@ public class IdentitySerializationTests
         Assert.Equal(Guid.Parse("5cc79553-6f51-4ee0-bf9f-5b99b682da5f"), identity.Id);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void Deserialize_WithNullableProperties_ShouldSucceed()
     {
         // Arrange
@@ -57,7 +57,7 @@ public class IdentitySerializationTests
         Assert.Null(identity.SafetyNumber);
     }
 
-    [Theory(Timeout = 5000)]
+    [Theory]
     [InlineData("UNDEFINED", IdentityStatus.Undefined)]
     [InlineData("UNTRUSTED", IdentityStatus.Untrusted)]
     [InlineData("TRUSTED_UNVERIFIED", IdentityStatus.TrustedUnverified)]
@@ -76,7 +76,7 @@ public class IdentitySerializationTests
         Assert.Equal(expectedStatus, identity.Status);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void Serialize_WithAllProperties_ShouldSucceed()
     {
         // Arrange
@@ -103,7 +103,7 @@ public class IdentitySerializationTests
         Assert.Contains("\"uuid\":", json);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void Serialize_WithDefaultProperties_ShouldOmitNulls()
     {
         // Arrange
@@ -130,7 +130,7 @@ public class IdentitySerializationTests
         Assert.DoesNotContain("\"uuid\":", json);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void Deserialize_WithInvalidGuid_ShouldThrowException()
     {
         // Arrange
@@ -145,7 +145,7 @@ public class IdentitySerializationTests
             JsonSerializer.Deserialize<Identity>(json, JsonBotAPI.Options));
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void Deserialize_WithInvalidStatus_ShouldThrowException()
     {
         // Arrange
@@ -160,7 +160,7 @@ public class IdentitySerializationTests
             JsonSerializer.Deserialize<Identity>(json, JsonBotAPI.Options));
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void RoundTrip_ShouldPreserveData()
     {
         // Arrange
@@ -193,7 +193,7 @@ public class IdentitySerializationTests
         Assert.Equal(original.Id, deserialized.Id);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void Identity_DefaultValues_ShouldBeNull()
     {
         // Act

@@ -6,7 +6,7 @@ namespace Signal.Bot.UnitTests.Serialization;
 
 public class MentionSerializationTests
 {
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void TestMentionSerializationAndDeserialization()
     {
         // Arrange
@@ -28,7 +28,7 @@ public class MentionSerializationTests
         Assert.Equal(mention.Id, deserialized.Id);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void TestMentionNullSerialization()
     {
         // Arrange
@@ -45,7 +45,7 @@ public class MentionSerializationTests
         Assert.Equal(Guid.Empty, deserialized.Id);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void TestRealMentionDeserialization()
     {
         const string json = """

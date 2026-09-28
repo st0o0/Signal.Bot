@@ -8,7 +8,6 @@ namespace Signal.Bot.UnitTests.Extensions;
 
 public class SendMessageTests : BotTestBase
 {
-    private const string BotNumber = "+1234567890";
     private const string RecipientNumber = "+0987654321";
 
     [Fact(Timeout = 5000)]
@@ -111,11 +110,10 @@ public class SendMessageTests : BotTestBase
     public async Task SendMessageAsync_WithCancellationToken_ShouldPassTokenToHttpClient()
     {
         // Arrange
-        using var cts = new CancellationTokenSource();
         SetupResponse();
 
         // Act
-        await Client.SendMessageAsync("Test", RecipientNumber, cts.Token);
+        await Client.SendMessageAsync("Test", RecipientNumber, TestContext.Current.CancellationToken);
 
         // Assert
         await HttpClientMock.Received(1).SendAsync(
@@ -127,8 +125,10 @@ public class SendMessageTests : BotTestBase
     public async Task SendMessageAsync_WithAlreadyCancelledToken_ShouldHandleGracefully()
     {
         // Arrange
-        using var cts = new CancellationTokenSource();
-        await cts.CancelAsync();
+        using var ctsCanceled = new CancellationTokenSource();
+        using var cts =  CancellationTokenSource.CreateLinkedTokenSource(TestContext.Current.CancellationToken, ctsCanceled.Token);
+       
+        await ctsCanceled.CancelAsync();
 
         SetupResponse();
 
@@ -205,7 +205,7 @@ public class SendMessageTests : BotTestBase
         SetupResponse();
 
         var tasks = Enumerable.Range(1, 5)
-            .Select(i => Client.SendMessageAsync($"+123456789{i}", $"Message {i}"))
+            .Select(i => Client.SendMessageAsync($"+123456789{i}", $"Message {i}", TestContext.Current.CancellationToken))
             .ToList();
 
         await Task.WhenAll(tasks);

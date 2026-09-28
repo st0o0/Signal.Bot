@@ -6,7 +6,7 @@ namespace Signal.Bot.UnitTests.Serialization;
 
 public class SystemSerializationTests
 {
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void TestErrorSerializationAndDeserialization()
     {
         // Arrange
@@ -24,7 +24,7 @@ public class SystemSerializationTests
         Assert.Equal(error.Message, deserializedError.Message);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void TestSetConfigurationRequestSerializationAndDeserialization()
     {
         // Arrange
@@ -42,7 +42,7 @@ public class SystemSerializationTests
         Assert.Equal(setConfigurationRequest.Logging.Level, deserializedSetConfigurationRequest.Logging!.Level);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void TestSetTypingIndicatorRequestSerializationAndDeserialization()
     {
         // Arrange

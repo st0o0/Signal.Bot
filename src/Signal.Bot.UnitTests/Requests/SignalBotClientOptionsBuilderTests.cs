@@ -2,7 +2,7 @@ namespace Signal.Bot.UnitTests.Requests;
 
 public class SignalBotClientOptionsBuilderTests
 {
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void Create_ReturnsEmptyBuilder()
     {
         // Act
@@ -12,7 +12,7 @@ public class SignalBotClientOptionsBuilderTests
         Assert.NotNull(builder);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void Build_WithMissingNumber_ThrowsArgumentException()
     {
         // Arrange
@@ -23,7 +23,7 @@ public class SignalBotClientOptionsBuilderTests
         Assert.Throws<ArgumentException>(() => builder.Build());
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void Build_WithMissingBaseUrl_ThrowsArgumentException()
     {
         // Arrange
@@ -31,10 +31,10 @@ public class SignalBotClientOptionsBuilderTests
             .WithNumber("+123456789");
 
         // Act & Assert
-        Assert.Throws<ArgumentException>(() => builder.Build());
+        Assert.Throws<ArgumentException>(builder.Build);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void Build_WithValidParameters_ReturnsOptions()
     {
         // Arrange
@@ -54,7 +54,7 @@ public class SignalBotClientOptionsBuilderTests
         Assert.Equal(new Uri(baseUrl), options.HttpClient.BaseAddress);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void WithHttpClient_SetsHttpClient()
     {
         // Arrange

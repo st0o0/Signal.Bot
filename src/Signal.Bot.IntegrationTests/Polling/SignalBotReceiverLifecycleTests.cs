@@ -12,7 +12,8 @@ public class SignalBotReceiverLifecycleTests : ReceiverIntegrationTestBase
     public async Task Should_Stop_Processing_After_Cancellation()
     {
         // Arrange
-        using var cts = new CancellationTokenSource();
+        using var ctsCanceled = new CancellationTokenSource();
+        using var cts =  CancellationTokenSource.CreateLinkedTokenSource(TestContext.Current.CancellationToken, ctsCanceled.Token);
         var processedAfterCancel = false;
         var firstMessageTcs = new TaskCompletionSource<bool>();
 
@@ -44,7 +45,7 @@ public class SignalBotReceiverLifecycleTests : ReceiverIntegrationTestBase
             JsonBotAPI.Options));
         await firstMessageTcs.Task;
 
-        await cts.CancelAsync();
+        await ctsCanceled.CancelAsync();
 
         await TestServer.SendMessageAsync(JsonSerializer.Serialize(CreateTestReceivedMessage("After cancel"),
             JsonBotAPI.Options));

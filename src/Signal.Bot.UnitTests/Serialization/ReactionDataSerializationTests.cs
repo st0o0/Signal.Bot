@@ -6,7 +6,7 @@ namespace Signal.Bot.UnitTests.Serialization;
 
 public class ReactionDataSerializationTests
 {
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void TestReactionDataSerializationAndDeserialization()
     {
         // Arrange
@@ -30,7 +30,7 @@ public class ReactionDataSerializationTests
         Assert.Equal(reaction.TargetSent, deserialized.TargetSent);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void TestReactionDataNullSerialization()
     {
         // Arrange

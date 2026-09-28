@@ -4,7 +4,7 @@ namespace Signal.Bot.UnitTests.Polling;
 
 public class ReceiverOptionsPollingTests
 {
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void AsQueryParameter_DefaultOptions_ReturnsCorrectQueryString()
     {
         // Arrange
@@ -20,7 +20,7 @@ public class ReceiverOptionsPollingTests
         Assert.Contains("max_messages=100", result);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void AsQueryParameter_CustomOptions_ReturnsCorrectQueryString()
     {
         // Arrange

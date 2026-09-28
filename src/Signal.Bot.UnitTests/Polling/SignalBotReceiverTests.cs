@@ -2,7 +2,6 @@ using System.Net.WebSockets;
 using NSubstitute;
 using R3;
 using Signal.Bot.Serialization;
-using Signal.Bot.Types;
 using WebSocket.Rx;
 
 namespace Signal.Bot.UnitTests.Polling;
@@ -30,7 +29,7 @@ public class SignalBotReceiverTests
         _mockWebSocket.StopAsync(Arg.Any<WebSocketCloseStatus>(), Arg.Any<string>()).Returns(Task.FromResult(true));
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void Constructor_WithNullClient_ThrowsArgumentNullException()
     {
         // Act & Assert
@@ -40,7 +39,7 @@ public class SignalBotReceiverTests
         Assert.Equal("client", exception.ParamName);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void Constructor_WithValidClient_CreatesInstance()
     {
         // Act
@@ -70,7 +69,7 @@ public class SignalBotReceiverTests
         // Act
         var disposable = await receiver.StartReceivingAsync(
             _mockHandler,
-            cancellationToken: new CancellationTokenSource(10).Token);
+            cancellationToken: TestContext.Current.CancellationToken);
 
         // Assert
         Assert.NotNull(disposable);
@@ -92,7 +91,7 @@ public class SignalBotReceiverTests
         await receiver.StartReceivingAsync(
             _mockHandler,
             options => options.WithTimeout(TimeSpan.FromMilliseconds(100)),
-            new CancellationTokenSource(10).Token);
+            TestContext.Current.CancellationToken);
 
         // Assert
         _ = _mockClient.Received(1).BaseUrl;
@@ -104,8 +103,11 @@ public class SignalBotReceiverTests
     {
         // Arrange
         var receiver = new SignalBotReceiver(_mockClient, _mockWebSocket);
-        using var cts = new CancellationTokenSource();
-        await cts.CancelAsync();
+        using var ctsCanceled = new CancellationTokenSource();
+        using var cts =
+            CancellationTokenSource.CreateLinkedTokenSource(TestContext.Current.CancellationToken, ctsCanceled.Token);
+
+        await ctsCanceled.CancelAsync();
 
         _mockHandler
             .HandleErrorAsync(Arg.Any<ISignalBotClient>(), Arg.Any<Error>(), Arg.Any<CancellationToken>())
@@ -134,7 +136,7 @@ public class SignalBotReceiverTests
                 configuredTimeout = 100;
                 configuredCapacity = 10;
             },
-            new CancellationTokenSource(50).Token);
+            TestContext.Current.CancellationToken);
 
         // Assert
         Assert.Equal(100, configuredTimeout);
@@ -149,7 +151,7 @@ public class SignalBotReceiverTests
 
         await receiver.StartReceivingAsync(
             _mockHandler,
-            cancellationToken: new CancellationTokenSource(10).Token);
+            cancellationToken: TestContext.Current.CancellationToken);
 
         // Act
         await receiver.DisposeAsync();
@@ -159,7 +161,7 @@ public class SignalBotReceiverTests
         Assert.True(true);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void Receiver_ImplementsIAsyncDisposable()
     {
         // Arrange

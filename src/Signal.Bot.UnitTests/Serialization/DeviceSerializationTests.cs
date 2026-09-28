@@ -6,7 +6,7 @@ namespace Signal.Bot.UnitTests.Serialization;
 
 public class DeviceSerializationTests
 {
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void TestAddDeviceRequestSerializationAndDeserialization()
     {
         // Arrange
@@ -24,7 +24,7 @@ public class DeviceSerializationTests
         Assert.Equal(addDeviceRequest.Uri, deserializedAddDeviceRequest.Uri);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void TestDeviceSerializationAndDeserialization()
     {
         // Arrange

@@ -6,7 +6,7 @@ namespace Signal.Bot.UnitTests.Serialization;
 
 public class PollReceiveSerializationTests
 {
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void TestPollVoteSerializationAndDeserialization()
     {
         // Arrange
@@ -33,7 +33,7 @@ public class PollReceiveSerializationTests
         Assert.Equal(5, deserialized.VoteCount);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void TestPollVoteNullSerialization()
     {
         // Arrange
@@ -50,7 +50,7 @@ public class PollReceiveSerializationTests
         Assert.Equal(0, deserialized.VoteCount);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void TestPollTerminateSerializationAndDeserialization()
     {
         // Arrange
@@ -68,7 +68,7 @@ public class PollReceiveSerializationTests
         Assert.Equal(terminate.TargetSent, deserialized.TargetSent);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void TestPollCreateSerializationAndDeserialization()
     {
         // Arrange
@@ -90,7 +90,7 @@ public class PollReceiveSerializationTests
         Assert.Equal("Which do you prefer?", deserialized.Question);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void TestRealPollVoteDeserialization()
     {
         // Arrange

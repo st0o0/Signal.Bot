@@ -2,7 +2,7 @@ namespace Signal.Bot.UnitTests.Polling;
 
 public class ReceiverOptionsBuilderTests
 {
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void Build_DefaultValues_AreCorrect()
     {
         var builder = new ReceiverOptionsBuilder();
@@ -18,7 +18,7 @@ public class ReceiverOptionsBuilderTests
         Assert.False(options.SendReadReceipts);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void WithTimeout_SetsTimeout()
     {
         var timeout = TimeSpan.FromMinutes(1);
@@ -29,7 +29,7 @@ public class ReceiverOptionsBuilderTests
         Assert.Equal(timeout, options.Timeout);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void WithIgnoreFlags_SetsFlags()
     {
         var options = new ReceiverOptionsBuilder()
@@ -47,7 +47,7 @@ public class ReceiverOptionsBuilderTests
         Assert.True(options.IgnoreSync);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void WithMaxMessages_SetsMaxMessages()
     {
         var options = new ReceiverOptionsBuilder()
@@ -57,7 +57,7 @@ public class ReceiverOptionsBuilderTests
         Assert.Equal(500, options.MaxMessages);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void WithReadReceipts_SetsReadReceipts()
     {
         var options = new ReceiverOptionsBuilder()

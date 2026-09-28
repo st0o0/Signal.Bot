@@ -6,7 +6,7 @@ namespace Signal.Bot.UnitTests.Serialization;
 
 public class StorySerializationTests
 {
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void TestStoryMessageSerializationAndDeserialization()
     {
         // Arrange
@@ -30,7 +30,7 @@ public class StorySerializationTests
         Assert.Null(deserialized.TextAttachment);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void TestStoryMessageWithTextAttachment()
     {
         // Arrange
@@ -66,7 +66,7 @@ public class StorySerializationTests
         Assert.Equal(3, result.TextAttachment.BackgroundGradient.Colors!.Count);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void TestStoryContextSerializationAndDeserialization()
     {
         // Arrange
@@ -88,7 +88,7 @@ public class StorySerializationTests
         Assert.Equal(context.Sent, deserialized.Sent);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void TestSyncStoryMessageSerializationAndDeserialization()
     {
         // Arrange

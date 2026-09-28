@@ -6,7 +6,7 @@ namespace Signal.Bot.UnitTests.Serialization;
 
 public class LoggingConfigurationSerializationTests
 {
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void TestLoggingConfigurationSerializationAndDeserialization()
     {
         // Arrange
@@ -24,7 +24,7 @@ public class LoggingConfigurationSerializationTests
         Assert.Equal(config.Level, deserialized.Level);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void TestLoggingConfigurationNullSerialization()
     {
         // Arrange

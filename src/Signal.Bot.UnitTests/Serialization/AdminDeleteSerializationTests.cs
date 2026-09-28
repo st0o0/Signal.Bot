@@ -6,7 +6,7 @@ namespace Signal.Bot.UnitTests.Serialization;
 
 public class AdminDeleteSerializationTests
 {
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void TestAdminDeleteSerializationAndDeserialization()
     {
         // Arrange
@@ -30,7 +30,7 @@ public class AdminDeleteSerializationTests
         Assert.Equal(adminDelete.TargetSent, deserialized.TargetSent);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void TestAdminDeleteNullSerialization()
     {
         // Arrange

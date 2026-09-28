@@ -8,7 +8,7 @@ public class QueryParameterRegistryTests
 
     #region AddAndGet Tests
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void AddAndGet_StringValue_ReturnsSameValue()
     {
         // Arrange & Act
@@ -19,7 +19,7 @@ public class QueryParameterRegistryTests
         Assert.Equal("?test=value", _registry.Build());
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void AddAndGet_IntValue_ReturnsSameValue()
     {
         // Arrange & Act
@@ -30,7 +30,7 @@ public class QueryParameterRegistryTests
         Assert.Equal("?count=42", _registry.Build());
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void AddAndGet_WithValueFactory_UsesFactory()
     {
         // Arrange & Act
@@ -40,21 +40,21 @@ public class QueryParameterRegistryTests
         Assert.StartsWith("?date=", _registry.Build());
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void AddAndGet_NullValueName_ThrowsArgumentNullException()
     {
         // Act & Assert
         Assert.Throws<ArgumentNullException>(() => _registry.AddAndGet(null!, "value"));
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void AddAndGet_NullValue_ThrowsArgumentNullException()
     {
         // Act & Assert
         Assert.Throws<ArgumentNullException>(() => _registry.AddAndGet<string>("test", null!));
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void AddAndGet_MultipleCalls_ReturnsEachValue()
     {
         // Act
@@ -71,7 +71,7 @@ public class QueryParameterRegistryTests
 
     #region Add Tests
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void Add_StringValue_BuildsCorrectQuery()
     {
         // Act
@@ -81,7 +81,7 @@ public class QueryParameterRegistryTests
         Assert.Equal("?name=John", _registry.Build());
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void Add_IntValue_BuildsCorrectQuery()
     {
         // Act
@@ -91,7 +91,7 @@ public class QueryParameterRegistryTests
         Assert.Equal("?age=30", _registry.Build());
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void Add_BooleanValue_BuildsCorrectQuery()
     {
         // Act
@@ -101,7 +101,7 @@ public class QueryParameterRegistryTests
         Assert.Equal("?active=True", _registry.Build());
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void Add_EnumValue_BuildsCorrectQuery()
     {
         // Act
@@ -111,7 +111,7 @@ public class QueryParameterRegistryTests
         Assert.Equal("?mode=RemoveEmptyEntries", _registry.Build());
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void Add_MultipleParameters_BuildsCorrectFormat()
     {
         // Act
@@ -123,7 +123,7 @@ public class QueryParameterRegistryTests
         Assert.Equal("?a=1&b=two&c=True", _registry.Build());
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void Add_WithValueFactory_UsesFactoryOutput()
     {
         // Act
@@ -139,7 +139,7 @@ public class QueryParameterRegistryTests
         static string CustomFormat(DateTime dt) => dt.ToString("yyyyMMdd");
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void Add_ValueImplementsToString_UsesToString()
     {
         // Arrange
@@ -152,21 +152,21 @@ public class QueryParameterRegistryTests
         Assert.Equal("?obj=custom", _registry.Build());
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void Add_NullValueName_ThrowsArgumentNullException()
     {
         // Act & Assert
         Assert.Throws<ArgumentNullException>(() => _registry.Add(null!, "value"));
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void Add_NullValue_ThrowsArgumentNullException()
     {
         // Act & Assert
         Assert.Throws<ArgumentNullException>(() => _registry.Add<string>("test", null!));
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void Add_NullValueFactory_IgnoresFactory()
     {
         // Act
@@ -180,14 +180,14 @@ public class QueryParameterRegistryTests
 
     #region Build Tests
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void Build_EmptyRegistry_ReturnsEmptyString()
     {
         // Act & Assert
         Assert.Equal(string.Empty, _registry.Build());
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void Build_SingleParameter_ReturnsCorrectFormat()
     {
         // Act
@@ -197,7 +197,7 @@ public class QueryParameterRegistryTests
         Assert.Equal("?key=value", _registry.Build());
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void Build_MultipleParameters_MaintainsOrder()
     {
         // Act
@@ -210,7 +210,7 @@ public class QueryParameterRegistryTests
         Assert.Equal("?first=1&second=2&third=three", result);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void Build_AfterAddAndGet_WorksCorrectly()
     {
         // Act
@@ -225,7 +225,7 @@ public class QueryParameterRegistryTests
 
     #region Edge Cases
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void Add_SpecialCharacters_EncodesCorrectly()
     {
         // Act
@@ -236,7 +236,7 @@ public class QueryParameterRegistryTests
         Assert.Equal("?name=John%26Doe&value=test%20space", _registry.Build());
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void Add_EmptyStringValue_Allowed()
     {
         // Act
@@ -246,7 +246,7 @@ public class QueryParameterRegistryTests
         Assert.Equal("?empty=", _registry.Build());
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void Add_NullValueFactoryWithStringFallback_Works()
     {
         // Arrange
@@ -263,7 +263,7 @@ public class QueryParameterRegistryTests
 
     #region Integration Tests
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void FullUsageScenario_BuildsCorrectQueryString()
     {
         // Arrange & Act

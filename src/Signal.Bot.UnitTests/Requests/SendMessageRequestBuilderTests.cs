@@ -4,7 +4,7 @@ namespace Signal.Bot.UnitTests.Requests;
 
 public class SendMessageRequestBuilderTests
 {
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void Build_EmptyBuilder_ReturnsDefaultRequest()
     {
         var builder = SendMessageRequestBuilder.Create(string.Empty);
@@ -15,7 +15,7 @@ public class SendMessageRequestBuilderTests
         Assert.Null(request.Recipients);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void WithMessage_SetsMessage()
     {
         var builder = SendMessageRequestBuilder.Create(string.Empty);
@@ -24,7 +24,7 @@ public class SendMessageRequestBuilderTests
         Assert.Equal("Hello", request.Message);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void WithRecipient_AddsRecipient()
     {
         var builder = SendMessageRequestBuilder.Create(string.Empty);
@@ -33,7 +33,7 @@ public class SendMessageRequestBuilderTests
         Assert.Contains("user1", request.Recipients!);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void WithRecipients_SetsRecipients()
     {
         var builder = SendMessageRequestBuilder.Create(string.Empty);
@@ -45,7 +45,7 @@ public class SendMessageRequestBuilderTests
         Assert.Equal("user2", request.Recipients[1]);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void WithRecipients_AppendMode_AppendsRecipients()
     {
         var builder = SendMessageRequestBuilder.Create(string.Empty);
@@ -60,19 +60,21 @@ public class SendMessageRequestBuilderTests
         Assert.Equal("user3", request.Recipients[2]);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void WithMention_AddsMention()
     {
         var builder = SendMessageRequestBuilder.Create(string.Empty);
         var request = builder.WithMention("author1", 0, 5).Build();
 
-        Assert.Single(request.Mentions!);
-        Assert.Equal("author1", request.Mentions![0].Author);
-        Assert.Equal(0, request.Mentions[0].Start);
-        Assert.Equal(5, request.Mentions[0].Length);
+        Assert.NotNull(request.Mentions);
+        Assert.NotEmpty(request.Mentions);
+        var item = Assert.Single(request.Mentions);
+        Assert.Equal("author1", item.Author);
+        Assert.Equal(0, item.Start);
+        Assert.Equal(5, item.Length);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void WithLinkPreview_SetsLinkPreview()
     {
         var builder = SendMessageRequestBuilder.Create(string.Empty);
@@ -84,7 +86,7 @@ public class SendMessageRequestBuilderTests
         Assert.Equal("Desc", request.LinkPreview.Description);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void WithAttachment_AddsAttachment()
     {
         var builder = SendMessageRequestBuilder.Create(string.Empty);
@@ -97,7 +99,7 @@ public class SendMessageRequestBuilderTests
         Assert.Equal("KEKW", request.Sticker);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void WithQuote_SetsQuoteInfo()
     {
         var timestamp = DateTime.UtcNow;

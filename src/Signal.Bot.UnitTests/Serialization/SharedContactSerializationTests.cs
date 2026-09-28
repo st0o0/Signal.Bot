@@ -6,7 +6,7 @@ namespace Signal.Bot.UnitTests.Serialization;
 
 public class SharedContactSerializationTests
 {
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void TestSharedContactSerializationAndDeserialization()
     {
         // Arrange
@@ -33,7 +33,7 @@ public class SharedContactSerializationTests
         Assert.Equal("ACME Corp", deserialized.Organization);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void TestSharedContactNullSerialization()
     {
         // Arrange
@@ -51,7 +51,7 @@ public class SharedContactSerializationTests
         Assert.Null(deserialized.Organization);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void TestRealSharedContactDeserialization()
     {
         // Arrange

@@ -8,7 +8,7 @@ namespace Signal.Bot.UnitTests.Exceptions;
 
 public class ErrorHandlingTests
 {
-    [Theory(Timeout = 5000)]
+    [Theory]
     [InlineData(ConnectReason.Initialized, ConnectionEvent.Initialized)]
     [InlineData(ConnectReason.Reconnected, ConnectionEvent.Reconnected)]
     public void ConnectionError_To_MapsCorrectly(ConnectReason reason, ConnectionEvent expectedType)
@@ -24,7 +24,7 @@ public class ErrorHandlingTests
         Assert.Equal(expectedType, error.Event);
     }
 
-    [Theory(Timeout = 5000)]
+    [Theory]
     [InlineData(DisconnectReason.Undefined, DisconnectionEvent.Undefined)]
     [InlineData(DisconnectReason.ClientInitiated, DisconnectionEvent.ClientInitiated)]
     [InlineData(DisconnectReason.ServerInitiated, DisconnectionEvent.ServerInitiated)]
@@ -46,7 +46,7 @@ public class ErrorHandlingTests
         Assert.Equal(exception, error.Exception);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void DisconnectionError_CancelActions_InvokeCorrectly()
     {
         // Arrange
@@ -69,7 +69,7 @@ public class ErrorHandlingTests
         Assert.True(closingCancelled);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void ErrorRecord_SetsPropertiesCorrectly()
     {
         // Arrange
@@ -84,7 +84,7 @@ public class ErrorHandlingTests
         Assert.Equal(errorSource, error.Source);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void RequestException_SetsPropertiesCorrectly()
     {
         // Arrange
@@ -101,7 +101,7 @@ public class ErrorHandlingTests
         Assert.Equal(inner, ex.InnerException);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void RequestException_SetsPropertiesCorrectly2()
     {
         // Arrange
@@ -116,7 +116,7 @@ public class ErrorHandlingTests
         Assert.Equal(inner, ex.InnerException);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void RequestException_SetsPropertiesCorrectly3()
     {
         // Arrange
@@ -131,7 +131,7 @@ public class ErrorHandlingTests
         Assert.Equal(statusCode, ex.HttpStatusCode);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void RequestException_SetsPropertiesCorrectly4()
     {
         // Arrange

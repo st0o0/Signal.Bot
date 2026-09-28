@@ -6,11 +6,10 @@ namespace Signal.Bot.UnitTests.Serialization;
 
 public class QuoteDataSerializationTests
 {
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void TestQuoteSerializationAndDeserialization()
     {
         // Arrange
-        var timestamp = 1707523200000;
         var quote = new Quote
         {
             Id = DateTimeOffset.FromUnixTimeMilliseconds(1770354634885).UtcDateTime,
@@ -29,7 +28,7 @@ public class QuoteDataSerializationTests
         Assert.Equal(quote.Text, deserialized.Text);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void TestQuoteNullSerialization()
     {
         // Arrange
@@ -46,7 +45,7 @@ public class QuoteDataSerializationTests
         Assert.Null(deserialized.Text);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void TestRealQuoteDeserialization()
     {
         const string json = """

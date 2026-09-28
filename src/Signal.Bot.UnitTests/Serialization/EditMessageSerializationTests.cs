@@ -6,7 +6,7 @@ namespace Signal.Bot.UnitTests.Serialization;
 
 public class EditMessageSerializationTests
 {
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void TestEditMessageSerializationAndDeserialization()
     {
         // Arrange
@@ -27,7 +27,7 @@ public class EditMessageSerializationTests
         Assert.Equal(editMessage.TargetSent, deserialized.TargetSent);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void TestEditMessageNullSerialization()
     {
         // Arrange
@@ -43,7 +43,7 @@ public class EditMessageSerializationTests
         Assert.Equal(default, deserialized.TargetSent);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void TestRealEditMessageDeserialization()
     {
         // Arrange

@@ -6,7 +6,7 @@ namespace Signal.Bot.UnitTests.Serialization;
 
 public class AboutSerializationTests
 {
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void TestAboutSerializationAndDeserialization()
     {
         // Arrange
@@ -35,7 +35,7 @@ public class AboutSerializationTests
         Assert.Equal(about.Capabilities, deserialized.Capabilities);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void TestAboutNullSerialization()
     {
         // Arrange

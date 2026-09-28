@@ -100,9 +100,9 @@ public class SignalBotReceiverPerformanceTests : ReceiverIntegrationTestBase
         stopwatch.Stop();
 
         Assert.Equal(messageCount, receivedCount);
-        var totalMB = (messageCount * messageSize) / 1024.0 / 1024.0;
-        var mbPerSecond = totalMB / stopwatch.Elapsed.TotalSeconds;
-        Console.WriteLine($"Processed {totalMB:F2} MB in {stopwatch.ElapsedMilliseconds}ms ({mbPerSecond:F2} MB/s)");
+        const double totalMb = messageCount * messageSize / 1024.0 / 1024.0;
+        var mbPerSecond = totalMb / stopwatch.Elapsed.TotalSeconds;
+        Console.WriteLine($"Processed {totalMb:F2} MB in {stopwatch.ElapsedMilliseconds}ms ({mbPerSecond:F2} MB/s)");
 
         await receiver.DisposeAsync();
     }
@@ -222,7 +222,7 @@ public class SignalBotReceiverPerformanceTests : ReceiverIntegrationTestBase
 
         // Randomize order
         var random = new Random(42);
-        messages = messages.OrderBy(_ => random.Next()).ToList();
+        messages = [.. messages.OrderBy(_ => random.Next())];
 
         foreach (var message in messages)
         {

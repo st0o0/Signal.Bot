@@ -34,7 +34,10 @@ public class AboutTests : BotTestBase
     public async Task GetAboutAsync_WithCancellationToken_PassesCancellationToken()
     {
         // Arrange
-        var cts = new CancellationTokenSource();
+        using var ctsCanceled = new CancellationTokenSource();
+        using var cts =  CancellationTokenSource.CreateLinkedTokenSource(TestContext.Current.CancellationToken, ctsCanceled.Token);
+       
+        await ctsCanceled.CancelAsync();
         var about = new About { Version = "1.0.0" };
         var json = JsonSerializer.Serialize(about, JsonBotAPI.Options);
 
@@ -47,7 +50,5 @@ public class AboutTests : BotTestBase
         await HttpClientMock
             .Received(1)
             .SendAsync(Arg.Any<HttpRequestMessage>(), Arg.Any<CancellationToken>());
-
-        cts.Dispose();
     }
 }

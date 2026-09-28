@@ -7,7 +7,7 @@ public class UpdateGroupBuilderTests
     private const string TestNumber = "+1234567890";
     private const string TestGroupId = "group-id-123";
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void Constructor_SetsDefaultPermissions()
     {
         // Arrange & Act
@@ -23,7 +23,7 @@ public class UpdateGroupBuilderTests
         Assert.Equal(GroupPermission.OnlyAdmins, request.Permissions.SendMessages);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void WithName_SetsName()
     {
         // Arrange
@@ -37,7 +37,7 @@ public class UpdateGroupBuilderTests
         Assert.Equal(name, request.Name);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void WithDescription_SetsDescription()
     {
         // Arrange
@@ -51,7 +51,7 @@ public class UpdateGroupBuilderTests
         Assert.Equal(description, request.Description);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void WithExpirationTime_SetsExpirationTime()
     {
         // Arrange
@@ -65,7 +65,7 @@ public class UpdateGroupBuilderTests
         Assert.Equal(expiration, request.ExpirationTime);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void WithGroupLink_SetsGroupLink()
     {
         // Arrange
@@ -79,7 +79,7 @@ public class UpdateGroupBuilderTests
         Assert.Equal(link, request.GroupLink);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void WithAddMemberPermission_UpdatesPermission()
     {
         // Arrange
@@ -92,7 +92,7 @@ public class UpdateGroupBuilderTests
         Assert.Equal(GroupPermission.EveryMember, request.Permissions!.AddMembers);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void WithEditGroupPermission_UpdatesPermission()
     {
         // Arrange
@@ -105,7 +105,7 @@ public class UpdateGroupBuilderTests
         Assert.Equal(GroupPermission.EveryMember, request.Permissions!.EditGroup);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void WithSendMessagesPermission_UpdatesPermission()
     {
         // Arrange
@@ -118,7 +118,7 @@ public class UpdateGroupBuilderTests
         Assert.Equal(GroupPermission.EveryMember, request.Permissions!.SendMessages);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void WithAvatar_SetsAvatar()
     {
         // Arrange

@@ -6,7 +6,7 @@ namespace Signal.Bot.UnitTests.Serialization;
 
 public class PinMessageSerializationTests
 {
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void TestReceivedPinMessageSerializationAndDeserialization()
     {
         // Arrange
@@ -31,7 +31,7 @@ public class PinMessageSerializationTests
         Assert.Equal(pin.TargetSent, deserialized.TargetSent);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void TestReceivedUnpinMessageSerializationAndDeserialization()
     {
         // Arrange
@@ -54,7 +54,7 @@ public class PinMessageSerializationTests
         Assert.Equal(unpin.TargetSent, deserialized.TargetSent);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void TestRealReceivedPinMessageDeserialization()
     {
         // Arrange

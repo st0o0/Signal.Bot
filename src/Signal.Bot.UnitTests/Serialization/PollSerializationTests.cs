@@ -5,7 +5,7 @@ namespace Signal.Bot.UnitTests.Serialization;
 
 public class PollSerializationTests
 {
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void TestAddPollRequestSerializationAndDeserialization()
     {
         // Arrange
@@ -35,7 +35,7 @@ public class PollSerializationTests
         Assert.Equal("123456789", deserialized.Recipient);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void TestClosePollRequestSerializationAndDeserialization()
     {
         // Arrange
@@ -57,7 +57,7 @@ public class PollSerializationTests
         Assert.Equal("123456789", deserialized.Recipient);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void TestVotePollRequestSerializationAndDeserialization_SingleAnswer()
     {
         // Arrange
@@ -85,7 +85,7 @@ public class PollSerializationTests
         Assert.Equal("123456789", deserialized.Recipient);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void TestVotePollRequestSerializationAndDeserialization_MultipleAnswers()
     {
         // Arrange

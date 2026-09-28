@@ -10,7 +10,7 @@ public class TimestampConverterTests
         Converters = { new TimestampConverter() }
     };
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void Read_ValidNumberTimestamp_ReturnsCorrectDateTime()
     {
         // Arrange
@@ -24,7 +24,7 @@ public class TimestampConverterTests
         Assert.Equal(DateTimeOffset.FromUnixTimeMilliseconds(milliseconds).DateTime, result);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void Read_ValidStringTimestamp_ReturnsCorrectDateTime()
     {
         // Arrange
@@ -38,7 +38,7 @@ public class TimestampConverterTests
         Assert.Equal(DateTimeOffset.FromUnixTimeMilliseconds(milliseconds).DateTime, result);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void Read_InvalidStringFormat_ThrowsJsonException()
     {
         // Arrange
@@ -48,7 +48,7 @@ public class TimestampConverterTests
         Assert.Throws<JsonException>(() => JsonSerializer.Deserialize<DateTime>(json, _options));
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void Read_UnsupportedTokenType_ThrowsJsonException()
     {
         // Arrange
@@ -58,7 +58,7 @@ public class TimestampConverterTests
         Assert.Throws<JsonException>(() => JsonSerializer.Deserialize<DateTime>(json, _options));
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void Write_DateTime_WritesStringTimestamp()
     {
         // Arrange

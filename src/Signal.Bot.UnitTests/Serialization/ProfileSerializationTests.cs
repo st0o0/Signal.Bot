@@ -6,7 +6,7 @@ namespace Signal.Bot.UnitTests.Serialization;
 
 public class ProfileSerializationTests
 {
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void TestNicknameSerializationAndDeserialization()
     {
         // Arrange
@@ -28,7 +28,7 @@ public class ProfileSerializationTests
         Assert.Equal(nickname.GivenName, deserializedNickname.GivenName);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void TestProfileSerializationAndDeserialization()
     {
         // Arrange
@@ -48,7 +48,7 @@ public class ProfileSerializationTests
         Assert.Equal(profile.GivenName, deserializedProfile.GivenName);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void TestProfileCapabilitiesSerializationAndDeserialization()
     {
         // Arrange
@@ -68,7 +68,7 @@ public class ProfileSerializationTests
         Assert.Equal(profileCapabilities.GiftBadges, deserializedProfileCapabilities.GiftBadges);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void TestUpdateProfileRequestSerializationAndDeserialization()
     {
         // Arrange

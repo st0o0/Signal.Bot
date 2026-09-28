@@ -5,7 +5,7 @@ namespace Signal.Bot.UnitTests.Serialization;
 
 public class GroupSerializationTests
 {
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void TestAddGroupMemberRequestSerializationAndDeserialization()
     {
         // Arrange
@@ -22,10 +22,10 @@ public class GroupSerializationTests
         Assert.NotNull(deserializedAddGroupMemberRequest);
         Assert.NotNull(deserializedAddGroupMemberRequest.Members);
         Assert.NotEmpty(deserializedAddGroupMemberRequest.Members);
-        Assert.Contains(addGroupMemberRequest.Members.ToArray(), deserializedAddGroupMemberRequest.Members.ToArray());
+        Assert.Contains([.. addGroupMemberRequest.Members], [.. deserializedAddGroupMemberRequest.Members]);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact]
     public void TestRemoveGroupMemberRequestSerializationAndDeserialization()
     {
         // Arrange
@@ -41,8 +41,8 @@ public class GroupSerializationTests
         // Assert
         Assert.NotNull(deserializedRemoveGroupMemberRequest);
         Assert.NotNull(deserializedRemoveGroupMemberRequest.Members);
-        Assert.Contains(removeGroupMemberRequest.Members.ToArray(),
-            deserializedRemoveGroupMemberRequest.Members.ToArray());
+        Assert.Contains([.. removeGroupMemberRequest.Members],
+            [.. deserializedRemoveGroupMemberRequest.Members]);
     }
 }
 
