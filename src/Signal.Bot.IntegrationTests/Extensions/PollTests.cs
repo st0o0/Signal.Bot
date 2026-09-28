@@ -10,7 +10,7 @@ namespace Signal.Bot.IntegrationTests.Extensions;
 
 public class PollTests : IntegrationTestBase
 {
-    [Fact(Timeout = 15000)]
+    [Fact(Timeout = 5000)]
     public async Task AddPoll_ShouldReturnPollResponse()
     {
         // Arrange
@@ -38,7 +38,7 @@ public class PollTests : IntegrationTestBase
         Assert.Single(MockServer.LogEntries);
     }
 
-    [Fact(Timeout = 15000)]
+    [Fact(Timeout = 5000)]
     public async Task ClosePoll_ShouldSucceed()
     {
         // Arrange
@@ -58,7 +58,7 @@ public class PollTests : IntegrationTestBase
         Assert.Single(MockServer.LogEntries);
     }
 
-    [Fact(Timeout = 15000)]
+    [Fact(Timeout = 5000)]
     public async Task VotePoll_ShouldSucceed()
     {
         // Arrange

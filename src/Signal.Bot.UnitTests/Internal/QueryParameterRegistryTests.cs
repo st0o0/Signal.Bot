@@ -6,8 +6,6 @@ public class QueryParameterRegistryTests
 {
     private readonly QueryParameterRegistry _registry = new();
 
-    #region AddAndGet Tests
-
     [Fact]
     public void AddAndGet_StringValue_ReturnsSameValue()
     {
@@ -34,7 +32,7 @@ public class QueryParameterRegistryTests
     public void AddAndGet_WithValueFactory_UsesFactory()
     {
         // Arrange & Act
-        _ = _registry.AddAndGet("date", DateTime.Now, dt => dt.ToString("yyyy-MM-dd"));
+        _ = _registry.AddAndGet("date", TimeProvider.System.GetUtcNow().DateTime, dt => dt.ToString("yyyy-MM-dd"));
 
         // Assert
         Assert.StartsWith("?date=", _registry.Build());
@@ -66,10 +64,6 @@ public class QueryParameterRegistryTests
         Assert.Equal(2, second);
         Assert.Equal("?a=1&b=2", _registry.Build());
     }
-
-    #endregion
-
-    #region Add Tests
 
     [Fact]
     public void Add_StringValue_BuildsCorrectQuery()
@@ -127,7 +121,7 @@ public class QueryParameterRegistryTests
     public void Add_WithValueFactory_UsesFactoryOutput()
     {
         // Act
-        _registry.Add("date", DateTime.Now, CustomFormat);
+        _registry.Add("date", TimeProvider.System.GetUtcNow().DateTime, CustomFormat);
 
         // Assert
         var result = _registry.Build();
@@ -176,10 +170,6 @@ public class QueryParameterRegistryTests
         Assert.Equal("?test=123", _registry.Build());
     }
 
-    #endregion
-
-    #region Build Tests
-
     [Fact]
     public void Build_EmptyRegistry_ReturnsEmptyString()
     {
@@ -221,10 +211,6 @@ public class QueryParameterRegistryTests
         Assert.Equal("?a=1&b=2", _registry.Build());
     }
 
-    #endregion
-
-    #region Edge Cases
-
     [Fact]
     public void Add_SpecialCharacters_EncodesCorrectly()
     {
@@ -259,10 +245,6 @@ public class QueryParameterRegistryTests
         Assert.Equal("?test=hello", _registry.Build());
     }
 
-    #endregion
-
-    #region Integration Tests
-
     [Fact]
     public void FullUsageScenario_BuildsCorrectQueryString()
     {
@@ -276,8 +258,6 @@ public class QueryParameterRegistryTests
         var result = _registry.Build();
         Assert.Equal("?page=1&size=10&filter=ACTIVE&sort=name", result);
     }
-
-    #endregion
 }
 
 public class TestClass

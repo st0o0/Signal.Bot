@@ -7,7 +7,7 @@ namespace Signal.Bot.IntegrationTests.Extensions;
 
 public class AttachmentTests : IntegrationTestBase
 {
-    [Fact(Timeout = 15000)]
+    [Fact(Timeout = 5000)]
     public async Task GetAttachments_ShouldReturnList()
     {
         // Arrange
@@ -29,7 +29,7 @@ public class AttachmentTests : IntegrationTestBase
         Assert.Contains("id2", result);
     }
 
-    [Fact(Timeout = 15000)]
+    [Fact(Timeout = 5000)]
     public async Task GetAttachment_ShouldReturnBytes()
     {
         // Arrange
@@ -50,7 +50,7 @@ public class AttachmentTests : IntegrationTestBase
         Assert.Equal(content, result);
     }
 
-    [Fact(Timeout = 15000)]
+    [Fact(Timeout = 5000)]
     public async Task RemoveAttachment_ShouldSucceed()
     {
         // Arrange

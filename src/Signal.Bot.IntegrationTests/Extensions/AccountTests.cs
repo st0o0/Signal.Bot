@@ -9,7 +9,7 @@ namespace Signal.Bot.IntegrationTests.Extensions;
 
 public class AccountTests : IntegrationTestBase
 {
-    [Fact(Timeout = 15000)]
+    [Fact(Timeout = 5000)]
     public async Task GetAccounts_ShouldReturnList()
     {
         // Arrange
@@ -29,7 +29,7 @@ public class AccountTests : IntegrationTestBase
         Assert.Contains(BotNumber, result);
     }
 
-    [Fact(Timeout = 15000)]
+    [Fact(Timeout = 5000)]
     public async Task SetPin_ShouldSucceed()
     {
         // Arrange
@@ -48,7 +48,7 @@ public class AccountTests : IntegrationTestBase
         Assert.Single(MockServer.LogEntries);
     }
 
-    [Fact(Timeout = 15000)]
+    [Fact(Timeout = 5000)]
     public async Task SetUsername_ShouldReturnResult()
     {
         // Arrange
@@ -72,7 +72,7 @@ public class AccountTests : IntegrationTestBase
         Assert.Equal(username, result.Username);
     }
 
-    [Fact(Timeout = 15000)]
+    [Fact(Timeout = 5000)]
     public async Task GetQrCodeLink_ShouldReturnLink()
     {
         // Arrange

@@ -10,7 +10,7 @@ namespace Signal.Bot.IntegrationTests.Extensions;
 
 public class HealthAndTrustTests : IntegrationTestBase
 {
-    [Fact(Timeout = 15000)]
+    [Fact(Timeout = 5000)]
     public async Task IsHealthy_WhenApiReturns200_ShouldReturnTrue()
     {
         // Arrange
@@ -28,7 +28,7 @@ public class HealthAndTrustTests : IntegrationTestBase
         Assert.True(result);
     }
 
-    [Fact(Timeout = 15000)]
+    [Fact(Timeout = 5000)]
     public async Task IsHealthy_WhenApiReturns500_ShouldReturnFalse()
     {
         // Arrange
@@ -42,11 +42,11 @@ public class HealthAndTrustTests : IntegrationTestBase
         // Act
         var result = await Client.IsHealthyAsync(cancellationToken: TestContext.Current.CancellationToken);
 
-        // Assert — SendAsync returns null on non-success, so IsHealthyAsync returns false via null-conditional
+        // Assert
         Assert.False(result);
     }
 
-    [Fact(Timeout = 15000)]
+    [Fact(Timeout = 5000)]
     public async Task IsHealthy_WhenNoServerConfigured_ShouldReturnFalse()
     {
         // Act — no mock configured, so the request gets a default non-match response
@@ -56,7 +56,7 @@ public class HealthAndTrustTests : IntegrationTestBase
         Assert.False(result);
     }
 
-    [Fact(Timeout = 15000)]
+    [Fact(Timeout = 5000)]
     public async Task GetTrustMode_ShouldReturnSettings()
     {
         // Arrange
@@ -79,7 +79,7 @@ public class HealthAndTrustTests : IntegrationTestBase
         Assert.Equal("always", result.TrustMode);
     }
 
-    [Fact(Timeout = 15000)]
+    [Fact(Timeout = 5000)]
     public async Task SetTrustMode_ShouldReturnUpdatedSettings()
     {
         // Arrange

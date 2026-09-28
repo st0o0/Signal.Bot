@@ -7,7 +7,7 @@ namespace Signal.Bot.IntegrationTests.Extensions;
 
 public class ConfigurationTests : IntegrationTestBase
 {
-    [Fact(Timeout = 15000)]
+    [Fact(Timeout = 5000)]
     public async Task GetConfiguration_ShouldReturnConfiguration()
     {
         // Arrange
@@ -28,7 +28,7 @@ public class ConfigurationTests : IntegrationTestBase
         Assert.Equal("info", result.Logging?.Level);
     }
 
-    [Fact(Timeout = 15000)]
+    [Fact(Timeout = 5000)]
     public async Task GetAbout_ShouldReturnAbout()
     {
         // Arrange
@@ -49,7 +49,7 @@ public class ConfigurationTests : IntegrationTestBase
         Assert.Equal("1.0.0", result.Version);
     }
 
-    [Fact(Timeout = 15000)]
+    [Fact(Timeout = 5000)]
     public async Task SetConfiguration_ShouldSucceed()
     {
         // Arrange

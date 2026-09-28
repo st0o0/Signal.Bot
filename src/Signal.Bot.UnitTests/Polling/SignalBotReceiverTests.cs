@@ -115,8 +115,6 @@ public class SignalBotReceiverTests
 
         // Act & Assert
         await receiver.StartReceivingAsync(_mockHandler, cancellationToken: cts.Token);
-
-        Assert.True(true);
     }
 
     [Fact(Timeout = 5000)]
@@ -153,12 +151,9 @@ public class SignalBotReceiverTests
             _mockHandler,
             cancellationToken: TestContext.Current.CancellationToken);
 
-        // Act
+        // Act — double dispose should not throw
         await receiver.DisposeAsync();
-
-        // Assert
         await receiver.DisposeAsync();
-        Assert.True(true);
     }
 
     [Fact]

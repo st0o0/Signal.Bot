@@ -117,7 +117,7 @@ public class PollTests : BotTestBase
         SetupResponse();
 
         // Act
-        await Client.ClosePollAsync(DateTime.Now, "123456789", cancellationToken: TestContext.Current.CancellationToken);
+        await Client.ClosePollAsync(TimeProvider.System.GetUtcNow().DateTime, "123456789", cancellationToken: TestContext.Current.CancellationToken);
 
         // Assert
         await HttpClientMock
@@ -134,7 +134,7 @@ public class PollTests : BotTestBase
         SetupResponse();
 
         // Act
-        await Client.VotePollAsync("987654321", DateTime.Now, "123456789", null, cancellationToken: TestContext.Current.CancellationToken);
+        await Client.VotePollAsync("987654321", TimeProvider.System.GetUtcNow().DateTime, "123456789", null, cancellationToken: TestContext.Current.CancellationToken);
 
         // Assert
         await HttpClientMock
@@ -151,7 +151,7 @@ public class PollTests : BotTestBase
         SetupResponse();
 
         // Act
-        await Client.VotePollAsync("987654321", DateTime.Now, "123456789", [1], cancellationToken: TestContext.Current.CancellationToken);
+        await Client.VotePollAsync("987654321", TimeProvider.System.GetUtcNow().DateTime, "123456789", [1], cancellationToken: TestContext.Current.CancellationToken);
 
         // Assert
         await HttpClientMock
@@ -168,7 +168,7 @@ public class PollTests : BotTestBase
         SetupResponse();
 
         // Act
-        await Client.VotePollAsync("987654321", DateTime.Now, "123456789", [1, 3], cancellationToken: TestContext.Current.CancellationToken);
+        await Client.VotePollAsync("987654321", TimeProvider.System.GetUtcNow().DateTime, "123456789", [1, 3], cancellationToken: TestContext.Current.CancellationToken);
 
         // Assert
         await HttpClientMock

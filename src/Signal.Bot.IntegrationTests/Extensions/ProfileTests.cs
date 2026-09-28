@@ -8,7 +8,7 @@ namespace Signal.Bot.IntegrationTests.Extensions;
 
 public class ProfileTests : IntegrationTestBase
 {
-    [Fact(Timeout = 15000)]
+    [Fact(Timeout = 5000)]
     public async Task UpdateProfile_ShouldSucceed()
     {
         // Arrange
@@ -36,7 +36,7 @@ public class ProfileTests : IntegrationTestBase
         Assert.Single(MockServer.LogEntries);
     }
 
-    [Fact(Timeout = 15000)]
+    [Fact(Timeout = 5000)]
     public async Task UpdateProfile_WithAvatar_ShouldSucceed()
     {
         // Arrange

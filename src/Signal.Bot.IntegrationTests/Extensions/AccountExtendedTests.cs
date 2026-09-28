@@ -7,7 +7,7 @@ namespace Signal.Bot.IntegrationTests.Extensions;
 
 public class AccountExtendedTests : IntegrationTestBase
 {
-    [Fact(Timeout = 15000)]
+    [Fact(Timeout = 5000)]
     public async Task RemovePin_ShouldSucceed()
     {
         // Arrange
@@ -25,7 +25,7 @@ public class AccountExtendedTests : IntegrationTestBase
         Assert.Single(MockServer.LogEntries);
     }
 
-    [Fact(Timeout = 15000)]
+    [Fact(Timeout = 5000)]
     public async Task RateLimitChallenge_ShouldSucceed()
     {
         // Arrange
@@ -44,7 +44,7 @@ public class AccountExtendedTests : IntegrationTestBase
         Assert.Single(MockServer.LogEntries);
     }
 
-    [Fact(Timeout = 15000)]
+    [Fact(Timeout = 5000)]
     public async Task UpdateAccountSettings_ShouldSucceed()
     {
         // Arrange
@@ -63,7 +63,7 @@ public class AccountExtendedTests : IntegrationTestBase
         Assert.Single(MockServer.LogEntries);
     }
 
-    [Fact(Timeout = 15000)]
+    [Fact(Timeout = 5000)]
     public async Task RemoveUsername_ShouldSucceed()
     {
         // Arrange

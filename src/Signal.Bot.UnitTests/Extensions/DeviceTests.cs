@@ -35,9 +35,9 @@ public class DeviceTests : BotTestBase
     {
         var devices = new List<Device>
         {
-            new() { Name = "Device 1", Created = DateTime.Now.AddMinutes(1000) },
-            new() { Name = "Device 2", Created = DateTime.Now.AddMinutes(2000) },
-            new() { Name = "Device 3", Created = DateTime.Now.AddMinutes(3000) }
+            new() { Name = "Device 1", Created = TimeProvider.System.GetUtcNow().DateTime.AddMinutes(1000) },
+            new() { Name = "Device 2", Created = TimeProvider.System.GetUtcNow().DateTime.AddMinutes(2000) },
+            new() { Name = "Device 3", Created = TimeProvider.System.GetUtcNow().DateTime.AddMinutes(3000) }
         };
         var json = JsonSerializer.Serialize(devices, JsonBotAPI.Options);
 

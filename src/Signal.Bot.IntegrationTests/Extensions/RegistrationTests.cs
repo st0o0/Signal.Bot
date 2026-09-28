@@ -8,7 +8,7 @@ namespace Signal.Bot.IntegrationTests.Extensions;
 
 public class RegistrationTests : IntegrationTestBase
 {
-    [Fact(Timeout = 15000)]
+    [Fact(Timeout = 5000)]
     public async Task RegisterNumber_WithCaptcha_ShouldSendVerificationCode()
     {
         // Arrange
@@ -36,7 +36,7 @@ public class RegistrationTests : IntegrationTestBase
         Assert.Single(MockServer.LogEntries);
     }
 
-    [Fact(Timeout = 15000)]
+    [Fact(Timeout = 5000)]
     public async Task VerifyRegistration_WithCode_ShouldComplete()
     {
         // Arrange
@@ -60,7 +60,7 @@ public class RegistrationTests : IntegrationTestBase
         Assert.Single(MockServer.LogEntries);
     }
 
-    [Theory(Timeout = 15000)]
+    [Theory(Timeout = 5000)]
     [InlineData("123456")]
     [InlineData("not-a-number")]
     [InlineData("++491701234567")]
@@ -82,7 +82,7 @@ public class RegistrationTests : IntegrationTestBase
         Assert.Single(MockServer.LogEntries);
     }
 
-    [Fact(Timeout = 15000)]
+    [Fact(Timeout = 5000)]
     public async Task UnregisterDevice_ShouldSucceed()
     {
         // Arrange

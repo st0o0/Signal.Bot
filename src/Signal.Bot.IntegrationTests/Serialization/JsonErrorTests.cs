@@ -7,7 +7,7 @@ namespace Signal.Bot.IntegrationTests.Serialization;
 
 public class JsonErrorTests : IntegrationTestBase
 {
-    [Fact(Timeout = 15000)]
+    [Fact(Timeout = 5000)]
     public async Task ApiReturnsInvalidJson_ShouldReturnNull()
     {
         // Arrange
@@ -27,7 +27,7 @@ public class JsonErrorTests : IntegrationTestBase
         Assert.Null(result);
     }
 
-    [Fact(Timeout = 15000)]
+    [Fact(Timeout = 5000)]
     public async Task ApiReturnsEmptyBody_WhenExpectingJson_ShouldReturnNull()
     {
         // Arrange
@@ -47,7 +47,7 @@ public class JsonErrorTests : IntegrationTestBase
         Assert.Null(result);
     }
 
-    [Fact(Timeout = 15000)]
+    [Fact(Timeout = 5000)]
     public async Task ApiReturnsUnexpectedJsonStructure_ShouldHandleOrThrow()
     {
         // Arrange

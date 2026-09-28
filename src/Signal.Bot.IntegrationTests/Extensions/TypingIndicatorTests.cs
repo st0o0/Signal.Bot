@@ -7,7 +7,7 @@ namespace Signal.Bot.IntegrationTests.Extensions;
 
 public class TypingIndicatorTests : IntegrationTestBase
 {
-    [Fact(Timeout = 15000)]
+    [Fact(Timeout = 5000)]
     public async Task SetTypingIndicator_StartTyping_ShouldUsePut()
     {
         // Arrange
@@ -27,7 +27,7 @@ public class TypingIndicatorTests : IntegrationTestBase
         Assert.Single(MockServer.LogEntries);
     }
 
-    [Fact(Timeout = 15000)]
+    [Fact(Timeout = 5000)]
     public async Task SetTypingIndicator_StopTyping_ShouldUseDelete()
     {
         // Arrange

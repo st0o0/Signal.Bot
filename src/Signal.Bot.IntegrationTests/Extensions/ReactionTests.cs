@@ -8,12 +8,12 @@ namespace Signal.Bot.IntegrationTests.Extensions;
 
 public class ReactionTests : IntegrationTestBase
 {
-    [Fact(Timeout = 15000)]
+    [Fact(Timeout = 5000)]
     public async Task AddReaction_ShouldSucceed()
     {
         // Arrange
         const string reaction = "👍";
-        var timestamp = DateTime.Now;
+        var timestamp = DateTime.UtcNow;
 
         MockServer
             .Given(Request.Create()
@@ -38,7 +38,7 @@ public class ReactionTests : IntegrationTestBase
         Assert.Single(MockServer.LogEntries);
     }
 
-    [Fact(Timeout = 15000)]
+    [Fact(Timeout = 5000)]
     public async Task RemoveReaction_ShouldSucceed()
     {
         // Arrange
