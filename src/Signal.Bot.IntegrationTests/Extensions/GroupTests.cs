@@ -26,7 +26,7 @@ public class GroupTests : IntegrationTestBase
                 .WithBodyAsJson(new { id = GroupId }));
 
         // Act
-        var result = await Client.CreateGroupAsync(x => x.WithName(groupName).WithMembers(members),
+        await Client.CreateGroupAsync(x => x.WithName(groupName).WithMembers(members),
             cancellationToken: TestContext.Current.CancellationToken);
 
         // Assert

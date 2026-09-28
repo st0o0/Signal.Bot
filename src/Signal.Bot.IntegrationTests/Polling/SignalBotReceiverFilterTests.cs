@@ -45,9 +45,9 @@ public class SignalBotReceiverFilterTests : ReceiverIntegrationTestBase
 
         // Assert
         await dataMessageTcs.Task;
-        Assert.Single(receivedMessages);
-        Assert.NotNull(receivedMessages.First().Envelope?.DataMessage);
-        Assert.Null(receivedMessages.First().Envelope?.ReceiptMessage);
+        var item = Assert.Single(receivedMessages);
+        Assert.NotNull(item.Envelope?.DataMessage);
+        Assert.Null(item.Envelope?.ReceiptMessage);
 
         await receiver.DisposeAsync();
     }
@@ -88,8 +88,8 @@ public class SignalBotReceiverFilterTests : ReceiverIntegrationTestBase
 
         // Assert
         await dataMessageTcs.Task;
-        Assert.Single(receivedMessages);
-        Assert.NotNull(receivedMessages.First().Envelope?.DataMessage);
+        var item = Assert.Single(receivedMessages);
+        Assert.NotNull(item.Envelope?.DataMessage);
         Assert.Null(receivedMessages.First().Envelope?.TypingMessage);
 
         await receiver.DisposeAsync();
@@ -131,9 +131,9 @@ public class SignalBotReceiverFilterTests : ReceiverIntegrationTestBase
 
         // Assert
         await dataMessageTcs.Task;
-        Assert.Single(receivedMessages);
-        Assert.NotNull(receivedMessages.First().Envelope?.DataMessage);
-        Assert.Null(receivedMessages.First().Envelope?.SyncMessage);
+        var item = Assert.Single(receivedMessages);
+        Assert.NotNull(item.Envelope?.DataMessage);
+        Assert.Null(item.Envelope?.SyncMessage);
 
         await receiver.DisposeAsync();
     }
@@ -176,9 +176,9 @@ public class SignalBotReceiverFilterTests : ReceiverIntegrationTestBase
 
         // Assert
         await dataMessageTcs.Task;
-        Assert.Single(receivedMessages);
-        Assert.NotNull(receivedMessages.First().Envelope?.DataMessage);
-        Assert.Equal("Data message", receivedMessages.First().Envelope?.DataMessage?.Message);
+        var item = Assert.Single(receivedMessages);
+        Assert.NotNull(item.Envelope?.DataMessage);
+        Assert.Equal("Data message", item.Envelope?.DataMessage?.Message);
 
         await receiver.DisposeAsync();
     }

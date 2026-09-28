@@ -29,9 +29,9 @@ public class DeviceTests : IntegrationTestBase
         var result = await Client.GetDevicesAsync(cancellationToken: TestContext.Current.CancellationToken);
 
         // Assert
-        Assert.Single(result);
-        Assert.Equal(1, result.First().Id);
-        Assert.Equal("Phone", result.First().Name);
+        var item = Assert.Single(result);
+        Assert.Equal(1, item.Id);
+        Assert.Equal("Phone", item.Name);
     }
 
     [Fact(Timeout = 15000)]

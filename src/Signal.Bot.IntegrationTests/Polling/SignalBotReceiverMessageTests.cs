@@ -219,9 +219,9 @@ public class SignalBotReceiverMessageTests : ReceiverIntegrationTestBase
         var completed = await messageReceivedTcs.Task;
         Assert.NotNull(completed);
         Assert.NotNull(completed.Envelope?.DataMessage?.Attachments);
-        Assert.Single(completed.Envelope.DataMessage.Attachments);
-        Assert.Equal("document.pdf", completed.Envelope.DataMessage.Attachments[0].Filename);
-        Assert.Equal("application/pdf", completed.Envelope.DataMessage.Attachments[0].ContentType);
+        var item = Assert.Single(completed.Envelope.DataMessage.Attachments);
+        Assert.Equal("document.pdf", item.Filename);
+        Assert.Equal("application/pdf", item.ContentType);
 
         await receiver.DisposeAsync();
     }

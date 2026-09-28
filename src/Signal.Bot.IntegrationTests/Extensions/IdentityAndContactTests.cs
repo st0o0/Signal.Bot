@@ -37,8 +37,8 @@ public class IdentityAndContactTests : IntegrationTestBase
         var result = await Client.GetIdentitiesAsync(cancellationToken: TestContext.Current.CancellationToken);
 
         // Assert
-        Assert.Single(result);
-        Assert.Equal(RecipientNumber, result.First().Number);
+        var item = Assert.Single(result);
+        Assert.Equal(RecipientNumber, item.Number);
     }
 
     [Fact(Timeout = 15000)]
@@ -67,8 +67,8 @@ public class IdentityAndContactTests : IntegrationTestBase
         var result = await Client.GetContactsAsync(cancellationToken: TestContext.Current.CancellationToken);
 
         // Assert
-        Assert.Single(result);
-        Assert.Equal(RecipientNumber, result.First().Number);
+        var item = Assert.Single(result);
+        Assert.Equal(RecipientNumber, item.Number);
     }
 
     [Fact(Timeout = 15000)]
@@ -97,8 +97,8 @@ public class IdentityAndContactTests : IntegrationTestBase
         var result = await Client.SearchNumbersAsync([RecipientNumber], cancellationToken: TestContext.Current.CancellationToken);
 
         // Assert
-        Assert.Single(result);
-        Assert.True(result.First().Registered);
+        var item = Assert.Single(result);
+        Assert.True(item.Registered);
     }
 
     [Fact(Timeout = 15000)]

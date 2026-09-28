@@ -156,7 +156,7 @@ public abstract class ReceiverIntegrationTestBase : IAsyncDisposable
         return message;
     }
 
-    protected static int GetAvailablePort()
+    private static int GetAvailablePort()
     {
         var listener = new TcpListener(System.Net.IPAddress.Loopback, 0);
         listener.Start();

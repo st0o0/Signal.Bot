@@ -32,8 +32,8 @@ public class StickerAndReceiptTests : IntegrationTestBase
         var result = await Client.GetStickerPacksAsync(cancellationToken: TestContext.Current.CancellationToken);
 
         // Assert
-        Assert.Single(result);
-        Assert.Equal("pack1", result.First().PackId);
+        var item = Assert.Single(result);
+        Assert.Equal("pack1", item.PackId);
     }
 
     [Fact(Timeout = 15000)]
