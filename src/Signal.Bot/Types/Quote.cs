@@ -22,13 +22,13 @@ public record Quote
     public string? Author { get; set; }
 
     /// <summary>
-    /// TBD
+    /// Gets or sets the phone number of the quoted message author.
     /// </summary>
     [JsonPropertyName("authorNumber")]
     public string? AuthorNumber { get; set; }
 
     /// <summary>
-    /// TBD
+    /// Gets or sets the UUID of the quoted message author.
     /// </summary>
     [JsonPropertyName("authorUuid")]
     public Guid? AuthorId { get; set; }
@@ -40,16 +40,22 @@ public record Quote
     public string? Text { get; set; }
 
     /// <summary>
-    /// TBD
+    /// Gets or sets the list of mentions in the quoted message text.
     /// </summary>
     [JsonPropertyName("mentions")]
     public List<Mention>? Mentions { get; set; }
 
     /// <summary>
-    /// TBD
+    /// Gets or sets the list of attachments from the quoted message.
     /// </summary>
     [JsonPropertyName("attachments")]
     public List<Attachment>? Attachments { get; set; }
+
+    /// <summary>
+    /// Gets or sets the list of text formatting styles in the quoted message.
+    /// </summary>
+    [JsonPropertyName("textStyles")]
+    public List<TextStyle>? TextStyles { get; set; }
 
     /// <inheritdoc />
     public override string ToString() => JsonSerializer.Serialize(this, JsonBotAPI.Get(GetType()));

@@ -39,6 +39,36 @@ public record Profile
     [JsonPropertyName("last_updated_timestamp")]
     public DateTime LastUpdated { get; set; }
 
+    /// <summary>
+    /// Gets or sets the emoji displayed alongside the about text.
+    /// </summary>
+    [JsonPropertyName("aboutEmoji")]
+    public string? AboutEmoji { get; set; }
+
+    /// <summary>
+    /// Gets or sets the family name from the receive profile.
+    /// </summary>
+    [JsonPropertyName("familyName")]
+    public string? FamilyName { get; set; }
+
+    /// <summary>
+    /// Gets or sets the given name from the receive profile.
+    /// </summary>
+    [JsonPropertyName("givenName")]
+    public string? FirstName { get; set; }
+
+    /// <summary>
+    /// Gets or sets the timestamp when the receive profile was last updated.
+    /// </summary>
+    [JsonPropertyName("lastUpdateTimestamp")]
+    public DateTime LastUpdateTimestamp { get; set; }
+
+    /// <summary>
+    /// Gets or sets the MobileCoin wallet address associated with this profile.
+    /// </summary>
+    [JsonPropertyName("mobileCoinAddress")]
+    public string? MobileCoinAddress { get; set; }
+
     /// <inheritdoc />
     public override string ToString() => JsonSerializer.Serialize(this, JsonBotAPI.Get(GetType()));
 }

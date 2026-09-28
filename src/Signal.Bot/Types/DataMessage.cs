@@ -82,10 +82,100 @@ public record DataMessage
     public List<Preview>? Previews { get; set; }
 
     /// <summary>
-    /// TBD
+    /// Gets or sets the remote delete data if this message deletes a previously sent message.
     /// </summary>
     [JsonPropertyName("remoteDelete")]
     public Acknowledged? RemoteDelete { get; set; }
+
+    /// <summary>
+    /// Gets or sets the admin delete data if an admin deleted a message in a group.
+    /// </summary>
+    [JsonPropertyName("adminDelete")]
+    public AdminDelete? AdminDelete { get; set; }
+
+    /// <summary>
+    /// Gets or sets the list of shared contacts included in this message.
+    /// </summary>
+    [JsonPropertyName("contacts")]
+    public List<SharedContact>? Contacts { get; set; }
+
+    /// <summary>
+    /// Gets or sets the group call update event data.
+    /// </summary>
+    [JsonPropertyName("groupCallUpdate")]
+    public GroupCallUpdate? GroupCallUpdate { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether this message includes a profile key.
+    /// </summary>
+    [JsonPropertyName("hasProfileKey")]
+    public bool? HasProfileKey { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether this message signals the end of a session.
+    /// </summary>
+    [JsonPropertyName("isEndSession")]
+    public bool? IsEndSession { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether this message is a profile key update.
+    /// </summary>
+    [JsonPropertyName("isProfileKeyUpdate")]
+    public bool? IsProfileKeyUpdate { get; set; }
+
+    /// <summary>
+    /// Gets or sets the payment data if this message contains a payment.
+    /// </summary>
+    [JsonPropertyName("payment")]
+    public Payment? Payment { get; set; }
+
+    /// <summary>
+    /// Gets or sets the pin message event if a message was pinned in a group.
+    /// </summary>
+    [JsonPropertyName("pinMessage")]
+    public ReceivedPinMessage? PinMessage { get; set; }
+
+    /// <summary>
+    /// Gets or sets the poll creation data if this message creates a new poll.
+    /// </summary>
+    [JsonPropertyName("pollCreate")]
+    public PollCreate? PollCreate { get; set; }
+
+    /// <summary>
+    /// Gets or sets the poll termination data if this message closes a poll.
+    /// </summary>
+    [JsonPropertyName("pollTerminate")]
+    public PollTerminate? PollTerminate { get; set; }
+
+    /// <summary>
+    /// Gets or sets the poll vote data if this message contains a vote on a poll.
+    /// </summary>
+    [JsonPropertyName("pollVote")]
+    public PollVote? PollVote { get; set; }
+
+    /// <summary>
+    /// Gets or sets the sticker data if this message contains a sticker.
+    /// </summary>
+    [JsonPropertyName("sticker")]
+    public Sticker? Sticker { get; set; }
+
+    /// <summary>
+    /// Gets or sets the story context if this message is a reply to a story.
+    /// </summary>
+    [JsonPropertyName("storyContext")]
+    public StoryContext? StoryContext { get; set; }
+
+    /// <summary>
+    /// Gets or sets the list of text formatting styles applied to the message text.
+    /// </summary>
+    [JsonPropertyName("textStyles")]
+    public List<TextStyle>? TextStyles { get; set; }
+
+    /// <summary>
+    /// Gets or sets the unpin message event if a message was unpinned in a group.
+    /// </summary>
+    [JsonPropertyName("unpinMessage")]
+    public ReceivedUnpinMessage? UnpinMessage { get; set; }
 
     /// <inheritdoc />
     public override string ToString() => JsonSerializer.Serialize(this, JsonBotAPI.Get(GetType()));

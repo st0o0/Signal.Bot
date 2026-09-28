@@ -34,28 +34,34 @@ public record Attachment
     public long? Size { get; set; }
 
     /// <summary>
-    /// TBD
+    /// Gets or sets the width of the attachment in pixels, if applicable.
     /// </summary>
     [JsonPropertyName("width")]
     public int? Width { get; set; }
 
     /// <summary>
-    /// TBD
+    /// Gets or sets the height of the attachment in pixels, if applicable.
     /// </summary>
     [JsonPropertyName("height")]
     public int? Height { get; set; }
 
     /// <summary>
-    /// TBD
+    /// Gets or sets the caption text for this attachment.
     /// </summary>
     [JsonPropertyName("caption")]
     public string? Caption { get; set; }
 
     /// <summary>
-    /// TBD
+    /// Gets or sets the timestamp when the attachment was uploaded.
     /// </summary>
     [JsonPropertyName("uploadTimestamp")]
     public DateTime? UploadTimestamp { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether this attachment is a voice note.
+    /// </summary>
+    [JsonPropertyName("isVoiceNote")]
+    public bool? IsVoiceNote { get; set; }
 
     /// <inheritdoc />
     public override string ToString() => JsonSerializer.Serialize(this, JsonBotAPI.Get(GetType()));

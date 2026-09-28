@@ -21,6 +21,30 @@ public record ReceiptMessage
     [JsonPropertyName("type")]
     public string? Type { get; set; }
 
+    /// <summary>
+    /// Gets or sets a value indicating whether this is a delivery receipt.
+    /// </summary>
+    [JsonPropertyName("isDelivery")]
+    public bool? IsDelivery { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether this is a read receipt.
+    /// </summary>
+    [JsonPropertyName("isRead")]
+    public bool? IsRead { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether this is a viewed receipt.
+    /// </summary>
+    [JsonPropertyName("isViewed")]
+    public bool? IsViewed { get; set; }
+
+    /// <summary>
+    /// Gets or sets the timestamp when the receipt event occurred.
+    /// </summary>
+    [JsonPropertyName("when")]
+    public DateTime When { get; set; }
+
     /// <inheritdoc />
     public override string ToString() => JsonSerializer.Serialize(this, JsonBotAPI.Get(GetType()));
 }

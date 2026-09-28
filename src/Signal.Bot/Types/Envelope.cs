@@ -28,7 +28,7 @@ public record Envelope
     public Guid SourceId { get; set; }
 
     /// <summary>
-    /// TBD
+    /// Gets or sets the display name of the message sender.
     /// </summary>
     [JsonPropertyName("sourceName")]
     public string? SourceName { get; set; }
@@ -46,13 +46,13 @@ public record Envelope
     public DateTime Timestamp { get; set; }
 
     /// <summary>
-    /// TBD
+    /// Gets or sets the timestamp when the server received the message.
     /// </summary>
     [JsonPropertyName("serverReceivedTimestamp")]
     public DateTime ServerReceived { get; set; }
 
     /// <summary>
-    /// TBD
+    /// Gets or sets the timestamp when the server delivered the message.
     /// </summary>
     [JsonPropertyName("serverDeliveredTimestamp")]
     public DateTime ServerDelivered { get; set; }
@@ -82,10 +82,22 @@ public record Envelope
     public ReceiptMessage? ReceiptMessage { get; set; }
 
     /// <summary>
-    /// TBD
+    /// Gets or sets the call message if this envelope contains a voice or video call event.
     /// </summary>
     [JsonPropertyName("callMessage")]
     public CallMessage? CallMessage { get; set; }
+
+    /// <summary>
+    /// Gets or sets the edit message if this envelope contains an edit to a previously sent message.
+    /// </summary>
+    [JsonPropertyName("editMessage")]
+    public EditMessage? EditMessage { get; set; }
+
+    /// <summary>
+    /// Gets or sets the story message if this envelope contains a story.
+    /// </summary>
+    [JsonPropertyName("storyMessage")]
+    public StoryMessage? StoryMessage { get; set; }
 
     /// <inheritdoc />
     public override string ToString() => JsonSerializer.Serialize(this, JsonBotAPI.Get(GetType()));
