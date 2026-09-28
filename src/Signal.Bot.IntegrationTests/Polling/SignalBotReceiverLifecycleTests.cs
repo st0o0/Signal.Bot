@@ -8,7 +8,7 @@ namespace Signal.Bot.IntegrationTests.Polling;
 
 public class SignalBotReceiverLifecycleTests : ReceiverIntegrationTestBase
 {
-    [Fact(Timeout = 30000)]
+    [Fact(Timeout = 5000)]
     public async Task Should_Stop_Processing_After_Cancellation()
     {
         // Arrange

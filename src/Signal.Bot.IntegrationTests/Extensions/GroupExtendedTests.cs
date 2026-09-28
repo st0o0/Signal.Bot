@@ -12,7 +12,7 @@ public class GroupExtendedTests : IntegrationTestBase
 {
     private const string GroupId = "group.ckRzaEd4VmRzNnJaASAEsasa";
 
-    [Fact(Timeout = 15000)]
+    [Fact(Timeout = 5000)]
     public async Task GetGroup_ShouldReturnGroup()
     {
         // Arrange
@@ -33,11 +33,12 @@ public class GroupExtendedTests : IntegrationTestBase
 
         // Assert
         Assert.NotNull(result);
-        Assert.Equal(GroupId, result.Id);
-        Assert.Equal("Test Group", result.Name);
+        Assert.Multiple(
+            () => Assert.Equal(GroupId, result.Id),
+            () => Assert.Equal("Test Group", result.Name));
     }
 
-    [Fact(Timeout = 15000)]
+    [Fact(Timeout = 5000)]
     public async Task UpdateGroup_ShouldSucceed()
     {
         // Arrange
@@ -56,7 +57,7 @@ public class GroupExtendedTests : IntegrationTestBase
         Assert.Single(MockServer.LogEntries);
     }
 
-    [Fact(Timeout = 15000)]
+    [Fact(Timeout = 5000)]
     public async Task RemoveGroup_ShouldSucceed()
     {
         // Arrange
@@ -75,7 +76,7 @@ public class GroupExtendedTests : IntegrationTestBase
         Assert.Single(MockServer.LogEntries);
     }
 
-    [Fact(Timeout = 15000)]
+    [Fact(Timeout = 5000)]
     public async Task AddGroupAdmin_ShouldSucceed()
     {
         // Arrange
@@ -94,7 +95,7 @@ public class GroupExtendedTests : IntegrationTestBase
         Assert.Single(MockServer.LogEntries);
     }
 
-    [Fact(Timeout = 15000)]
+    [Fact(Timeout = 5000)]
     public async Task RemoveGroupAdmin_ShouldSucceed()
     {
         // Arrange
@@ -113,7 +114,7 @@ public class GroupExtendedTests : IntegrationTestBase
         Assert.Single(MockServer.LogEntries);
     }
 
-    [Fact(Timeout = 15000)]
+    [Fact(Timeout = 5000)]
     public async Task BlockGroup_ShouldSucceed()
     {
         // Arrange
@@ -132,7 +133,7 @@ public class GroupExtendedTests : IntegrationTestBase
         Assert.Single(MockServer.LogEntries);
     }
 
-    [Fact(Timeout = 15000)]
+    [Fact(Timeout = 5000)]
     public async Task JoinGroup_ShouldSucceed()
     {
         // Arrange
@@ -151,7 +152,7 @@ public class GroupExtendedTests : IntegrationTestBase
         Assert.Single(MockServer.LogEntries);
     }
 
-    [Fact(Timeout = 15000)]
+    [Fact(Timeout = 5000)]
     public async Task QuitGroup_ShouldSucceed()
     {
         // Arrange
@@ -170,7 +171,7 @@ public class GroupExtendedTests : IntegrationTestBase
         Assert.Single(MockServer.LogEntries);
     }
 
-    [Fact(Timeout = 15000)]
+    [Fact(Timeout = 5000)]
     public async Task PinMessage_ShouldSucceed()
     {
         // Arrange
@@ -190,7 +191,7 @@ public class GroupExtendedTests : IntegrationTestBase
         Assert.Single(MockServer.LogEntries);
     }
 
-    [Fact(Timeout = 15000)]
+    [Fact(Timeout = 5000)]
     public async Task UnpinMessage_ShouldSucceed()
     {
         // Arrange
@@ -210,7 +211,7 @@ public class GroupExtendedTests : IntegrationTestBase
         Assert.Single(MockServer.LogEntries);
     }
 
-    [Fact(Timeout = 15000)]
+    [Fact(Timeout = 5000)]
     public async Task GetGroupAvatar_ShouldReturnBytes()
     {
         // Arrange

@@ -22,7 +22,7 @@ public class GroupSerializationTests
         Assert.NotNull(deserializedAddGroupMemberRequest);
         Assert.NotNull(deserializedAddGroupMemberRequest.Members);
         Assert.NotEmpty(deserializedAddGroupMemberRequest.Members);
-        Assert.Contains([.. addGroupMemberRequest.Members], [.. deserializedAddGroupMemberRequest.Members]);
+        Assert.Equal(addGroupMemberRequest.Members, deserializedAddGroupMemberRequest.Members);
     }
 
     [Fact]
@@ -41,8 +41,7 @@ public class GroupSerializationTests
         // Assert
         Assert.NotNull(deserializedRemoveGroupMemberRequest);
         Assert.NotNull(deserializedRemoveGroupMemberRequest.Members);
-        Assert.Contains([.. removeGroupMemberRequest.Members],
-            [.. deserializedRemoveGroupMemberRequest.Members]);
+        Assert.Equal(removeGroupMemberRequest.Members, deserializedRemoveGroupMemberRequest.Members);
     }
 }
 

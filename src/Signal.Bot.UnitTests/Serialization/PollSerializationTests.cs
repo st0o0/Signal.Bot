@@ -23,23 +23,18 @@ public class PollSerializationTests
 
         // Assert
         Assert.NotNull(deserialized);
-        Assert.NotNull(deserialized.AllowMultipleSelections);
-        Assert.Equal(true, deserialized.AllowMultipleSelections);
-        Assert.NotNull(deserialized.Answers);
-        Assert.Equal("yes", deserialized.Answers[0]);
-        Assert.Equal("no", deserialized.Answers[1]);
-        Assert.Equal("maybe", deserialized.Answers[2]);
-        Assert.NotNull(deserialized.Question);
-        Assert.Equal("Does this test succeed?", deserialized.Question);
-        Assert.NotNull(deserialized.Recipient);
-        Assert.Equal("123456789", deserialized.Recipient);
+        Assert.Multiple(
+            () => Assert.True(deserialized.AllowMultipleSelections!.Value),
+            () => Assert.Equal(["yes", "no", "maybe"], deserialized.Answers),
+            () => Assert.Equal("Does this test succeed?", deserialized.Question),
+            () => Assert.Equal("123456789", deserialized.Recipient));
     }
 
     [Fact]
     public void TestClosePollRequestSerializationAndDeserialization()
     {
         // Arrange
-        var timestamp = DateTime.Now;
+        var timestamp = TimeProvider.System.GetUtcNow().DateTime;
         var closePollRequest = new ClosePollRequest("")
         {
             Timestamp = timestamp,
@@ -52,16 +47,16 @@ public class PollSerializationTests
 
         // Assert
         Assert.NotNull(deserialized);
-        Assert.Equal(timestamp, deserialized.Timestamp);
-        Assert.NotNull(deserialized.Recipient);
-        Assert.Equal("123456789", deserialized.Recipient);
+        Assert.Multiple(
+            () => Assert.Equal(timestamp, deserialized.Timestamp),
+            () => Assert.Equal("123456789", deserialized.Recipient));
     }
 
     [Fact]
     public void TestVotePollRequestSerializationAndDeserialization_SingleAnswer()
     {
         // Arrange
-        var timestamp = DateTime.Now;
+        var timestamp = TimeProvider.System.GetUtcNow().DateTime;
         var votePollRequest = new VotePollRequest("")
         {
             Recipient = "123456789",
@@ -76,20 +71,18 @@ public class PollSerializationTests
 
         // Assert
         Assert.NotNull(deserialized);
-        Assert.Equal(timestamp, deserialized.Timestamp);
-        Assert.NotNull(deserialized.SelectedAnswers);
-        Assert.Equal(0, deserialized.SelectedAnswers[0]);
-        Assert.NotNull(deserialized.PollAuthor);
-        Assert.Equal("98765421", deserialized.PollAuthor);
-        Assert.NotNull(deserialized.Recipient);
-        Assert.Equal("123456789", deserialized.Recipient);
+        Assert.Multiple(
+            () => Assert.Equal(timestamp, deserialized.Timestamp),
+            () => Assert.Equal([0], deserialized.SelectedAnswers),
+            () => Assert.Equal("98765421", deserialized.PollAuthor),
+            () => Assert.Equal("123456789", deserialized.Recipient));
     }
 
     [Fact]
     public void TestVotePollRequestSerializationAndDeserialization_MultipleAnswers()
     {
         // Arrange
-        var timestamp = DateTime.Now;
+        var timestamp = TimeProvider.System.GetUtcNow().DateTime;
         var votePollRequest = new VotePollRequest("")
         {
             Recipient = "123456789",
@@ -104,13 +97,10 @@ public class PollSerializationTests
 
         // Assert
         Assert.NotNull(deserialized);
-        Assert.Equal(timestamp, deserialized.Timestamp);
-        Assert.NotNull(deserialized.SelectedAnswers);
-        Assert.Equal(2, deserialized.SelectedAnswers[0]);
-        Assert.Equal(0, deserialized.SelectedAnswers[1]);
-        Assert.NotNull(deserialized.PollAuthor);
-        Assert.Equal("98765421", deserialized.PollAuthor);
-        Assert.NotNull(deserialized.Recipient);
-        Assert.Equal("123456789", deserialized.Recipient);
+        Assert.Multiple(
+            () => Assert.Equal(timestamp, deserialized.Timestamp),
+            () => Assert.Equal([2, 0], deserialized.SelectedAnswers),
+            () => Assert.Equal("98765421", deserialized.PollAuthor),
+            () => Assert.Equal("123456789", deserialized.Recipient));
     }
 }

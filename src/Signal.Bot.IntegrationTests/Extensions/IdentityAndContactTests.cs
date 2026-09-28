@@ -20,7 +20,7 @@ public class IdentityAndContactTests : IntegrationTestBase
             {
                 Number = RecipientNumber,
                 Status = IdentityStatus.TrustedVerified,
-                Added = DateTime.UtcNow
+                Added = TimeProvider.System.GetUtcNow().DateTime
             }
         };
         var json = JsonSerializer.Serialize(identities, JsonBotAPI.Options);
@@ -38,7 +38,9 @@ public class IdentityAndContactTests : IntegrationTestBase
 
         // Assert
         var item = Assert.Single(result);
-        Assert.Equal(RecipientNumber, item.Number);
+        Assert.Multiple(
+            () => Assert.Equal(RecipientNumber, item.Number),
+            () => Assert.Equal(IdentityStatus.TrustedVerified, item.Status));
     }
 
     [Fact(Timeout = 15000)]
@@ -68,7 +70,9 @@ public class IdentityAndContactTests : IntegrationTestBase
 
         // Assert
         var item = Assert.Single(result);
-        Assert.Equal(RecipientNumber, item.Number);
+        Assert.Multiple(
+            () => Assert.Equal(RecipientNumber, item.Number),
+            () => Assert.Equal("Test", item.Name));
     }
 
     [Fact(Timeout = 15000)]
@@ -98,7 +102,9 @@ public class IdentityAndContactTests : IntegrationTestBase
 
         // Assert
         var item = Assert.Single(result);
-        Assert.True(item.Registered);
+        Assert.Multiple(
+            () => Assert.Equal(RecipientNumber, item.Number),
+            () => Assert.True(item.Registered));
     }
 
     [Fact(Timeout = 15000)]

@@ -1,6 +1,7 @@
 using System.Net;
 using System.Text.Json;
 using Signal.Bot.IntegrationTests.Utils;
+using Signal.Bot.Requests;
 using Signal.Bot.Serialization;
 using Signal.Bot.Types;
 using WireMock.RequestBuilders;
@@ -10,7 +11,7 @@ namespace Signal.Bot.IntegrationTests.Extensions;
 
 public class MessageTests : IntegrationTestBase
 {
-    [Fact(Timeout = 15000)]
+    [Fact(Timeout = 5000)]
     public async Task SendMessage_SimpleText_ShouldReturnTimestamp()
     {
         // Arrange
@@ -34,11 +35,10 @@ public class MessageTests : IntegrationTestBase
         Assert.NotNull(result);
 
         var expectedLocal = DateTimeOffset.FromUnixTimeMilliseconds(timestamp).DateTime;
-        var diff = Math.Abs((result.Timestamp - expectedLocal).TotalMilliseconds);
-        Assert.True(diff < 1_000, $"Timestamp differs more than tolerance. diff={diff}ms");
+        Assert.InRange(result.Timestamp, expectedLocal.AddSeconds(-1), expectedLocal.AddSeconds(1));
     }
 
-    [Theory(Timeout = 15000)]
+    [Theory(Timeout = 5000)]
     [InlineData(HttpStatusCode.BadRequest)]
     [InlineData(HttpStatusCode.Unauthorized)]
     [InlineData(HttpStatusCode.NotFound)]
@@ -62,7 +62,7 @@ public class MessageTests : IntegrationTestBase
         Assert.Null(result);
     }
 
-    [Fact(Timeout = 15000)]
+    [Fact(Timeout = 5000)]
     public async Task SendMessage_UnicodeEmojis_ShouldHandleCorrectly()
     {
         // Arrange
@@ -81,10 +81,12 @@ public class MessageTests : IntegrationTestBase
             cancellationToken: TestContext.Current.CancellationToken);
 
         // Assert
-        Assert.Single(MockServer.LogEntries);
+        var entry = Assert.Single(MockServer.LogEntries);
+        var request = JsonSerializer.Deserialize(entry.RequestMessage.Body!, JsonBotSerializerContext.Default.SendMessageRequest);
+        Assert.Equal(messageWithEmojis, request!.Message);
     }
 
-    [Fact(Timeout = 15000)]
+    [Fact(Timeout = 5000)]
     public async Task SendMessage_RightToLeftText_ShouldHandleCorrectly()
     {
         // Arrange
@@ -103,10 +105,12 @@ public class MessageTests : IntegrationTestBase
             cancellationToken: TestContext.Current.CancellationToken);
 
         // Assert
-        Assert.Single(MockServer.LogEntries);
+        var entry = Assert.Single(MockServer.LogEntries);
+        var request = JsonSerializer.Deserialize(entry.RequestMessage.Body!, JsonBotSerializerContext.Default.SendMessageRequest);
+        Assert.Equal(rtlMessage, request!.Message);
     }
 
-    [Fact(Timeout = 15000)]
+    [Fact(Timeout = 5000)]
     public async Task SendMessage_VeryLongMessage_ShouldSucceed()
     {
         // Arrange
@@ -125,10 +129,12 @@ public class MessageTests : IntegrationTestBase
             cancellationToken: TestContext.Current.CancellationToken);
 
         // Assert
-        Assert.Single(MockServer.LogEntries);
+        var entry = Assert.Single(MockServer.LogEntries);
+        var request = JsonSerializer.Deserialize(entry.RequestMessage.Body!, JsonBotSerializerContext.Default.SendMessageRequest);
+        Assert.Equal(longMessage, request!.Message);
     }
 
-    [Fact(Timeout = 15000)]
+    [Fact(Timeout = 5000)]
     public async Task SendMessage_ExtremelyLongMessage_ShouldReturnNull()
     {
         // Arrange
@@ -150,7 +156,7 @@ public class MessageTests : IntegrationTestBase
         Assert.Null(result);
     }
 
-    [Fact(Timeout = 15000)]
+    [Fact(Timeout = 5000)]
     public async Task SendMessage_RateLimited_ShouldReturnNull()
     {
         // Arrange
@@ -171,7 +177,7 @@ public class MessageTests : IntegrationTestBase
         Assert.Null(result);
     }
 
-    [Fact(Timeout = 15000)]
+    [Fact(Timeout = 5000)]
     public async Task RemoteDelete_ShouldSucceed()
     {
         // Arrange
@@ -192,8 +198,9 @@ public class MessageTests : IntegrationTestBase
         var result = await Client.RemoteDeleteAsync(RecipientNumber, timestamp, cancellationToken: TestContext.Current.CancellationToken);
 
         // Assert
-        Assert.NotNull(result);
-        Assert.Single(MockServer.LogEntries);
+        Assert.Multiple(
+            () => Assert.NotNull(result),
+            () => Assert.Single(MockServer.LogEntries));
     }
 }
 

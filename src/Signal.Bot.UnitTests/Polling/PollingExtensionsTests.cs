@@ -39,7 +39,5 @@ public class PollingExtensionsTests : BotTestBase
         ctsCanceled.Cancel();
 
         Client.StartReceiving(new DummyHandler(), cancellationToken: cts.Token);
-
-        Assert.True(true);
     }
 }

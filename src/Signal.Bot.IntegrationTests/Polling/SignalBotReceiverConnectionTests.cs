@@ -5,7 +5,7 @@ namespace Signal.Bot.IntegrationTests.Polling;
 
 public class SignalBotReceiverConnectionTests : ReceiverIntegrationTestBase
 {
-    [Fact(Timeout = 10000)]
+    [Fact(Timeout = 5000)]
     public async Task Should_Connect_To_WebSocket_Server()
     {
         // Arrange
@@ -29,7 +29,7 @@ public class SignalBotReceiverConnectionTests : ReceiverIntegrationTestBase
         await receiver.DisposeAsync();
     }
 
-    [Fact(Timeout = 10000)]
+    [Fact(Timeout = 5000)]
     public async Task Should_Handle_Server_Disconnect()
     {
         // Arrange
@@ -58,7 +58,7 @@ public class SignalBotReceiverConnectionTests : ReceiverIntegrationTestBase
         await receiver.DisposeAsync();
     }
 
-    [Fact(Timeout = 15000)]
+    [Fact(Timeout = 5000)]
     public async Task Should_Dispose_Cleanly()
     {
         // Arrange
@@ -68,6 +68,5 @@ public class SignalBotReceiverConnectionTests : ReceiverIntegrationTestBase
 
         // Act & Assert
         await receiver.DisposeAsync();
-        Assert.True(true, "Dispose completed without exception");
     }
 }

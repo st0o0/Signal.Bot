@@ -195,8 +195,9 @@ public class SendMessageTests : BotTestBase
         await Client.SendMessageAsync("+1234567890", "Test message",
             cancellationToken: TestContext.Current.CancellationToken);
 
-        await HttpClientMock.Received(1).SendAsync(Arg.Any<HttpRequestMessage>(), Arg.Any<CancellationToken>());
-        Assert.Equal(1, exceptions);
+        Assert.Multiple(
+            async () => await HttpClientMock.Received(1).SendAsync(Arg.Any<HttpRequestMessage>(), Arg.Any<CancellationToken>()),
+            () => Assert.Equal(1, exceptions));
     }
 
     [Fact(Timeout = 5000)]

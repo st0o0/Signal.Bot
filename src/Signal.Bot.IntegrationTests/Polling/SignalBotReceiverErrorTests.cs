@@ -8,7 +8,7 @@ namespace Signal.Bot.IntegrationTests.Polling;
 
 public class SignalBotReceiverErrorTests : ReceiverIntegrationTestBase
 {
-    [Fact(Timeout = 20000)]
+    [Fact(Timeout = 5000)]
     public async Task Should_Handle_Exception_In_Handler()
     {
         // Arrange
@@ -52,7 +52,7 @@ public class SignalBotReceiverErrorTests : ReceiverIntegrationTestBase
         await receiver.DisposeAsync();
     }
 
-    [Fact(Timeout = 10000)]
+    [Fact(Timeout = 5000)]
     public async Task Should_Continue_After_Handler_Exception()
     {
         // Arrange

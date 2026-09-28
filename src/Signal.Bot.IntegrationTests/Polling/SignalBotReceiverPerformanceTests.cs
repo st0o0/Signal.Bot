@@ -231,10 +231,11 @@ public class SignalBotReceiverPerformanceTests : ReceiverIntegrationTestBase
 
         // Assert
         await allReceivedTcs.Task;
-        Assert.Equal(messagesPerType, dataMessageCount);
-        Assert.Equal(messagesPerType, receiptMessageCount);
-        Assert.Equal(messagesPerType, typingMessageCount);
-        Assert.Equal(messagesPerType, syncMessageCount);
+        Assert.Multiple(
+            () => Assert.Equal(messagesPerType, dataMessageCount),
+            () => Assert.Equal(messagesPerType, receiptMessageCount),
+            () => Assert.Equal(messagesPerType, typingMessageCount),
+            () => Assert.Equal(messagesPerType, syncMessageCount));
 
         await receiver.DisposeAsync();
     }

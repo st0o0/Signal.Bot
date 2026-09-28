@@ -7,6 +7,9 @@ namespace Signal.Bot.IntegrationTests.Utils;
 
 public abstract class ReceiverIntegrationTestBase : IAsyncDisposable
 {
+    protected const string BotNumber = "+491701234567";
+    protected const string RecipientNumber = "+491709876543";
+
     protected readonly WebSocketTestServer TestServer;
     protected readonly ISignalBotClient MockClient;
     protected readonly IReceivedMessageHandler MockHandler;
@@ -20,7 +23,7 @@ public abstract class ReceiverIntegrationTestBase : IAsyncDisposable
         MockHandler = Substitute.For<IReceivedMessageHandler>();
 
         MockClient.BaseUrl.Returns($"localhost:{serverPort}");
-        MockClient.Number.Returns("+1234567890");
+        MockClient.Number.Returns(BotNumber);
         MockClient.JsonSerializerOptions.Returns(new JsonSerializerOptions());
     }
 
@@ -34,11 +37,11 @@ public abstract class ReceiverIntegrationTestBase : IAsyncDisposable
     {
         return new ReceivedMessage
         {
-            Account = "+1234567890",
+            Account = BotNumber,
             Envelope = new Envelope
             {
-                Source = "+9876543210",
-                SourceNumber = "+9876543210",
+                Source = RecipientNumber,
+                SourceNumber = RecipientNumber,
                 SourceId = Guid.NewGuid(),
                 Timestamp = DateTime.UtcNow,
                 DataMessage = new DataMessage
@@ -54,11 +57,11 @@ public abstract class ReceiverIntegrationTestBase : IAsyncDisposable
     {
         return new ReceivedMessage
         {
-            Account = "+1234567890",
+            Account = BotNumber,
             Envelope = new Envelope
             {
-                Source = "+9876543210",
-                SourceNumber = "+9876543210",
+                Source = RecipientNumber,
+                SourceNumber = RecipientNumber,
                 SourceId = Guid.NewGuid(),
                 Timestamp = DateTime.UtcNow,
                 ReceiptMessage = new ReceiptMessage
@@ -74,11 +77,11 @@ public abstract class ReceiverIntegrationTestBase : IAsyncDisposable
     {
         return new ReceivedMessage
         {
-            Account = "+1234567890",
+            Account = BotNumber,
             Envelope = new Envelope
             {
-                Source = "+9876543210",
-                SourceNumber = "+9876543210",
+                Source = RecipientNumber,
+                SourceNumber = RecipientNumber,
                 SourceId = Guid.NewGuid(),
                 Timestamp = DateTime.UtcNow,
                 TypingMessage = new TypingMessage
@@ -94,11 +97,11 @@ public abstract class ReceiverIntegrationTestBase : IAsyncDisposable
     {
         return new ReceivedMessage
         {
-            Account = "+1234567890",
+            Account = BotNumber,
             Envelope = new Envelope
             {
-                Source = "+9876543210",
-                SourceNumber = "+9876543210",
+                Source = RecipientNumber,
+                SourceNumber = RecipientNumber,
                 SourceId = Guid.NewGuid(),
                 Timestamp = DateTime.UtcNow,
                 SyncMessage = new SyncMessage

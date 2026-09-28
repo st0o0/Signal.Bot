@@ -18,12 +18,13 @@ public class MessageSerializationTests
 
         // Assert
         Assert.NotNull(result);
-        Assert.Equal("msg123", result.Account);
         Assert.NotNull(result.Envelope);
-        Assert.Equal("src123", result.Envelope.Source);
-        Assert.Null(result.Envelope.DataMessage);
-        Assert.Null(result.Envelope.ReceiptMessage);
-        Assert.Null(result.Envelope.TypingMessage);
+        Assert.Multiple(
+            () => Assert.Equal("msg123", result.Account),
+            () => Assert.Equal("src123", result.Envelope.Source),
+            () => Assert.Null(result.Envelope.DataMessage),
+            () => Assert.Null(result.Envelope.ReceiptMessage),
+            () => Assert.Null(result.Envelope.TypingMessage));
     }
 
     [Fact]
@@ -53,9 +54,10 @@ public class MessageSerializationTests
         Assert.NotNull(deserializedReceivedMessage);
         Assert.NotNull(deserializedReceivedMessage.Envelope);
         Assert.NotNull(deserializedReceivedMessage.Envelope.DataMessage);
-        Assert.Equal(receivedMessage.Account, deserializedReceivedMessage.Account);
-        Assert.Equal(receivedMessage.Envelope.DataMessage.Message,
-            deserializedReceivedMessage.Envelope.DataMessage.Message);
+        Assert.Multiple(
+            () => Assert.Equal(receivedMessage.Account, deserializedReceivedMessage.Account),
+            () => Assert.Equal(receivedMessage.Envelope.DataMessage.Message,
+                deserializedReceivedMessage.Envelope.DataMessage.Message));
     }
 
     [Fact]
@@ -64,7 +66,7 @@ public class MessageSerializationTests
         // Arrange
         var remoteDeleteMessage = new Acknowledged
         {
-            Timestamp = DateTime.Now
+            Timestamp = TimeProvider.System.GetUtcNow().DateTime
         };
 
         // Act
@@ -92,8 +94,9 @@ public class MessageSerializationTests
 
         // Assert
         Assert.NotNull(deserializedSendMessageRequest);
-        Assert.Equal(sendMessageRequest.Message, deserializedSendMessageRequest.Message);
-        Assert.Equal(sendMessageRequest.QuoteAuthor, deserializedSendMessageRequest.QuoteAuthor);
+        Assert.Multiple(
+            () => Assert.Equal(sendMessageRequest.Message, deserializedSendMessageRequest.Message),
+            () => Assert.Equal(sendMessageRequest.QuoteAuthor, deserializedSendMessageRequest.QuoteAuthor));
     }
 
     [Fact]
@@ -124,29 +127,30 @@ public class MessageSerializationTests
 
         var result = JsonSerializer.Deserialize(json, JsonBotAPI.Get<ReceivedMessage>())!;
 
-        Assert.Equal("MyAccount", result.Account);
         Assert.NotNull(result.Envelope);
         var env = result.Envelope;
-        Assert.Equal("Alice Bob", env.Source);
-        Assert.Equal("+4915112345678", env.SourceNumber);
-        Assert.Equal(Guid.Parse("f7e7c46b-8f52-4d87-a977-f352ad7f5667"), env.SourceId);
-        Assert.Equal("Alice", env.SourceName);
-        Assert.Equal(1, env.SourceDevice);
-        Assert.Equal(DateTime.UnixEpoch.AddMilliseconds(1000), env.Timestamp);
-        Assert.Equal(DateTime.UnixEpoch.AddMilliseconds(2000), env.ServerReceived);
-        Assert.Equal(DateTime.UnixEpoch.AddMilliseconds(3000), env.ServerDelivered);
-        Assert.Null(env.TypingMessage);
-        Assert.Null(env.SyncMessage);
-
+        Assert.NotNull(env.DataMessage);
         var dm = env.DataMessage;
-        Assert.NotNull(dm);
-        Assert.Equal(DateTime.UnixEpoch.AddMilliseconds(4000), dm.Timestamp);
-        Assert.Equal("Hello World", dm.Message);
-        Assert.Equal(TimeSpan.FromSeconds(604800), dm.ExpiresIn);
-        Assert.False(dm.IsExpirationUpdate);
-        Assert.False(dm.ViewOnce);
-        Assert.Null(dm.Reaction);
-        Assert.Null(dm.Attachments);
+
+        Assert.Multiple(
+            () => Assert.Equal("MyAccount", result.Account),
+            () => Assert.Equal("Alice Bob", env.Source),
+            () => Assert.Equal("+4915112345678", env.SourceNumber),
+            () => Assert.Equal(Guid.Parse("f7e7c46b-8f52-4d87-a977-f352ad7f5667"), env.SourceId),
+            () => Assert.Equal("Alice", env.SourceName),
+            () => Assert.Equal(1, env.SourceDevice),
+            () => Assert.Equal(DateTime.UnixEpoch.AddMilliseconds(1000), env.Timestamp),
+            () => Assert.Equal(DateTime.UnixEpoch.AddMilliseconds(2000), env.ServerReceived),
+            () => Assert.Equal(DateTime.UnixEpoch.AddMilliseconds(3000), env.ServerDelivered),
+            () => Assert.Null(env.TypingMessage),
+            () => Assert.Null(env.SyncMessage),
+            () => Assert.Equal(DateTime.UnixEpoch.AddMilliseconds(4000), dm.Timestamp),
+            () => Assert.Equal("Hello World", dm.Message),
+            () => Assert.Equal(TimeSpan.FromSeconds(604800), dm.ExpiresIn),
+            () => Assert.False(dm.IsExpirationUpdate),
+            () => Assert.False(dm.ViewOnce),
+            () => Assert.Null(dm.Reaction),
+            () => Assert.Null(dm.Attachments));
     }
 
     [Fact]
@@ -174,9 +178,10 @@ public class MessageSerializationTests
 
         Assert.NotNull(result.Envelope);
         Assert.NotNull(result.Envelope.DataMessage);
-        Assert.Null(result.Envelope.DataMessage.Message);
-        Assert.True(result.Envelope.DataMessage.IsExpirationUpdate);
-        Assert.Equal(TimeSpan.FromSeconds(600), result.Envelope.DataMessage.ExpiresIn);
+        Assert.Multiple(
+            () => Assert.Null(result.Envelope.DataMessage.Message),
+            () => Assert.True(result.Envelope.DataMessage.IsExpirationUpdate),
+            () => Assert.Equal(TimeSpan.FromSeconds(600), result.Envelope.DataMessage.ExpiresIn));
     }
 
     [Fact]
@@ -202,9 +207,10 @@ public class MessageSerializationTests
         var typing = result.Envelope.TypingMessage;
 
         Assert.NotNull(typing);
-        Assert.Equal(TypingAction.Started, typing.Action);
-        Assert.Equal(DateTime.UnixEpoch.AddMilliseconds(8000), typing.Timestamp);
-        Assert.Null(result.Envelope.DataMessage);
+        Assert.Multiple(
+            () => Assert.Equal(TypingAction.Started, typing.Action),
+            () => Assert.Equal(DateTime.UnixEpoch.AddMilliseconds(8000), typing.Timestamp),
+            () => Assert.Null(result.Envelope.DataMessage));
     }
 
     [Fact]
@@ -244,14 +250,13 @@ public class MessageSerializationTests
         var reads = result.Envelope.SyncMessage.ReadMessages;
 
         Assert.Equal(2, reads.Count);
-
-        Assert.Equal("Alice", reads[0].Sender);
-        Assert.Equal("+49123", reads[0].SenderNumber);
-        Assert.Equal(Guid.Parse("17d4540e-6337-4271-a77e-3e6ed0907dfb"), reads[0].SenderId);
-        Assert.Equal(DateTime.UnixEpoch.AddMilliseconds(9000), reads[0].Timestamp);
-
-        Assert.Equal("Bob", reads[1].Sender);
-        Assert.Equal(Guid.Parse("068b6bfd-9317-49f0-b00e-d399a66fee45"), reads[1].SenderId);
+        Assert.Multiple(
+            () => Assert.Equal("Alice", reads[0].Sender),
+            () => Assert.Equal("+49123", reads[0].SenderNumber),
+            () => Assert.Equal(Guid.Parse("17d4540e-6337-4271-a77e-3e6ed0907dfb"), reads[0].SenderId),
+            () => Assert.Equal(DateTime.UnixEpoch.AddMilliseconds(9000), reads[0].Timestamp),
+            () => Assert.Equal("Bob", reads[1].Sender),
+            () => Assert.Equal(Guid.Parse("068b6bfd-9317-49f0-b00e-d399a66fee45"), reads[1].SenderId));
     }
 
     [Fact]
@@ -286,16 +291,17 @@ public class MessageSerializationTests
         Assert.NotNull(result.Envelope.SyncMessage.SentMessage);
         var sent = result.Envelope.SyncMessage.SentMessage;
 
-        Assert.Equal("Carol", sent.Destination);
-        Assert.Equal("+49789", sent.DestinationNumber);
-        Assert.Equal(Guid.Parse("399e537d-6ff9-4ee4-9561-0f5592659fda"), sent.DestinationId);
-        Assert.Equal(DateTime.UnixEpoch.AddMilliseconds(11000), sent.Timestamp);
-        Assert.Null(sent.Message);
-        Assert.Equal(TimeSpan.FromSeconds(2592000), sent.ExpiresIn);
-        Assert.True(sent.IsExpirationUpdate);
-        Assert.False(sent.ViewOnce);
-        Assert.Null(sent.Reaction);
-        Assert.Null(sent.Attachments);
+        Assert.Multiple(
+            () => Assert.Equal("Carol", sent.Destination),
+            () => Assert.Equal("+49789", sent.DestinationNumber),
+            () => Assert.Equal(Guid.Parse("399e537d-6ff9-4ee4-9561-0f5592659fda"), sent.DestinationId),
+            () => Assert.Equal(DateTime.UnixEpoch.AddMilliseconds(11000), sent.Timestamp),
+            () => Assert.Null(sent.Message),
+            () => Assert.Equal(TimeSpan.FromSeconds(2592000), sent.ExpiresIn),
+            () => Assert.True(sent.IsExpirationUpdate),
+            () => Assert.False(sent.ViewOnce),
+            () => Assert.Null(sent.Reaction),
+            () => Assert.Null(sent.Attachments));
     }
 
     [Fact]
@@ -338,11 +344,12 @@ public class MessageSerializationTests
         Assert.NotNull(result.Envelope.SyncMessage.SentMessage);
         var reaction = result.Envelope.SyncMessage.SentMessage.Reaction!;
 
-        Assert.Equal("👍", reaction.Emoji);
-        Assert.Equal("Eve", reaction.TargetAuthor);
-        Assert.Equal(Guid.Parse("2450bb5a-d476-44b9-8986-4866a48f1c65"), reaction.TargetAuthorId);
-        Assert.Equal(DateTime.UnixEpoch.AddMilliseconds(13000), reaction.TargetSent);
-        Assert.True(reaction.IsRemove);
+        Assert.Multiple(
+            () => Assert.Equal("👍", reaction.Emoji),
+            () => Assert.Equal("Eve", reaction.TargetAuthor),
+            () => Assert.Equal(Guid.Parse("2450bb5a-d476-44b9-8986-4866a48f1c65"), reaction.TargetAuthorId),
+            () => Assert.Equal(DateTime.UnixEpoch.AddMilliseconds(13000), reaction.TargetSent),
+            () => Assert.True(reaction.IsRemove));
     }
 
     [Fact]
@@ -380,11 +387,12 @@ public class MessageSerializationTests
         Assert.NotNull(result.Envelope.DataMessage.Reaction);
         var reaction = result.Envelope.DataMessage.Reaction;
 
-        Assert.Equal("❤️", reaction.Emoji);
-        Assert.Equal("Grace", reaction.TargetAuthor);
-        Assert.Equal(Guid.Parse("f1badf5e-36f7-4d67-a2cc-6caf86296693"), reaction.TargetAuthorId);
-        Assert.Equal(DateTime.UnixEpoch.AddMilliseconds(15000), reaction.TargetSent);
-        Assert.False(reaction.IsRemove);
+        Assert.Multiple(
+            () => Assert.Equal("❤️", reaction.Emoji),
+            () => Assert.Equal("Grace", reaction.TargetAuthor),
+            () => Assert.Equal(Guid.Parse("f1badf5e-36f7-4d67-a2cc-6caf86296693"), reaction.TargetAuthorId),
+            () => Assert.Equal(DateTime.UnixEpoch.AddMilliseconds(15000), reaction.TargetSent),
+            () => Assert.False(reaction.IsRemove));
     }
 
     [Fact]
@@ -434,14 +442,15 @@ public class MessageSerializationTests
         var attachments = result.Envelope.SyncMessage.SentMessage.Attachments;
 
         var item = Assert.Single(attachments);
-        Assert.Equal("audio/aac", item.ContentType);
-        Assert.Null(item.Filename);
-        Assert.Equal("attach-001", item.Id);
-        Assert.Equal(62869L, item.Size);
-        Assert.Null(item.Width);
-        Assert.Null(item.Height);
-        Assert.Null(item.Caption);
-        Assert.Equal(DateTime.UnixEpoch.AddMilliseconds(17000), item.UploadTimestamp);
+        Assert.Multiple(
+            () => Assert.Equal("audio/aac", item.ContentType),
+            () => Assert.Null(item.Filename),
+            () => Assert.Equal("attach-001", item.Id),
+            () => Assert.Equal(62869L, item.Size),
+            () => Assert.Null(item.Width),
+            () => Assert.Null(item.Height),
+            () => Assert.Null(item.Caption),
+            () => Assert.Equal(DateTime.UnixEpoch.AddMilliseconds(17000), item.UploadTimestamp));
     }
 
     [Fact]
@@ -488,10 +497,11 @@ public class MessageSerializationTests
         Assert.NotNull(result.Envelope.SyncMessage.SentMessage.GroupInfo);
         var groupInfo = result.Envelope.SyncMessage.SentMessage.GroupInfo;
 
-        Assert.Equal("Dolor Servus", groupInfo.Id);
-        Assert.Equal("Anonym Lorem", groupInfo.Name);
-        Assert.Equal(6455, groupInfo.Revision);
-        Assert.Equal(GroupInfoType.Deliver, groupInfo.Type);
+        Assert.Multiple(
+            () => Assert.Equal("Dolor Servus", groupInfo.Id),
+            () => Assert.Equal("Anonym Lorem", groupInfo.Name),
+            () => Assert.Equal(6455, groupInfo.Revision),
+            () => Assert.Equal(GroupInfoType.Deliver, groupInfo.Type));
     }
 
     [Fact]
@@ -555,11 +565,12 @@ public class MessageSerializationTests
         Assert.NotNull(result.Envelope.SyncMessage.SentMessage.Previews);
         var previews = result.Envelope.SyncMessage.SentMessage.Previews;
         var item = Assert.Single(previews);
-        Assert.Equal("Lorem Lorem", item.Title);
-        Assert.Equal("Dolor Amet", item.Url);
-        Assert.Equal("Leberkas KEKW", item.Description);
         Assert.NotNull(item.Image);
-        Assert.Equal("Ipsum Lorem", item.Image.Id);
+        Assert.Multiple(
+            () => Assert.Equal("Lorem Lorem", item.Title),
+            () => Assert.Equal("Dolor Amet", item.Url),
+            () => Assert.Equal("Leberkas KEKW", item.Description),
+            () => Assert.Equal("Ipsum Lorem", item.Image.Id));
     }
 
     [Fact]
@@ -624,8 +635,9 @@ public class MessageSerializationTests
         Assert.NotNull(result.Envelope.CallMessage);
         var callMessage = result.Envelope.CallMessage;
         Assert.NotNull(callMessage.HangupMessage);
-        Assert.Equal(65669, callMessage.HangupMessage.Id);
-        Assert.Equal(66344, callMessage.HangupMessage.DeviceId);
-        Assert.Equal(HangupType.Accepted, callMessage.HangupMessage.Type);
+        Assert.Multiple(
+            () => Assert.Equal(65669, callMessage.HangupMessage.Id),
+            () => Assert.Equal(66344, callMessage.HangupMessage.DeviceId),
+            () => Assert.Equal(HangupType.Accepted, callMessage.HangupMessage.Type));
     }
 }

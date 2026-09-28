@@ -33,8 +33,9 @@ public class SignalBotReceiverMessageTests : ReceiverIntegrationTestBase
 
         // Assert
         var completed = await messageReceivedTcs.Task;
-        Assert.NotNull(completed);
-        Assert.Equal("Hello from server!", completed.Envelope?.DataMessage?.Message);
+        Assert.Multiple(
+            () => Assert.NotNull(completed),
+            () => Assert.Equal("Hello from server!", completed.Envelope?.DataMessage?.Message));
 
         await receiver.DisposeAsync();
     }
@@ -65,8 +66,9 @@ public class SignalBotReceiverMessageTests : ReceiverIntegrationTestBase
 
         // Assert
         var completed = await messageReceivedTcs.Task;
-        Assert.NotNull(completed);
-        Assert.Equal("Binary message!", completed.Envelope?.DataMessage?.Message);
+        Assert.Multiple(
+            () => Assert.NotNull(completed),
+            () => Assert.Equal("Binary message!", completed.Envelope?.DataMessage?.Message));
 
         await receiver.DisposeAsync();
     }
@@ -186,9 +188,10 @@ public class SignalBotReceiverMessageTests : ReceiverIntegrationTestBase
         // Assert
         var completed = await messageReceivedTcs.Task;
         Assert.NotNull(completed);
-        Assert.Equal("Hello group!", completed.Envelope?.DataMessage?.Message);
-        Assert.Equal("Test Group", completed.Envelope?.DataMessage?.GroupInfo?.Name);
-        Assert.Equal("group-123", completed.Envelope?.DataMessage?.GroupInfo?.Id);
+        Assert.Multiple(
+            () => Assert.Equal("Hello group!", completed.Envelope?.DataMessage?.Message),
+            () => Assert.Equal("Test Group", completed.Envelope?.DataMessage?.GroupInfo?.Name),
+            () => Assert.Equal("group-123", completed.Envelope?.DataMessage?.GroupInfo?.Id));
 
         await receiver.DisposeAsync();
     }
@@ -220,8 +223,9 @@ public class SignalBotReceiverMessageTests : ReceiverIntegrationTestBase
         Assert.NotNull(completed);
         Assert.NotNull(completed.Envelope?.DataMessage?.Attachments);
         var item = Assert.Single(completed.Envelope.DataMessage.Attachments);
-        Assert.Equal("document.pdf", item.Filename);
-        Assert.Equal("application/pdf", item.ContentType);
+        Assert.Multiple(
+            () => Assert.Equal("document.pdf", item.Filename),
+            () => Assert.Equal("application/pdf", item.ContentType));
 
         await receiver.DisposeAsync();
     }

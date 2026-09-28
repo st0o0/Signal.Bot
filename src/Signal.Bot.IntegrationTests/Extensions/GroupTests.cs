@@ -101,8 +101,9 @@ public class GroupTests : IntegrationTestBase
         var result = await Client.GetGroupsAsync(cancellationToken: TestContext.Current.CancellationToken);
 
         // Assert
-        Assert.Single(MockServer.LogEntries);
-        Assert.Single(result);
+        Assert.Multiple(
+            () => Assert.Single(MockServer.LogEntries),
+            () => Assert.Single(result));
     }
 
     [Fact(Timeout = 15000)]

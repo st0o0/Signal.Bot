@@ -58,10 +58,11 @@ public class DefaultReceivedMessageHandlerTests
         await _handler.HandleAsync(_clientMock, _message, TestContext.Current.CancellationToken);
 
         // Assert
-        await _updateHandlerMock.Received(1)(Arg.Any<ISignalBotClient>(), Arg.Any<ReceivedMessage>(),
-            Arg.Any<CancellationToken>());
-        await _errorHandlerMock.DidNotReceive()(Arg.Any<ISignalBotClient>(), Arg.Any<Error>(),
-            Arg.Any<CancellationToken>());
+        Assert.Multiple(
+            async () => await _updateHandlerMock.Received(1)(Arg.Any<ISignalBotClient>(), Arg.Any<ReceivedMessage>(),
+                Arg.Any<CancellationToken>()),
+            async () => await _errorHandlerMock.DidNotReceive()(Arg.Any<ISignalBotClient>(), Arg.Any<Error>(),
+                Arg.Any<CancellationToken>()));
     }
 
     [Fact(Timeout = 5000)]
@@ -118,7 +119,8 @@ public class DefaultReceivedMessageHandlerTests
         await _handler.HandleErrorAsync(_clientMock, _error, TestContext.Current.CancellationToken);
 
         // Assert
-        await _updateHandlerMock.Received(1)(Arg.Is(_clientMock), Arg.Is(_message), Arg.Is(TestContext.Current.CancellationToken));
-        await _errorHandlerMock.Received(1)(Arg.Is(_clientMock), Arg.Is(_error), Arg.Is(TestContext.Current.CancellationToken));
+        Assert.Multiple(
+            async () => await _updateHandlerMock.Received(1)(Arg.Is(_clientMock), Arg.Is(_message), Arg.Is(TestContext.Current.CancellationToken)),
+            async () => await _errorHandlerMock.Received(1)(Arg.Is(_clientMock), Arg.Is(_error), Arg.Is(TestContext.Current.CancellationToken)));
     }
 }

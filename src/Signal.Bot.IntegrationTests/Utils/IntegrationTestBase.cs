@@ -15,10 +15,10 @@ public abstract class IntegrationTestBase : IAsyncDisposable
         Client = new SignalBotClient(x => x.WithBaseUrl(MockServer.Url!).WithNumber(BotNumber));
     }
 
-    public virtual async ValueTask DisposeAsync()
+    public virtual ValueTask DisposeAsync()
     {
         MockServer.Stop();
         MockServer.Dispose();
-        await ValueTask.CompletedTask;
+        return ValueTask.CompletedTask;
     }
 }

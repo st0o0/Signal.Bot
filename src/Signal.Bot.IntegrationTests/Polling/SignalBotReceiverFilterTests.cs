@@ -46,8 +46,9 @@ public class SignalBotReceiverFilterTests : ReceiverIntegrationTestBase
         // Assert
         await dataMessageTcs.Task;
         var item = Assert.Single(receivedMessages);
-        Assert.NotNull(item.Envelope?.DataMessage);
-        Assert.Null(item.Envelope?.ReceiptMessage);
+        Assert.Multiple(
+            () => Assert.NotNull(item.Envelope?.DataMessage),
+            () => Assert.Null(item.Envelope?.ReceiptMessage));
 
         await receiver.DisposeAsync();
     }
@@ -89,8 +90,9 @@ public class SignalBotReceiverFilterTests : ReceiverIntegrationTestBase
         // Assert
         await dataMessageTcs.Task;
         var item = Assert.Single(receivedMessages);
-        Assert.NotNull(item.Envelope?.DataMessage);
-        Assert.Null(receivedMessages.First().Envelope?.TypingMessage);
+        Assert.Multiple(
+            () => Assert.NotNull(item.Envelope?.DataMessage),
+            () => Assert.Null(item.Envelope?.TypingMessage));
 
         await receiver.DisposeAsync();
     }
@@ -132,8 +134,9 @@ public class SignalBotReceiverFilterTests : ReceiverIntegrationTestBase
         // Assert
         await dataMessageTcs.Task;
         var item = Assert.Single(receivedMessages);
-        Assert.NotNull(item.Envelope?.DataMessage);
-        Assert.Null(item.Envelope?.SyncMessage);
+        Assert.Multiple(
+            () => Assert.NotNull(item.Envelope?.DataMessage),
+            () => Assert.Null(item.Envelope?.SyncMessage));
 
         await receiver.DisposeAsync();
     }
@@ -177,8 +180,9 @@ public class SignalBotReceiverFilterTests : ReceiverIntegrationTestBase
         // Assert
         await dataMessageTcs.Task;
         var item = Assert.Single(receivedMessages);
-        Assert.NotNull(item.Envelope?.DataMessage);
-        Assert.Equal("Data message", item.Envelope?.DataMessage?.Message);
+        Assert.Multiple(
+            () => Assert.NotNull(item.Envelope?.DataMessage),
+            () => Assert.Equal("Data message", item.Envelope?.DataMessage?.Message));
 
         await receiver.DisposeAsync();
     }

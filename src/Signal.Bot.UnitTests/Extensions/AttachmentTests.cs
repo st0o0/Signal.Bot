@@ -90,8 +90,9 @@ public class AttachmentTests : BotTestBase
         await Client.GetAttachmentAsync(attachmentId, cancellationToken: TestContext.Current.CancellationToken);
 
         // Assert
-        Assert.NotNull(capturedRequest);
-        Assert.Equal(cts.Token.IsCancellationRequested, capturedToken.IsCancellationRequested);
+        Assert.Multiple(
+            () => Assert.NotNull(capturedRequest),
+            () => Assert.Equal(cts.Token.IsCancellationRequested, capturedToken.IsCancellationRequested));
     }
 
     [Fact(Timeout = 5000)]
@@ -157,8 +158,9 @@ public class AttachmentTests : BotTestBase
             Client.GetAttachmentAsync(attachmentId, cancellationToken: TestContext.Current.CancellationToken));
 
         // Assert
-        Assert.IsType<HttpRequestException>(catchedException);
-        Assert.Equal(message, catchedException.Message);
+        Assert.Multiple(
+            () => Assert.IsType<HttpRequestException>(catchedException),
+            () => Assert.Equal(message, catchedException.Message));
     }
 
     [Fact(Timeout = 5000)]
@@ -184,8 +186,9 @@ public class AttachmentTests : BotTestBase
             await Client.GetAttachmentAsync(attachmentId, cancellationToken: TestContext.Current.CancellationToken);
 
         // Assert
-        Assert.Equal(largeData.Length, result.Length);
-        Assert.Equal(largeData, result);
+        Assert.Multiple(
+            () => Assert.Equal(largeData.Length, result.Length),
+            () => Assert.Equal(largeData, result));
     }
 
     [Theory(Timeout = 5000)]
@@ -216,8 +219,9 @@ public class AttachmentTests : BotTestBase
             await Client.GetAttachmentAsync(attachmentId, cancellationToken: TestContext.Current.CancellationToken);
 
         // Assert
-        Assert.Equal(fullData.Length, result.Length);
-        Assert.Equal(expectedHeader, result.Take(expectedHeader.Length).ToArray());
+        Assert.Multiple(
+            () => Assert.Equal(fullData.Length, result.Length),
+            () => Assert.Equal(expectedHeader, result.Take(expectedHeader.Length).ToArray()));
     }
 
     [Fact(Timeout = 5000)]

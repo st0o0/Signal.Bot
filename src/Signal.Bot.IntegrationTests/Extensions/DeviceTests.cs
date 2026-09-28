@@ -30,8 +30,9 @@ public class DeviceTests : IntegrationTestBase
 
         // Assert
         var item = Assert.Single(result);
-        Assert.Equal(1, item.Id);
-        Assert.Equal("Phone", item.Name);
+        Assert.Multiple(
+            () => Assert.Equal(1, item.Id),
+            () => Assert.Equal("Phone", item.Name));
     }
 
     [Fact(Timeout = 15000)]
@@ -109,7 +110,8 @@ public class DeviceTests : IntegrationTestBase
             cancellationToken: TestContext.Current.CancellationToken);
 
         // Assert
-        Assert.NotNull(result);
-        Assert.Equal("tsdevice:/?uuid=abc&pub_key=xyz", result.DeviceLinkUri);
+        Assert.Multiple(
+            () => Assert.NotNull(result),
+            () => Assert.Equal("tsdevice:/?uuid=abc&pub_key=xyz", result!.DeviceLinkUri));
     }
 }

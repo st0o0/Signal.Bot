@@ -102,7 +102,7 @@ public class ErrorHandlingTests
     }
 
     [Fact]
-    public void RequestException_SetsPropertiesCorrectly2()
+    public void RequestException_WithMessageAndInnerException_SetsProperties()
     {
         // Arrange
         const string message = "Error";
@@ -117,7 +117,7 @@ public class ErrorHandlingTests
     }
 
     [Fact]
-    public void RequestException_SetsPropertiesCorrectly3()
+    public void RequestException_WithMessageAndStatusCode_SetsProperties()
     {
         // Arrange
         const string message = "Error";
@@ -132,7 +132,7 @@ public class ErrorHandlingTests
     }
 
     [Fact]
-    public void RequestException_SetsPropertiesCorrectly4()
+    public void RequestException_WithMessageOnly_SetsProperties()
     {
         // Arrange
         const string message = "Error";

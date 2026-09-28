@@ -10,7 +10,7 @@ namespace Signal.Bot.IntegrationTests.Extensions;
 
 public class ContactExtendedTests : IntegrationTestBase
 {
-    [Fact(Timeout = 15000)]
+    [Fact(Timeout = 5000)]
     public async Task SyncContacts_ShouldSucceed()
     {
         // Arrange
@@ -28,7 +28,7 @@ public class ContactExtendedTests : IntegrationTestBase
         Assert.Single(MockServer.LogEntries);
     }
 
-    [Fact(Timeout = 15000)]
+    [Fact(Timeout = 5000)]
     public async Task GetContact_ShouldReturnContact()
     {
         // Arrange
@@ -49,11 +49,12 @@ public class ContactExtendedTests : IntegrationTestBase
 
         // Assert
         Assert.NotNull(result);
-        Assert.Equal(RecipientNumber, result.Number);
-        Assert.Equal("Test User", result.Name);
+        Assert.Multiple(
+            () => Assert.Equal(RecipientNumber, result.Number),
+            () => Assert.Equal("Test User", result.Name));
     }
 
-    [Fact(Timeout = 15000)]
+    [Fact(Timeout = 5000)]
     public async Task GetContactAvatar_ShouldReturnBytes()
     {
         // Arrange

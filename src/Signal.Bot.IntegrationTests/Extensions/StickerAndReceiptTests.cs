@@ -33,7 +33,9 @@ public class StickerAndReceiptTests : IntegrationTestBase
 
         // Assert
         var item = Assert.Single(result);
-        Assert.Equal("pack1", item.PackId);
+        Assert.Multiple(
+            () => Assert.NotNull(item),
+            () => Assert.Equal("pack1", item.PackId));
     }
 
     [Fact(Timeout = 15000)]
@@ -66,7 +68,7 @@ public class StickerAndReceiptTests : IntegrationTestBase
                 .WithStatusCode(HttpStatusCode.OK));
 
         // Act
-        await Client.SendReceiptAsync(RecipientNumber, DateTime.UtcNow,
+        await Client.SendReceiptAsync(RecipientNumber, TimeProvider.System.GetUtcNow().DateTime,
             cancellationToken: TestContext.Current.CancellationToken);
 
         // Assert
