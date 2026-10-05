@@ -115,7 +115,17 @@ public record SendMessageRequest() : RequestBase<Acknowledged>("v2/send")
 - Sync tests: plain `[Fact]` (no Timeout - xUnit1069 warns when Timeout is set
   without observing `CancellationToken`).
 - Use `Assert.Multiple(...)` to group related assertions on the same object.
-- Assert with `HttpClientMock.Received(1).SendAsync(...)`.
+- Assert with `HttpClientMock.Received(1).SendAsync(Arg.Is<HttpRequestMessage>(req => ...))`
+  — specify the exact method/route/body expected, not just that a call
+  happened.
+- **Assert the exact computed value, not just existence.** When behavior
+  produces a concrete value, assert on that value directly instead of
+  settling for "it's not null."
+- **Exceptions: capture and inspect, not just the type.**
+  `var ex = Assert.Throws<T>(...)`, then assert on `ex`'s actual fields
+  (e.g. `ex.ParamName`) — not just the exception type.
+- **`Assert.IsType<T>(obj, exactMatch: false)`** to prove interface
+  conformance (e.g. `IAsyncDisposable`) instead of an unchecked cast.
 
 ### Integration tests
 
