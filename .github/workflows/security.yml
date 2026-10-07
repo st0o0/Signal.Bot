@@ -18,6 +18,7 @@ jobs:
     uses: st0o0/github-workflows/.github/workflows/security.yml@main
     with:
       scan-type: fs
+      trivy-config: trivy.yaml
     permissions:
       contents: read
       security-events: write
