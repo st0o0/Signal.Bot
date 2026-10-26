@@ -64,6 +64,7 @@ jobs:
     with:
       needs-dotnet-build: true
       dotnet-project-path: src
+      fetch-depth: 0
     permissions:
       contents: read
       pages: write
