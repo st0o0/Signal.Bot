@@ -13,6 +13,6 @@
   "devDependencies": {
     "vitepress": "1.6.4",
     "xml2js": "^0.6.2",
-    "glob": "^13.0.6"
+    "glob": "^14.0.0"
   }
 }
