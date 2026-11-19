@@ -26,4 +26,5 @@ jobs:
       trivy-config: trivy.yaml
     permissions:
       contents: read
+      packages: read
       security-events: write
