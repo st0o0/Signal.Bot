@@ -5,11 +5,13 @@ on:
     paths:
       - 'src/Directory.Packages.props'
       - 'src/**/*.csproj'
+      - 'trivy.yaml'
   push:
     branches: [main]
     paths:
       - 'src/Directory.Packages.props'
       - 'src/**/*.csproj'
+      - 'trivy.yaml'
   schedule:
     - cron: '0 6 * * 1'
   workflow_dispatch:
