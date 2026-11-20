@@ -38,6 +38,7 @@
     <ItemGroup>
         <PackageReference Include="Microsoft.DotNet.ILCompiler" />
         <PackageReference Include="Microsoft.NET.ILLink.Tasks" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions"/>
         <PackageReference Include="R3"/>
         <PackageReference Include="WebSocket.Rx"/>
     </ItemGroup>

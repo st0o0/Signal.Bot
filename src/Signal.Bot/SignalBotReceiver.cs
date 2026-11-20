@@ -2,6 +2,8 @@ using System.Net.WebSockets;
 using R3;
 using System.Text;
 using System.Text.Json;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.IO;
 using Signal.Bot.Internal;
 using Signal.Bot.Serialization;
@@ -26,18 +28,21 @@ internal sealed class SignalBotReceiver : IAsyncDisposable
 
     private int _disposed;
     private readonly ISignalBotClient _client;
+    private readonly ILogger _logger;
     private IReactiveWebSocketClient? _websocketClient;
     private CompositeDisposable? _disposables;
     private CancellationTokenSource? _disposeCts;
     private CancellationTokenSource? _linkedCts;
 
 
-    public SignalBotReceiver(ISignalBotClient client)
+    public SignalBotReceiver(ISignalBotClient client, ILogger<SignalBotReceiver>? logger = null)
     {
         _client = client ?? throw new ArgumentNullException(nameof(client));
+        _logger = logger ?? NullLogger<SignalBotReceiver>.Instance;
     }
 
-    internal SignalBotReceiver(ISignalBotClient client, IReactiveWebSocketClient websocketClient) : this(client)
+    internal SignalBotReceiver(ISignalBotClient client, IReactiveWebSocketClient websocketClient,
+        ILogger<SignalBotReceiver>? logger = null) : this(client, logger)
     {
         _websocketClient = websocketClient;
     }
@@ -100,9 +105,10 @@ internal sealed class SignalBotReceiver : IAsyncDisposable
                             .HandleErrorAsync(_client, new Error(ex, FailureSource.MessageReceived), _linkedCts.Token)
                             .ConfigureAwait(false);
                     }
-                    catch
+                    catch (Exception handlerEx) when (handlerEx is not OperationCanceledException)
                     {
-                        // noop
+                        _logger.LogWarning(handlerEx,
+                            "Error handler failed while processing a received message; continuing to receive");
                     }
                 }
             }, _ => { });
@@ -136,9 +142,10 @@ internal sealed class SignalBotReceiver : IAsyncDisposable
                                 new Error(ex, FailureSource.Failed), _linkedCts.Token)
                             .ConfigureAwait(false);
                     }
-                    catch
+                    catch (Exception handlerEx) when (handlerEx is not OperationCanceledException)
                     {
-                        // noop
+                        _logger.LogWarning(handlerEx,
+                            "Error handler failed while processing a receiver error; continuing to receive");
                     }
                 }
             }, result => result.TryThrow());
@@ -175,9 +182,9 @@ internal sealed class SignalBotReceiver : IAsyncDisposable
                 .StopAsync(WebSocketCloseStatus.NormalClosure, "Disposed")
                 .WaitAsync(TimeSpan.FromSeconds(1), CancellationToken.None) ?? Task.CompletedTask);
         }
-        catch
+        catch (Exception ex)
         {
-            // noop
+            _logger.LogDebug(ex, "Error while stopping the websocket client during disposal; continuing cleanup");
         }
 
         await (_disposeCts?.CancelAsync() ?? Task.CompletedTask);
