@@ -637,7 +637,11 @@ public static class Extensions
     {
         var request = new GetGroupAvatarRequest(client.Number, groupId);
         var result = await client.SendAsync(request, cancellationToken: cancellationToken);
-        if (!result.IsSuccessStatusCode) return [];
+        if (!result.IsSuccessStatusCode)
+        {
+            return [];
+        }
+
         return await result.Content.ReadAsByteArrayAsync(cancellationToken);
     }
 
@@ -764,7 +768,11 @@ public static class Extensions
         ArgumentException.ThrowIfNullOrWhiteSpace(attachmentId);
         var request = new GetAttachmentRequest(attachmentId);
         var result = await client.SendAsync(request, cancellationToken: cancellationToken);
-        if (!result.IsSuccessStatusCode) return [];
+        if (!result.IsSuccessStatusCode)
+        {
+            return [];
+        }
+
         return await result.Content.ReadAsByteArrayAsync(cancellationToken);
     }
 
@@ -1100,7 +1108,11 @@ public static class Extensions
     {
         var request = new GetContactAvatarRequest(client.Number, contactUuid);
         var result = await client.SendAsync(request, cancellationToken: cancellationToken);
-        if (!result.IsSuccessStatusCode) return [];
+        if (!result.IsSuccessStatusCode)
+        {
+            return [];
+        }
+
         return await result.Content.ReadAsByteArrayAsync(cancellationToken);
     }
 

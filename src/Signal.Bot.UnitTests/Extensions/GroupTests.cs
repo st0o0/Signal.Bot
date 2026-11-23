@@ -70,7 +70,7 @@ public class GroupTests : BotTestBase
     {
         SetupResponse();
 
-        await Client.RemoveGroupAdminAsync("group-id", new List<string> { "+100" }, cancellationToken: TestContext.Current.CancellationToken);
+        await Client.RemoveGroupAdminAsync("group-id", ["+100"], cancellationToken: TestContext.Current.CancellationToken);
 
         await HttpClientMock.Received(1).SendAsync(Arg.Any<HttpRequestMessage>(), Arg.Any<CancellationToken>());
     }
@@ -100,7 +100,7 @@ public class GroupTests : BotTestBase
     {
         SetupResponse();
 
-        await Client.AddGroupMemberAsync("group-id", new List<string> { "+100" }, cancellationToken: TestContext.Current.CancellationToken);
+        await Client.AddGroupMemberAsync("group-id", ["+100"], cancellationToken: TestContext.Current.CancellationToken);
 
         await HttpClientMock.Received(1).SendAsync(Arg.Any<HttpRequestMessage>(), Arg.Any<CancellationToken>());
     }
@@ -110,7 +110,7 @@ public class GroupTests : BotTestBase
     {
         SetupResponse();
 
-        await Client.RemoveGroupMemberAsync("group-id", new List<string> { "+100" }, cancellationToken: TestContext.Current.CancellationToken);
+        await Client.RemoveGroupMemberAsync("group-id", ["+100"], cancellationToken: TestContext.Current.CancellationToken);
 
         await HttpClientMock.Received(1).SendAsync(Arg.Any<HttpRequestMessage>(), Arg.Any<CancellationToken>());
     }

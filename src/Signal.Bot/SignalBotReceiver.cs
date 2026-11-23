@@ -150,11 +150,11 @@ internal sealed class SignalBotReceiver : IAsyncDisposable
                 }
             }, result => result.TryThrow());
 
-        _disposables = new CompositeDisposable
-        {
+        _disposables =
+        [
             errorSubscription,
             messageSubscription
-        };
+        ];
 
         await _websocketClient.StartAsync(cancellationToken).ConfigureAwait(false);
 

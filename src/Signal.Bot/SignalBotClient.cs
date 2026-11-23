@@ -101,7 +101,11 @@ public sealed class SignalBotClient : ISignalBotClient
             }
             catch (TaskCanceledException exception)
             {
-                if (cancellationToken.IsCancellationRequested) throw;
+                if (cancellationToken.IsCancellationRequested)
+                {
+                    throw;
+                }
+
                 throw new RequestException("Bot API Request timed out", exception);
             }
 
@@ -165,7 +169,10 @@ public sealed class SignalBotClient : ISignalBotClient
     /// <param name="disposing">True to release both managed and unmanaged resources; false to release only unmanaged resources.</param>
     private void Dispose(bool disposing)
     {
-        if (!disposing) return;
+        if (!disposing)
+        {
+            return;
+        }
 
         _httpClient.Dispose();
         _onApiRequest.OnCompleted();

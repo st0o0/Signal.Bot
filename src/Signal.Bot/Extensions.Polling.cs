@@ -1,4 +1,4 @@
-﻿using Signal.Bot.Polling;
+using Signal.Bot.Polling;
 using Signal.Bot.Types;
 
 namespace Signal.Bot;
