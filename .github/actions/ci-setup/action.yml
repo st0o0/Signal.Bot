@@ -1,0 +1,8 @@
+name: CI Setup
+description: Install native AOT toolchain for publish verification
+
+runs:
+  using: composite
+  steps:
+    - run: sudo apt-get install -y --no-install-recommends clang zlib1g-dev
+      shell: bash

@@ -1,0 +1,8 @@
+name: CI Post-Build
+description: Verify Native AOT publish succeeds without trim/AOT warnings
+
+runs:
+  using: composite
+  steps:
+    - run: dotnet publish src/Signal.Bot.Example/Signal.Bot.Example.csproj -c Release -p:ContinuousIntegrationBuild=true
+      shell: bash
