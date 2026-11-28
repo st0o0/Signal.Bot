@@ -20,7 +20,7 @@ concurrency:
 
 jobs:
   scan:
-    uses: st0o0/github-workflows/.github/workflows/security.yml@main
+    uses: st0o0/github-workflows/.github/workflows/security.yml@v1.0.0
     with:
       scan-type: fs
       skip-dirs: docs
