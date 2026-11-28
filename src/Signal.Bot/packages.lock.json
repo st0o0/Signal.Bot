@@ -31,13 +31,13 @@
       },
       "WebSocket.Rx": {
         "type": "Direct",
-        "requested": "[0.1.10, )",
-        "resolved": "0.1.10",
-        "contentHash": "wbwJh0Iei1QO6w8nhJ09WRskCtC9VQYhVcgXxpXw6Ic3Kt7IMtICAIp7XFQj9vAmbOzsmNomq27UZAvjUa56xw==",
+        "requested": "[0.1.11, )",
+        "resolved": "0.1.11",
+        "contentHash": "6PMnROjMQCG9qll6FQofmCzfiZy+tk/r+dj8WgiGp4ZeOObpoADmkxEAFSqyDhoaFJ1nsLszyHsC3X4hqMPpJQ==",
         "dependencies": {
-          "Microsoft.DotNet.ILCompiler": "10.0.5",
-          "Microsoft.IO.RecyclableMemoryStream": "[3.0.1, 4.0.0)",
-          "Microsoft.NET.ILLink.Tasks": "10.0.5",
+          "Microsoft.DotNet.ILCompiler": "10.0.15",
+          "Microsoft.IO.RecyclableMemoryStream": "[4.0.1, 5.0.0)",
+          "Microsoft.NET.ILLink.Tasks": "10.0.15",
           "R3": "[1.3.1, 2.0.0)"
         }
       },
@@ -48,8 +48,8 @@
       },
       "Microsoft.IO.RecyclableMemoryStream": {
         "type": "Transitive",
-        "resolved": "3.0.1",
-        "contentHash": "s/s20YTVY9r9TPfTrN5g8zPF1YhwxyqO6PxUkrYTGI2B+OGPe9AdajWZrLhFqXIvqIW23fnUE4+ztrUWNU1+9g=="
+        "resolved": "4.0.1",
+        "contentHash": "+AgZ8B7QIcy2MZyqp1eeJlSgt03h0oyPeEhNWb1aAdgV9C0l8HdboJ1yt/DMu9qv7HTOA18WJUzKWB3j/WlTqg=="
       }
     }
   }
