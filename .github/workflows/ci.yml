@@ -12,11 +12,11 @@ concurrency:
 
 jobs:
   dotnet:
-    uses: st0o0/github-workflows/.github/workflows/dotnet-ci.yml@v1.0.0
+    uses: st0o0/github-workflows/.github/workflows/dotnet-ci.yml@f239350bedc5c262e5e0331f07b3fea666ea2866 # v1.1.0
     with:
       solution-file: Signal.slnx
       has-dockerfile: false
       slopwatch: true
 
   commits:
-    uses: st0o0/github-workflows/.github/workflows/commitlint.yml@v1.0.0
+    uses: st0o0/github-workflows/.github/workflows/commitlint.yml@f239350bedc5c262e5e0331f07b3fea666ea2866 # v1.1.0
