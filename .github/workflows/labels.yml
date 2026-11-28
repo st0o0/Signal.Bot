@@ -7,7 +7,7 @@ on:
 
 jobs:
   labels:
-    uses: st0o0/github-workflows/.github/workflows/labels.yml@v1.0.0
+    uses: st0o0/github-workflows/.github/workflows/labels.yml@f239350bedc5c262e5e0331f07b3fea666ea2866 # v1.1.0
     permissions:
       contents: read
       issues: write

@@ -11,7 +11,7 @@ concurrency:
 
 jobs:
   release-please:
-    uses: st0o0/github-workflows/.github/workflows/release-please.yml@v1.0.0
+    uses: st0o0/github-workflows/.github/workflows/release-please.yml@f239350bedc5c262e5e0331f07b3fea666ea2866 # v1.1.0
     permissions:
       contents: write
       pull-requests: write
@@ -19,7 +19,7 @@ jobs:
   build:
     needs: release-please
     if: needs.release-please.outputs.release_created == 'true'
-    uses: st0o0/github-workflows/.github/workflows/dotnet-build-nuget.yml@v1.0.0
+    uses: st0o0/github-workflows/.github/workflows/dotnet-build-nuget.yml@f239350bedc5c262e5e0331f07b3fea666ea2866 # v1.1.0
     permissions:
       contents: read
     with:
@@ -60,7 +60,7 @@ jobs:
   docs:
     needs: release-please
     if: needs.release-please.outputs.release_created == 'true'
-    uses: st0o0/github-workflows/.github/workflows/docs.yml@v1.0.0
+    uses: st0o0/github-workflows/.github/workflows/docs.yml@f239350bedc5c262e5e0331f07b3fea666ea2866 # v1.1.0
     with:
       needs-dotnet-build: true
       dotnet-project-path: src
