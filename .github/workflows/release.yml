@@ -11,7 +11,7 @@ concurrency:
 
 jobs:
   release-please:
-    uses: st0o0/github-workflows/.github/workflows/release-please.yml@v1.0.0
+    uses: st0o0/github-workflows/.github/workflows/release-please.yml@910b3216ef0b321eec4af7eca7fd2430f23eaedf # v1.0.0
     permissions:
       contents: write
       pull-requests: write
@@ -19,7 +19,7 @@ jobs:
   build:
     needs: release-please
     if: needs.release-please.outputs.release_created == 'true'
-    uses: st0o0/github-workflows/.github/workflows/dotnet-build-nuget.yml@v1.0.0
+    uses: st0o0/github-workflows/.github/workflows/dotnet-build-nuget.yml@910b3216ef0b321eec4af7eca7fd2430f23eaedf # v1.0.0
     permissions:
       contents: read
     with:
@@ -36,12 +36,12 @@ jobs:
       name: nuget
       url: https://www.nuget.org/packages/Signal.Bot
     steps:
-      - uses: actions/setup-dotnet@v6
-      - uses: actions/download-artifact@v8
+      - uses: actions/setup-dotnet@0f4a354dd5547a28c70b7853dbd95d5b67886e73 # v6
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
         with:
           name: nuget-packages
           path: ./packages
-      - uses: NuGet/login@v1
+      - uses: NuGet/login@8d196754b4036150537f80ac539e15c2f1028841 # v1
         id: nuget-login
         with:
           user: ${{ secrets.NUGET_USER }}
@@ -52,7 +52,7 @@ jobs:
           --source https://api.nuget.org/v3/index.json
           --skip-duplicate ./packages/*.nupkg
       - name: Attach .nupkg to GitHub Release
-        uses: softprops/action-gh-release@v3
+        uses: softprops/action-gh-release@8a0cd651e5b2365bd640854a3fa5dfc70e4875f3 # v3
         with:
           tag_name: v${{ needs.release-please.outputs.version }}
           files: ./packages/*.nupkg
@@ -60,7 +60,7 @@ jobs:
   docs:
     needs: release-please
     if: needs.release-please.outputs.release_created == 'true'
-    uses: st0o0/github-workflows/.github/workflows/docs.yml@v1.0.0
+    uses: st0o0/github-workflows/.github/workflows/docs.yml@910b3216ef0b321eec4af7eca7fd2430f23eaedf # v1.0.0
     with:
       needs-dotnet-build: true
       dotnet-project-path: src
